@@ -3,11 +3,10 @@
 
 # v-analyzer
 
-[![Association Official Project][AssociationOfficialBadge]][AssociationUrl]
 [![VSCode Extension](https://img.shields.io/badge/VS_Code-extension-25829e?logo=visualstudiocode&logoWidth=10)](https://marketplace.visualstudio.com/items?itemName=VOSCA.vscode-v-analyzer)
-[![Build CI](https://github.com/v-analyzer/v-analyzer/actions/workflows/build_ci.yml/badge.svg)](https://github.com/v-analyzer/v-analyzer/actions/workflows/build_ci.yml)
-[![Analyzer tests](https://github.com/v-analyzer/v-analyzer/actions/workflows/analyzer_tests.yml/badge.svg)](https://github.com/v-analyzer/v-analyzer/actions/workflows/analyzer_tests.yml)
-[![VS Code extension tests](https://github.com/v-analyzer/v-analyzer/actions/workflows/vscode_extension_tests.yml/badge.svg)](https://github.com/v-analyzer/v-analyzer/actions/workflows/vscode_extension_tests.yml)
+[![Build CI](https://github.com/vlang/v-analyzer/actions/workflows/build_ci.yml/badge.svg)](https://github.com/vlang/v-analyzer/actions/workflows/build_ci.yml)
+[![Analyzer tests](https://github.com/vlang/v-analyzer/actions/workflows/analyzer_tests.yml/badge.svg)](https://github.com/vlang/v-analyzer/actions/workflows/analyzer_tests.yml)
+[![VS Code extension tests](https://github.com/vlang/v-analyzer/actions/workflows/vscode_extension_tests.yml/badge.svg)](https://github.com/vlang/v-analyzer/actions/workflows/vscode_extension_tests.yml)
 
 Bring IDE features for the V programming language to VS Code, Vim, and other editors.
 
@@ -170,5 +169,3 @@ See the
 [LICENSE](https://github.com/vlang-association/v-analyzer/blob/main/LICENSE)
 file for the full license text.
 
-[AssociationOfficialBadge]: https://vosca.dev/badge.svg
-[AssociationUrl]: https://vosca.dev
