@@ -26,7 +26,7 @@ v-analyzer provides the following features:
 ### Linux and macOS
 
 ```
-v -e "$(curl -fsSL https://raw.githubusercontent.com/v-analyzer/v-analyzer/main/install.vsh)"
+v -e "$(curl -fsSL https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh)"
 ```
 
 ### Windows
@@ -38,19 +38,19 @@ overwritten or deleted.
 #### Powershell
 
 ```
-curl -o install.vsh https://raw.githubusercontent.com/v-analyzer/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
+curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
 ```
 
 #### Command shell
 
 ```
-curl -o install.vsh https://raw.githubusercontent.com/v-analyzer/v-analyzer/main/install.vsh && v run install.vsh && del install.vsh
+curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh && v run install.vsh && del install.vsh
 ```
 
 ## Pre-built binaries
 
 You can download pre-built binaries from the
-[release page](https://github.com/v-analyzer/v-analyzer/releases).
+[release page](https://github.com/vlang/v-analyzer/releases).
 Currently, we provide binaries for Linux (x64), macOS (x64 and ARM), and Windows (x64).
 
 ## Building from source
@@ -137,7 +137,7 @@ v-analyzer up --nightly
 ## VS Code extension
 
 This repository also contains the source code for the VS Code extension in the
-[`editors/code`](https://github.com/v-analyzer/v-analyzer/tree/main/editors/code)
+[`editors/code`](https://github.com/vlang/v-analyzer/tree/main/editors/code)
 folder.
 It is also available via the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=VOSCA.vscode-v-analyzer).
 
@@ -166,6 +166,6 @@ It is part of the mason registry and can be installated with `:LspInstall v_anal
 
 This project is under the **MIT License**.
 See the
-[LICENSE](https://github.com/vlang-association/v-analyzer/blob/main/LICENSE)
+[LICENSE](https://github.com/vlang/v-analyzer/blob/main/LICENSE)
 file for the full license text.
 
