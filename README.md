@@ -5,9 +5,9 @@
 
 [![Association Official Project][AssociationOfficialBadge]][AssociationUrl]
 [![VSCode Extension](https://img.shields.io/badge/VS_Code-extension-25829e?logo=visualstudiocode&logoWidth=10)](https://marketplace.visualstudio.com/items?itemName=VOSCA.vscode-v-analyzer)
-[![Build CI](https://github.com/v-analyzer/v-analyzer/actions/workflows/build_ci.yml/badge.svg)](https://github.com/v-analyzer/v-analyzer/actions/workflows/build_ci.yml)
-[![Analyzer tests](https://github.com/v-analyzer/v-analyzer/actions/workflows/analyzer_tests.yml/badge.svg)](https://github.com/v-analyzer/v-analyzer/actions/workflows/analyzer_tests.yml)
-[![VS Code extension tests](https://github.com/v-analyzer/v-analyzer/actions/workflows/vscode_extension_tests.yml/badge.svg)](https://github.com/v-analyzer/v-analyzer/actions/workflows/vscode_extension_tests.yml)
+[![Build CI](https://github.com/vlang/v-analyzer/actions/workflows/build_ci.yml/badge.svg)](https://github.com/vlang/v-analyzer/actions/workflows/build_ci.yml)
+[![Analyzer tests](https://github.com/vlang/v-analyzer/actions/workflows/analyzer_tests.yml/badge.svg)](https://github.com/vlang/v-analyzer/actions/workflows/analyzer_tests.yml)
+[![VS Code extension tests](https://github.com/vlang/v-analyzer/actions/workflows/vscode_extension_tests.yml/badge.svg)](https://github.com/vlang/v-analyzer/actions/workflows/vscode_extension_tests.yml)
 
 Bring IDE features for the V programming language to VS Code, Vim, and other editors.
 
@@ -27,7 +27,7 @@ v-analyzer provides the following features:
 ### Linux and macOS
 
 ```
-v -e "$(curl -fsSL https://raw.githubusercontent.com/v-analyzer/v-analyzer/main/install.vsh)"
+v -e "$(curl -fsSL https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh)"
 ```
 
 ### Windows
@@ -39,19 +39,19 @@ overwritten or deleted.
 #### Powershell
 
 ```
-curl -o install.vsh https://raw.githubusercontent.com/v-analyzer/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
+curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
 ```
 
 #### Command shell
 
 ```
-curl -o install.vsh https://raw.githubusercontent.com/v-analyzer/v-analyzer/main/install.vsh && v run install.vsh && del install.vsh
+curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh && v run install.vsh && del install.vsh
 ```
 
 ## Pre-built binaries
 
 You can download pre-built binaries from the
-[release page](https://github.com/v-analyzer/v-analyzer/releases).
+[release page](https://github.com/vlang/v-analyzer/releases).
 Currently, we provide binaries for Linux (x64), macOS (x64 and ARM), and Windows (x64).
 
 ## Building from source
@@ -138,7 +138,7 @@ v-analyzer up --nightly
 ## VS Code extension
 
 This repository also contains the source code for the VS Code extension in the
-[`editors/code`](https://github.com/v-analyzer/v-analyzer/tree/main/editors/code)
+[`editors/code`](https://github.com/vlang/v-analyzer/tree/main/editors/code)
 folder.
 It is also available via the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=VOSCA.vscode-v-analyzer).
 
@@ -167,7 +167,7 @@ It is part of the mason registry and can be installated with `:LspInstall v_anal
 
 This project is under the **MIT License**.
 See the
-[LICENSE](https://github.com/vlang-association/v-analyzer/blob/main/LICENSE)
+[LICENSE](https://github.com/vlang/v-analyzer/blob/main/LICENSE)
 file for the full license text.
 
 [AssociationOfficialBadge]: https://vosca.dev/badge.svg
