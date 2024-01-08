@@ -186,7 +186,7 @@ export function uploadToPlayground(_: ContextInit): Command {
 		const form = new FormData();
 		form.append("code", code);
 
-		const response = await axios.post("https://play.vosca.dev/share", form);
+		const response = await axios.post("https://play.vlang.io/share", form);
 
 		const json = await response.data;
 		const hash = json["hash"];
@@ -197,7 +197,7 @@ export function uploadToPlayground(_: ContextInit): Command {
 			return;
 		}
 
-		const url = `https://vosca.dev/p/${hash}`;
+		const url = `https://play.vlang.io/p/${hash}`;
 
 		const open = await vscode.window.showInformationMessage(
 			"Successfully uploaded to V playground. Open in browser?",
