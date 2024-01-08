@@ -1,5 +1,6 @@
 import cp from "child_process";
 import os from "os";
+import fs from "fs";
 import { log } from "./log";
 import { getWorkspaceConfig } from "./utils";
 import { AnalyzerNotInstalledError } from "./ctx";
@@ -26,7 +27,9 @@ export async function bootstrap(): Promise<string> {
 		);
 	}
 
+	const rpath = fs.realpathSync(path);
 	log.info("Using server binary at", path);
+	log.info("Server binary realpath:", rpath);
 
 	return path;
 }

@@ -482,7 +482,7 @@ export class Context {
 
 			https
 				.get(
-					"https://raw.githubusercontent.com/v-analyzer/v-analyzer/main/install.vsh",
+					"https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh",
 					(response) => {
 						response.pipe(file);
 						file.on("finish", () => {
