@@ -76,7 +76,7 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 		if first_child := node.first_child() {
 			result << element_to_semantic(first_child, .namespace)
 		}
-		if first_child := node.last_child() {
+		if last_child := node.last_child() {
 			result << element_to_semantic(first_child, .type_)
 		}
 	} else if node.type_name == .unknown {
