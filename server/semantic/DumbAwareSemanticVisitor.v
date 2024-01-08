@@ -77,7 +77,7 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 			result << element_to_semantic(first_child, .namespace)
 		}
 		if last_child := node.last_child() {
-			result << element_to_semantic(first_child, .type_)
+			result << element_to_semantic(last_child, .type_)
 		}
 	} else if node.type_name == .unknown {
 		text := node.text(root.containing_file.source_text)
