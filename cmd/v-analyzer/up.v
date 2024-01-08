@@ -4,7 +4,7 @@ import cli
 import term
 import utils
 
-pub const analyzer_install_script_download_path = 'https://raw.githubusercontent.com/v-analyzer/v-analyzer/main/install.vsh'
+pub const analyzer_install_script_download_path = 'https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh'
 pub const analyzer_install_script_path = utils.expand_tilde_to_home('~/.config/v-analyzer/install.vsh')
 
 fn up_cmd(cmd cli.Command) ! {

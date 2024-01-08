@@ -25,7 +25,7 @@ jobs:
           - os: windows-latest
             target: windows-x86_64
             bin_ext: .exe
-          - os: ubuntu-latest
+          - os: ubuntu-20.04
             target: linux-x86_64
           - os: macos-latest
             target: darwin-x86_64
