@@ -130,8 +130,8 @@ export class WelcomePanel {
 						<h1 class="Header-title">V for VS Code v${vAnalyzerExtensionVersion}</h1>
 						<p>The v-analyzer extension for Visual Studio Code, providing rich language support for V projects.</p>
 						<ul class="Header-links">
-							<li><a href="https://github.com/v-analyzer/v-analyzer/blob/main/editors/code/CHANGELOG.md">Release notes</a></li>
-							<li><a href="https://github.com/v-analyzer/v-analyzer">GitHub</a></li>
+							<li><a href="https://github.com/vlang/v-analyzer/blob/main/editors/code/CHANGELOG.md">Release notes</a></li>
+							<li><a href="https://github.com/vlang/v-analyzer">GitHub</a></li>
 							<li><a href="https://discord.gg/vlang">Discord</a></li>
 						</ul>
 					</div>
@@ -142,7 +142,7 @@ export class WelcomePanel {
 						<div class="Card-inner">
 							<p class="Card-title">Getting started</p>
 							<p class="Card-content">Learn about the v-analyzer extension in
-								<a href="https://github.com/v-analyzer/v-analyzer/tree/main/editors/code/README.md">README</a>.
+								<a href="https://github.com/vlang/v-analyzer/tree/main/editors/code/README.md">README</a>.
 							</p>
 						</div>
 					</div>
@@ -151,7 +151,7 @@ export class WelcomePanel {
 						<div class="Card-inner">
 							<p class="Card-title">Learning V</p>
 							<p class="Card-content">If you're new to the V programming language,
-								<a href="https://docs.vosca.dev">docs.vosca.dev</a> is a great place to get started.</a>
+								<a href="https://github.com/vlang/v/blob/master/doc/docs.md</a> is a great place to get started.</a>
 							</p>
 						</div>
 					</div>
@@ -160,7 +160,7 @@ export class WelcomePanel {
 						<div class="Card-inner">
 							<p class="Card-title">Troubleshooting</p>
 							<p class="Card-content">Experiencing problems? Start with
-								<a href="https://github.com/v-analyzer/v-analyzer/blob/main/editors/code/docs/troubleshooting.md">troubleshooting guide</a>.
+								<a href="https://github.com/vlang/v-analyzer/blob/main/editors/code/docs/troubleshooting.md">troubleshooting guide</a>.
 							</p>
 						</div>
 					</div>

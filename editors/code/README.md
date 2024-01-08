@@ -1,18 +1,18 @@
 # v-analyzer support for Visual Studio Code
 
 [![VSCode Extension](https://img.shields.io/badge/VS_Code-extension-25829e?logo=visualstudiocode&logoWidth=10)](https://marketplace.visualstudio.com/items?itemName=VOSCA.vscode-v-analyzer)
-[![VS Code extension tests](https://github.com/v-analyzer/v-analyzer/actions/workflows/vscode_extension_tests.yml/badge.svg)](https://github.com/v-analyzer/v-analyzer/actions/workflows/vscode_extension_tests.yml)
+[![VS Code extension tests](https://github.com/vlang/v-analyzer/actions/workflows/vscode_extension_tests.yml/badge.svg)](https://github.com/vlang/v-analyzer/actions/workflows/vscode_extension_tests.yml)
 
 Provides
 [V programming language](https://vlang.io)
 and
-[`v-analyzer`](https://github.com/v-analyzer/v-analyzer)
+[`v-analyzer`](https://github.com/vlang/v-analyzer)
 support for Visual Studio Code.
 It is recommended over and replaces
 [V extension](https://marketplace.visualstudio.com/items?itemName=vlanguage.vscode-vlang).
 
 For most of its functionality, the extension uses
-[`v-analyzer`](https://github.com/v-analyzer/v-analyzer),
+[`v-analyzer`](https://github.com/vlang/v-analyzer),
 which we will refer to as the server to avoid confusion.
 
 ## Features
@@ -91,7 +91,7 @@ You are ready to code in V! 🎉
 
 You can install ``v-analyzer`` server manually:
 Clone the
-[`v-analyzer`](https://github.com/v-analyzer/v-analyzer)
+[`v-analyzer`](https://github.com/vlang/v-analyzer)
 repository, build it and specify the path to the compiled binary.
 
 ```json
@@ -160,5 +160,5 @@ npm run package
 
 This project is under the **MIT License**.
 See the
-[LICENSE](https://github.com/v-analyzer/v-analyzer/blob/main/editors/code/LICENSE)
+[LICENSE](https://github.com/vlang/v-analyzer/blob/main/editors/code/LICENSE)
 file for the full license text.
