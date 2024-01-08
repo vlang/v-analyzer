@@ -57,24 +57,28 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 		if last_child := node.last_child() {
 			result << element_to_semantic(last_child, .namespace)
 		}
-	} else if node.type_name == .value_attribute {
-		first_child := node.first_child() or { return }
-		result << element_to_semantic(first_child, .decorator)
 	} else if node.type_name == .attribute {
 		// '['
-		first_child := node.first_child() or { return }
+		if first_child := node.first_child() {
+			result << element_to_semantic(first_child, .decorator)
+		}
 		// ']'
-		last_child := node.last_child() or { return }
-		result << element_to_semantic(first_child, .decorator)
-		result << element_to_semantic(last_child, .decorator)
+		if last_child := node.last_child() {
+			result << element_to_semantic(last_child, .decorator)
+		}
 	} else if node.type_name == .key_value_attribute {
-		value_child := node.child_by_field_name('value') or { return }
-		if value_child.type_name == .identifier {
-			result << element_to_semantic(node, .decorator)
+		if value_child := node.child_by_field_name('value') {
+			if value_child.type_name == .identifier {
+				result << element_to_semantic(value_child, .string)
+			}
 		}
 	} else if node.type_name == .qualified_type {
-		first_child := node.first_child() or { return }
-		result << element_to_semantic(first_child, .namespace)
+		if first_child := node.first_child() {
+			result << element_to_semantic(first_child, .namespace)
+		}
+		if last_child := node.last_child() {
+			result << element_to_semantic(last_child, .type_)
+		}
 	} else if node.type_name == .unknown {
 		text := node.text(root.containing_file.source_text)
 
@@ -100,31 +104,25 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 			}
 		}
 	} else if node.type_name == .enum_declaration {
-		identifier := node.child_by_field_name('name') or { return }
-		result << element_to_semantic(identifier, .enum_)
+		if identifier := node.child_by_field_name('name') {
+			result << element_to_semantic(identifier, .enum_)
+		}
 	} else if node.type_name == .parameter_declaration || node.type_name == .receiver {
-		identifier := node.child_by_field_name('name') or { return }
-		is_mut := if _ := node.child_by_field_name('mutability') {
-			true
-		} else {
-			false
+		if identifier := node.child_by_field_name('name') {
+			if _ := node.child_by_field_name('mutability') {
+				result << element_to_semantic(identifier, .parameter, 'mutable')
+			} else {
+				result << element_to_semantic(identifier, .parameter)
+			}
 		}
-
-		mut mods := []string{}
-		if is_mut {
-			mods << 'mutable'
-		}
-		result << element_to_semantic(identifier, .parameter, ...mods)
 	} else if node.type_name == .reference_expression {
 		def := psi.node_to_var_definition(node, root.containing_file, none)
 		if !isnil(def) {
-			mods := if def.is_mutable() {
-				['mutable']
+			if def.is_mutable() {
+				result << element_to_semantic(node, .variable, 'mutable')
 			} else {
-				[]string{}
+				result << element_to_semantic(node, .variable)
 			}
-
-			result << element_to_semantic(node, .variable, ...mods)
 		}
 
 		first_char := node.first_char(root.containing_file.source_text)
@@ -132,8 +130,9 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 			result << element_to_semantic(node, .property) // not a best variant...
 		}
 	} else if node.type_name == .const_definition {
-		name := node.child_by_field_name('name') or { return }
-		result << element_to_semantic(name, .property) // not a best variant...
+		if name := node.child_by_field_name('name') {
+			result << element_to_semantic(name, .property) // not a best variant...
+		}
 	} else if node.type_name == .import_path {
 		if last_part := node.last_child() {
 			result << element_to_semantic(last_part, .namespace)
@@ -143,8 +142,9 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 	} else if node.type_name == .generic_parameter {
 		result << element_to_semantic(node, .type_parameter)
 	} else if node.type_name == .global_var_definition {
-		identifier := node.child_by_field_name('name') or { return }
-		result << element_to_semantic(identifier, .variable, 'global')
+		if identifier := node.child_by_field_name('name') {
+			result << element_to_semantic(identifier, .variable, 'global')
+		}
 	} else if node.type_name == .function_declaration {
 		if first_child := node.child_by_field_name('name') {
 			first_char := first_child.first_char(root.containing_file.source_text)
