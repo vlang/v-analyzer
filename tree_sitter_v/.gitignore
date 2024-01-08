@@ -16,3 +16,9 @@ bin/
 target/
 Cargo.lock
 yarn.lock
+
+Cargo.toml
+
+bindings/node/
+bindings/rust/
+binding.gyp
