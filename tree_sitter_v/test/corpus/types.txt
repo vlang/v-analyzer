@@ -371,9 +371,43 @@ Generic type
 ================================================================================
 fn () Foo[string] {}
 fn () mod.Bar[string, int] {}
+fn () Foo<string> {}
+fn () mod.Bar<string, int> {}
 --------------------------------------------------------------------------------
 
 (source_file
+  (simple_statement
+    (function_literal
+      (signature
+        (parameter_list)
+        (plain_type
+          (generic_type
+            (type_reference_expression
+              (identifier))
+            (type_parameters
+              (plain_type
+                (type_reference_expression
+                  (identifier)))))))
+      (block)))
+  (simple_statement
+    (function_literal
+      (signature
+        (parameter_list)
+        (plain_type
+          (generic_type
+            (qualified_type
+              (reference_expression
+                (identifier))
+              (type_reference_expression
+                (identifier)))
+            (type_parameters
+              (plain_type
+                (type_reference_expression
+                  (identifier)))
+              (plain_type
+                (type_reference_expression
+                  (identifier)))))))
+      (block)))
   (simple_statement
     (function_literal
       (signature

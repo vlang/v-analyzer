@@ -378,9 +378,40 @@ Foo[int, string]{
     name: "John"
     age: 100
 }
+Foo<int, string>{
+    name: "John"
+    age: 100
+}
 --------------------------------------------------------------------------------
 
 (source_file
+  (simple_statement
+    (type_initializer
+      (plain_type
+        (generic_type
+          (type_reference_expression
+            (identifier))
+          (type_parameters
+            (plain_type
+              (type_reference_expression
+                (identifier)))
+            (plain_type
+              (type_reference_expression
+                (identifier))))))
+      (type_initializer_body
+        (element_list
+          (keyed_element
+            (field_name
+              (reference_expression
+                (identifier)))
+            (literal
+              (interpreted_string_literal)))
+          (keyed_element
+            (field_name
+              (reference_expression
+                (identifier)))
+            (literal
+              (int_literal)))))))
   (simple_statement
     (type_initializer
       (plain_type
