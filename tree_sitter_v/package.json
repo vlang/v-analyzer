@@ -1,11 +1,11 @@
 {
   "name": "tree-sitter-v",
-  "version": "0.0.3-beta.1",
+  "version": "0.0.4-beta.1",
   "main": "bindings/node",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/v-analyzer/v-analyzer.git"
+    "url": "https://github.com/vlang/v-analyzer.git"
   },
   "scripts": {
     "test": "tree-sitter test",

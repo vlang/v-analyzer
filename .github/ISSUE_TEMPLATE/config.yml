@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: 💬 General Questions and Answers about v-analyzer
-    url: https://github.com/v-analyzer/v-analyzer/discussions/categories/q-a
+    url: https://github.com/vlang/v-analyzer/discussions/categories/q-a
     about: You can ask and answer questions about v-analyzer in the discussions forum.
 
   - name: 💬 V Discord Server

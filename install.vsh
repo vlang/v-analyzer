@@ -167,7 +167,7 @@ fn install_from_binary(asset ReleaseAsset, update bool) ! {
 }
 
 fn find_latest_asset() !ReleaseAsset {
-	text := http.get_text('https://api.github.com/repos/v-analyzer/v-analyzer/releases/latest')
+	text := http.get_text('https://api.github.com/repos/vlang/v-analyzer/releases/latest')
 	res := json.decode(ReleaseInfo, text) or {
 		errorln('Failed to decode JSON response from GitHub: ${err}')
 		return error('Failed to decode JSON response from GitHub: ${err}')
@@ -289,7 +289,7 @@ fn install_from_sources(no_interaction bool) ! {
 			warnln('${term.bold('v-analyzer')} is not installed!')
 			println('')
 			println('${term.bold('[NOTE]')} If you want to build it from sources manually, run the following commands:')
-			println('git clone https://github.com/v-analyzer/v-analyzer.git')
+			println('git clone https://github.com/vlang/v-analyzer.git')
 			println('cd v-analyzer')
 			println('v build.vsh')
 			println(term.gray('# Optionally you can move the binary to the standard location:'))
@@ -319,7 +319,7 @@ fn install_from_sources(no_interaction bool) ! {
 fn clone_repository() ! {
 	println('Cloning ${term.bold('v-analyzer')} repository...')
 
-	exit_code := run_command('git clone https://github.com/v-analyzer/v-analyzer.git ${analyzer_sources_path} 2>&1') or {
+	exit_code := run_command('git clone https://github.com/vlang/v-analyzer.git ${analyzer_sources_path} 2>&1') or {
 		errorln('Failed to clone v-analyzer repository: ${err}')
 		return
 	}
