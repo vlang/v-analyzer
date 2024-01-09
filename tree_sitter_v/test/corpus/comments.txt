@@ -45,17 +45,32 @@ module foo
 Multiline nested comment
 ================================================================================
 /*
+  /* Nested */
   Multiline comment
   /* Nested */
   Multiline comment
-  */
-  */
-  /*******///*/
+  /* Nested */
 */
+// comment /* comment */
 module foo
+/*
+  Multiline comment
+  /*
+    Multiline comment
+    /*
+      Multiline comment
+      /* Nested */
+      Multiline comment
+    */
+    Multiline comment
+  */
+  Multiline comment
+*/
 --------------------------------------------------------------------------------
 
 (source_file
   (comment)
+  (comment)
   (module_clause
-    (identifier)))
+    (identifier))
+  (comment))

@@ -113,34 +113,16 @@
         "type": "CHOICE",
         "members": [
           {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "//"
-              },
-              {
-                "type": "PATTERN",
-                "value": "[^\\n\\r]*"
-              }
-            ]
+            "type": "PATTERN",
+            "value": "\\/\\/[^\\n\\r]*"
           },
           {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "/*"
-              },
-              {
-                "type": "PATTERN",
-                "value": "([^*]*\\*+(?:[^/*][^*]*\\*+)*)*"
-              },
-              {
-                "type": "STRING",
-                "value": "/"
-              }
-            ]
+            "type": "PATTERN",
+            "value": "\\/\\*(?:[^\\/][^\\*]+\\/\\*+[^\\/][^\\*]+)+(?:[^\\*][^\\/]+\\*+\\/[^\\*][^\\/]+)+\\/"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\/\\*[^\\*]*\\*\\/"
           }
         ]
       }
