@@ -4373,17 +4373,21 @@
       }
     },
     "enum_fetch": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "."
-        },
-        {
-          "type": "SYMBOL",
-          "name": "reference_expression"
-        }
-      ]
+      "type": "PREC_DYNAMIC",
+      "value": -1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "."
+          },
+          {
+            "type": "SYMBOL",
+            "name": "reference_expression"
+          }
+        ]
+      }
     },
     "match_expression": {
       "type": "SEQ",
