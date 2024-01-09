@@ -4,10 +4,11 @@ import x.json2
 import os
 import v_tree_sitter.tree_sitter
 
+#flag -I @VMODROOT/bindings/v
 #flag -I @VMODROOT/src
-#flag @VMODROOT/src/parser.o
+#flag @VMODROOT/src/parser.c
 
-#include "@VMODROOT/bindings/v/bindings.h"
+#include "bindings.h"
 
 fn C.tree_sitter_v() &tree_sitter.TSLanguage
 
