@@ -882,7 +882,7 @@ module.exports = grammar({
         seq(field("left", $._expression), "!in", field("right", $._expression)),
       ),
 
-    enum_fetch: ($) => seq(".", $.reference_expression),
+    enum_fetch: ($) => prec.dynamic(-1, seq(".", $.reference_expression)),
 
     match_expression: ($) =>
       seq(
