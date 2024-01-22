@@ -277,6 +277,8 @@ fn get_latest_commit_hash() !string {
 	return hash_res.output.trim_space()
 }
 
+const git_clone_options = '--filter=blob:none --recursive --shallow-submodules'
+
 fn install_from_sources(no_interaction bool) ! {
 	println('${term.yellow('[WARNING]')} Currently ${term.bold('v-analyzer')} has no prebuilt binaries for your platform')
 
@@ -289,7 +291,7 @@ fn install_from_sources(no_interaction bool) ! {
 			warnln('${term.bold('v-analyzer')} is not installed!')
 			println('')
 			println('${term.bold('[NOTE]')} If you want to build it from sources manually, run the following commands:')
-			println('git clone https://github.com/vlang/v-analyzer.git')
+			println('git clone ${git_clone_options} https://github.com/vlang/v-analyzer.git')
 			println('cd v-analyzer')
 			println('v build.vsh')
 			println(term.gray('# Optionally you can move the binary to the standard location:'))
@@ -319,7 +321,7 @@ fn install_from_sources(no_interaction bool) ! {
 fn clone_repository() ! {
 	println('Cloning ${term.bold('v-analyzer')} repository...')
 
-	exit_code := run_command('git clone https://github.com/vlang/v-analyzer.git ${analyzer_sources_path} 2>&1') or {
+	exit_code := run_command('git clone ${git_clone_options} https://github.com/vlang/v-analyzer.git ${analyzer_sources_path} 2>&1') or {
 		errorln('Failed to clone v-analyzer repository: ${err}')
 		return
 	}
