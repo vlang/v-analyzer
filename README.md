@@ -25,7 +25,7 @@ v-analyzer provides the following features:
 
 ### Linux and macOS
 
-```
+```sh
 v -e "$(curl -fsSL https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh)"
 ```
 
@@ -37,13 +37,13 @@ overwritten or deleted.
 
 #### Powershell
 
-```
+```sh
 curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
 ```
 
 #### Command shell
 
-```
+```sh
 curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh && v run install.vsh && del install.vsh
 ```
 
@@ -54,6 +54,17 @@ You can download pre-built binaries from the
 Currently, we provide binaries for Linux (x64), macOS (x64 and ARM), and Windows (x64).
 
 ## Building from source
+
+> **Note**
+> This repository uses Git submodules.
+> In practice, this means that you either have to:
+> `git clone --filter=blob:none --recursive --shallow-submodules https://github.com/vlang/v-analyzer`
+> ... or, if you used just `git clone https://github.com/vlang/v-analyzer`, you have to later do:
+> `git submodule init`
+> `git submodule update`
+> inside your local `v-analyzer` clone.
+> If you do not do either, the symptom is that when you try to build v-analyzer, you will get a
+> C compiler message, about `lib.c not found`
 
 > **Note**
 > If you're using Windows, then you need GCC for any build, as TCC doesn't work
@@ -144,7 +155,8 @@ It is also available via the [VS Code Marketplace](https://marketplace.visualstu
 ## NVIM LSP / Mason
 
 For Neovim users, v-analyzer is available via [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#v_analyzer).
-It is part of the mason registry and can be installated with `:LspInstall v_analyzer` for nvim-lspconfig or `:MasonInstall v_analyzer` for Mason.
+It is part of the mason registry and can be installated with:
+`:LspInstall v_analyzer` for nvim-lspconfig, or `:MasonInstall v_analyzer` for Mason.
 
 ## Authors
 
