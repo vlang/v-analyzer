@@ -139,11 +139,9 @@ module.exports = grammar({
   ],
 
   conflicts: ($) => [
-    [$._expression, $.plain_type],
     [$.fixed_array_type, $._expression_without_blocks],
     [$.qualified_type, $._expression_without_blocks],
     [$.fixed_array_type, $.literal],
-    [$.fixed_array_type, $._expression],
     [$.reference_expression, $.type_reference_expression],
     [$.is_expression],
     [$.not_is_expression],

@@ -8490,24 +8490,12 @@
   ],
   "conflicts": [
     [
-      "_expression",
-      "plain_type"
-    ],
-    [
       "fixed_array_type",
       "_expression_without_blocks"
     ],
     [
       "qualified_type",
       "_expression_without_blocks"
-    ],
-    [
-      "fixed_array_type",
-      "literal"
-    ],
-    [
-      "fixed_array_type",
-      "_expression"
     ],
     [
       "reference_expression",
