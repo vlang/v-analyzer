@@ -8498,6 +8498,10 @@
       "_expression_without_blocks"
     ],
     [
+      "fixed_array_type",
+      "literal"
+    ],
+    [
       "reference_expression",
       "type_reference_expression"
     ],
@@ -8529,4 +8533,3 @@
     "_expression_with_blocks"
   ]
 }
-
