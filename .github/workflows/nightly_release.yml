@@ -58,7 +58,7 @@ jobs:
           v run build.vsh debug
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT }}
           path: ./v-analyzer/bin/v-analyzer${{ matrix.bin_ext }}
