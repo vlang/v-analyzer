@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Install V
         id: install-v
-        uses: vlang/setup-v@v1.3
+        uses: vlang/setup-v@v1.4
         with:
           check-latest: true
 
