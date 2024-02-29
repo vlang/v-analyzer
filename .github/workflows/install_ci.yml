@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Install V
-        uses: vlang/setup-v@v1.3
+        uses: vlang/setup-v@v1.4
         with:
           check-latest: true
 
