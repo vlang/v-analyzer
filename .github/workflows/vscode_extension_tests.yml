@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - 'editors/code/**'
+      - '**/vscode_extension_tests.yml'
   pull_request:
     paths:
       - 'editors/code/**'
+      - '**/vscode_extension_tests.yml'
 
 jobs:
   test:

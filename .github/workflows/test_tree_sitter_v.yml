@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - 'tree_sitter_v/**'
+      - '**/test_tree_sitter_v.yml'
   pull_request:
     paths:
       - 'tree_sitter_v/**'
+      - '**/test_tree_sitter_v.yml'
 
 jobs:
   test:

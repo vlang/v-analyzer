@@ -4,11 +4,13 @@ on:
   push:
     paths-ignore:
       - '.github/**'
+      - '!**/analyzer_tests.yml'
       - 'editors/code/**'
       - '**/*.md'
   pull_request:
     paths-ignore:
       - '.github/**'
+      - '!**/analyzer_tests.yml'
       - 'editors/code/**'
       - '**/*.md'
 

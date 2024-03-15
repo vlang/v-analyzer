@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - 'install.vsh'
+      - '**/install.vsh'
   pull_request:
     paths:
-      - 'install.vsh'
+      - '**/install.vsh'
+      - 'install_ci.yml'
 
 jobs:
   install:
