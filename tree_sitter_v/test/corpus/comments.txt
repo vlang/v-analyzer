@@ -74,3 +74,22 @@ module foo
   (module_clause
     (identifier))
   (comment))
+
+================================================================================
+Shebang
+================================================================================
+#!/usr/bin/env -S v
+
+foo := 'foo'
+--------------------------------------------------------------------------------
+
+(source_file
+  (comment)
+  (simple_statement
+    (var_declaration
+      (expression_list
+        (reference_expression
+          (identifier)))
+      (expression_list
+        (literal
+          (interpreted_string_literal))))))
