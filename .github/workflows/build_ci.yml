@@ -19,21 +19,13 @@ on:
       - '**/*_test.v'
 
 jobs:
-  test:
+  build:
     strategy:
       matrix:
         os: [ubuntu-20.04, macos-latest, windows-latest]
-        name: [ Debug, Dev, Release ]
-        include:
-          - name: Debug
-            mode: debug
-          - name: Dev
-            mode: dev
-          - name: Release
-            mode: release
+        mode: [debug, dev, release]
       fail-fast: false
 
-    name: Build on ${{ matrix.os }} (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -46,15 +38,10 @@ jobs:
       - name: Checkout v-analyzer
         uses: actions/checkout@v4
         with:
-          path: v-analyzer
           submodules: true
 
-      - name: Build ${{ matrix.name }}
-        run: |
-          cd v-analyzer
-          v run build.vsh ${{ matrix.mode }}
+      - name: Build
+        run: v run build.vsh ${{ matrix.mode }}
 
       - name: Check if the build is successful
-        run: |
-          cd v-analyzer
-          ./bin/v-analyzer --version
+        run: ./bin/v-analyzer --version

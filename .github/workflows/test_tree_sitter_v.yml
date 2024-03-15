@@ -1,4 +1,4 @@
-name: Test tree-sitter-v
+name: Tree-sitter CI
 
 on:
   push:
@@ -21,16 +21,9 @@ jobs:
 
       - name: Checkout v-analyzer
         uses: actions/checkout@v4
-        with:
-          path: v-analyzer
-          submodules: true
 
       - name: Install dependencies
-        run: |
-          cd v-analyzer/tree_sitter_v
-          npm update
+        run: cd tree_sitter_v && npm update
 
       - name: Run tests
-        run: |
-          cd v-analyzer/tree_sitter_v
-          npm run test
+        run: cd tree_sitter_v && npm run test

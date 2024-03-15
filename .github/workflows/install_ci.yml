@@ -9,13 +9,12 @@ on:
       - 'install.vsh'
 
 jobs:
-  test:
+  install:
     strategy:
       matrix:
         os: [ubuntu-20.04, macos-latest, windows-latest]
       fail-fast: false
 
-    name: Install v-analyzer on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -27,7 +26,7 @@ jobs:
       - name: Install via webscript (Windows)
         if: runner.os == 'Windows'
         run: curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
-  
+
       - name: Install via webscript (nix)
         if: runner.os != 'Windows'
         run: v -e "$(curl https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh -fsSL)"

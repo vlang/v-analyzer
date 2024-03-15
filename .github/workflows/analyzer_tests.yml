@@ -1,4 +1,4 @@
-name: Analyzer tests
+name: Analyzer CI
 
 on:
   push:
@@ -18,15 +18,16 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            cc: -cc clang
+            cc: clang
           - os: ubuntu-20.04
-            cc: -cc gcc
+            cc: gcc
           - os: windows-latest
-            cc: -cc gcc
+            cc: gcc
       fail-fast: false
 
-    name: Analyzer tests on ${{ matrix.os }} with ${{ matrix.cc }}
     runs-on: ${{ matrix.os }}
+    env:
+      VFLAGS: -cg -cc ${{ matrix.cc }}
 
     steps:
       - name: Install V
@@ -38,15 +39,10 @@ jobs:
       - name: Checkout v-analyzer
         uses: actions/checkout@v4
         with:
-          path: v-analyzer
           submodules: true
 
       - name: Run tests
-        run: |
-          cd v-analyzer/tests
-          v ${{ matrix.cc }} run .
+        run: cd tests && v run .
 
       - name: Run other V tests
-        run: |
-          cd v-analyzer
-          v ${{ matrix.cc }} test .
+        run: v test .
