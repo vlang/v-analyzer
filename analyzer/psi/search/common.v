@@ -43,7 +43,7 @@ fn is_implemented(iface_methods []psi.PsiElement, iface_fields []psi.PsiElement,
 
 	for iface_method in iface_methods {
 		if iface_method is psi.InterfaceMethodDeclaration {
-			symbol_method := symbol_methods_set[iface_method.fingerprint()]
+			symbol_method := symbol_methods_set[iface_method.fingerprint()] or { return false }
 			if !is_method_compatible(*iface_method, symbol_method) {
 				return false
 			}
@@ -52,7 +52,7 @@ fn is_implemented(iface_methods []psi.PsiElement, iface_fields []psi.PsiElement,
 
 	for iface_field in iface_fields {
 		if iface_field is psi.FieldDeclaration {
-			symbol_field := symbol_fields_set[iface_field.name()]
+			symbol_field := symbol_fields_set[iface_field.name()] or { return false }
 			if !is_field_compatible(*iface_field, symbol_field) {
 				return false
 			}
