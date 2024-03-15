@@ -1,24 +1,20 @@
-# Avoid including irrelevant files
-node_modules/
-*.log
-build/
-package-lock.json
+# Ignore irrelevant and generated outputs
+/src
+/build
+/target
 
-# Ignore binary output folders
-bin/
+bindings/node/
+bindings/rust/
+binding.gyp
+
+Cargo.toml
+Cargo.lock
+yarn.lock
+package-lock.json
+*.log
 
 # Ignore common editor/system specific metadata
 .DS_Store
 .idea/
 .vscode/
 *.iml
-
-target/
-Cargo.lock
-yarn.lock
-
-Cargo.toml
-
-bindings/node/
-bindings/rust/
-binding.gyp
