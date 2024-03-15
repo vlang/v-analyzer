@@ -152,6 +152,7 @@ module.exports = grammar({
   rules: {
     source_file: ($) =>
       seq(
+        optional($.shebang),
         optional($.module_clause),
         optional($.import_list),
         repeat(
@@ -162,6 +163,8 @@ module.exports = grammar({
         ),
       ),
 
+    shebang: (_) => token(/\#\!([^\\\r\n]+)+/),
+
     // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
     comment: (_) =>
       token(
@@ -169,7 +172,6 @@ module.exports = grammar({
           /\/\/[^\n\r]*/,
           /\/\*(?:[^\/][^\*]+\/\*+[^\/][^\*]+)+(?:[^\*][^\/]+\*+\/[^\*][^\/]+)+\//,
           /\/\*[^\*]*\*\//,
-          /\#\!.*/,
         ),
       ),
 

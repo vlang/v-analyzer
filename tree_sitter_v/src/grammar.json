@@ -10,6 +10,18 @@
           "members": [
             {
               "type": "SYMBOL",
+              "name": "shebang"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
               "name": "module_clause"
             },
             {
@@ -107,6 +119,13 @@
         }
       ]
     },
+    "shebang": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "\\#\\!([^\\\\\\r\\n]+)+"
+      }
+    },
     "comment": {
       "type": "TOKEN",
       "content": {
@@ -123,10 +142,6 @@
           {
             "type": "PATTERN",
             "value": "\\/\\*[^\\*]*\\*\\/"
-          },
-          {
-            "type": "PATTERN",
-            "value": "\\#\\!.*"
           }
         ]
       }
