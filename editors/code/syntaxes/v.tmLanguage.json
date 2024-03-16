@@ -322,6 +322,18 @@
 						}
 					},
 					"end": "$"
+				},
+				{
+					"name": "comment.line.number-sign.v",
+					"match": "(?:^|\\s*)(?:((#!).*))",
+					"captures": {
+						"1": {
+							"name": "meta.shebang.v"
+						},
+						"2": {
+							"name": "punctuation.definition.comment.shebang.v"
+						}
+					}
 				}
 			]
 		},
