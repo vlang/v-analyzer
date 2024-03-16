@@ -1,6 +1,6 @@
 module psi
 
-import tree_sitter_v as v
+import v_tree_sitter as v
 
 pub fn (node AstNode) parent_of_type(typ v.NodeType) ?AstNode {
 	mut res := node

@@ -1,6 +1,6 @@
 module psi
 
-import tree_sitter_v as v
+import v_tree_sitter as v
 
 pub type StubId = int
 

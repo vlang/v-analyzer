@@ -4,7 +4,7 @@ import lsp
 import time
 import utils
 import loglib
-import tree_sitter_v as v
+import v_tree_sitter as v
 import analyzer.parser
 import v_tree_sitter.tree_sitter
 

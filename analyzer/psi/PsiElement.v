@@ -1,7 +1,7 @@
 module psi
 
 import v_tree_sitter.tree_sitter
-import tree_sitter_v as v
+import v_tree_sitter as v
 
 pub type ID = int
 

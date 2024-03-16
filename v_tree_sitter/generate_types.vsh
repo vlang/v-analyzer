@@ -58,7 +58,7 @@ fn (typ TSNodeType) is_anon() bool {
 }
 
 cur_dir := dir(@FILE)
-node_types_json := read_file(join_path(cur_dir, 'src', 'node-types.json'))!
+node_types_json := read_file(join_path(vmodules_dir(), 'tree_sitter_v', 'src', 'node-types.json'))!
 node_types := json.decode([]TSNodeType, node_types_json)!
 node_type_enum_name := 'NodeType'
 super_type_enum_name := 'SuperType'
@@ -170,7 +170,7 @@ sb.writeln('\n')
 sb.writeln('pub struct ${node_type_factory_sym_name} {}')
 sb.writeln('\n')
 sb.writeln('pub fn (nf ${node_type_factory_sym_name}) get_type(type_name string) ${node_type_enum_name} {')
-sb.writeln('   return tree_sitter_v.node_type_name_to_enum[type_name] or { NodeType.unknown }')
+sb.writeln('   return v_tree_sitter.node_type_name_to_enum[type_name] or { NodeType.unknown }')
 sb.writeln('}')
 sb.writeln('\n')
 sb.writeln('const node_type_name_to_enum = {')

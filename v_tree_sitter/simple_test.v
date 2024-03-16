@@ -1,10 +1,10 @@
-module tests
+module v_tree_sitter
 
 import v_tree_sitter.tree_sitter
 import tree_sitter_v
 
 fn test_simple() {
-	mut p := tree_sitter.new_parser[tree_sitter_v.NodeType](tree_sitter_v.type_factory)
+	mut p := tree_sitter.new_parser[NodeType](type_factory)
 	p.set_language(tree_sitter_v.language)
 
 	code := 'fn main() {}'

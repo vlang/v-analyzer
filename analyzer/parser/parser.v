@@ -1,6 +1,7 @@
 module parser
 
-import tree_sitter_v as v
+import v_tree_sitter as v
+import tree_sitter_v
 import v_tree_sitter.tree_sitter
 import os
 
@@ -97,7 +98,7 @@ pub fn parse_code(code string) ParseResult {
 // }
 pub fn parse_code_with_tree(code string, old_tree &tree_sitter.Tree[v.NodeType]) ParseResult {
 	mut parser := tree_sitter.new_parser[v.NodeType](v.type_factory)
-	parser.set_language(v.language)
+	parser.set_language(tree_sitter_v.language)
 	raw_tree := if isnil(old_tree) { unsafe { nil } } else { old_tree.raw_tree }
 	tree := parser.parse_string(source: code, tree: raw_tree)
 	return ParseResult{

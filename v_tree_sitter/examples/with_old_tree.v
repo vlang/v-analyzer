@@ -5,7 +5,7 @@ import tree_sitter_v
 import time
 
 fn main() {
-	mut p := tree_sitter.new_parser[tree_sitter_v.NodeType](tree_sitter_v.type_factory)
+	mut p := tree_sitter.new_parser[v_tree_sitter.NodeType](v_tree_sitter.type_factory)
 	p.set_language(tree_sitter_v.language)
 
 	code := '
