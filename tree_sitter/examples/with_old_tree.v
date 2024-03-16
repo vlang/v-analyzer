@@ -1,12 +1,11 @@
 module main
 
-import v_tree_sitter.tree_sitter
-import tree_sitter_v
 import time
+import tree_sitter as ts
 
 fn main() {
-	mut p := tree_sitter.new_parser[v_tree_sitter.NodeType](v_tree_sitter.type_factory)
-	p.set_language(tree_sitter_v.language)
+	mut p := ts.new_parser[ts.NodeType](ts.type_factory)
+	p.set_language(ts.language)
 
 	code := '
 fn foo() int {

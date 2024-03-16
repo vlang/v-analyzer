@@ -7,9 +7,9 @@ module tree_sitter
 // See the header file "./lib/api.h" for comments for functions and structures.
 
 // We directly build "lib.c" rather using the static library.
-#flag -I @VMODROOT/core/lib/include
-#flag -I @VMODROOT/core/lib/src
-#flag @VMODROOT/core/lib/src/lib.c
+#flag -I @VMODROOT/tree_sitter/core/lib/include
+#flag -I @VMODROOT/tree_sitter/core/lib/src
+#flag @VMODROOT/tree_sitter/core/lib/src/lib.c
 #include "tree_sitter/api.h"
 
 pub enum TSVInputEncoding {

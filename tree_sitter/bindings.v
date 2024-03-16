@@ -1,16 +1,15 @@
-module tree_sitter_v
+module tree_sitter
 
 import x.json2
 import os
-import tree_sitter
 
-#flag -I @VMODROOT/bindings/v
-#flag -I @VMODROOT/src
-#flag @VMODROOT/src/parser.c
+#flag -I @VMODROOT/tree_sitter
+#flag -I @VMODROOT/tree_sitter_v/src
+#flag @VMODROOT/tree_sitter_v/src/parser.c
 
 #include "bindings.h"
 
-fn C.tree_sitter_v() &tree_sitter.TSLanguage
+fn C.tree_sitter_v() &TSLanguage
 
 pub const language = unsafe { C.tree_sitter_v() }
 
