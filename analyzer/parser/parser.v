@@ -1,14 +1,13 @@
 module parser
 
-import v_tree_sitter as v
 import tree_sitter_v
-import v_tree_sitter.tree_sitter
+import tree_sitter as ts
 import os
 
 // ParseResult represents the result of a parsing operation.
 pub struct ParseResult {
 pub:
-	tree        &tree_sitter.Tree[v.NodeType] = unsafe { nil } // Resulting tree or nil if the source could not be parsed.
+	tree        &ts.Tree[ts.NodeType] = unsafe { nil } // Resulting tree or nil if the source could not be parsed.
 	source_text string // Source code.
 pub mut:
 	path string // Path of the file that was parsed.
@@ -96,8 +95,8 @@ pub fn parse_code(code string) ParseResult {
 //   res2 = parser.parse_code_with_tree(code2, res.tree)
 //   println(res2.tree
 // }
-pub fn parse_code_with_tree(code string, old_tree &tree_sitter.Tree[v.NodeType]) ParseResult {
-	mut parser := tree_sitter.new_parser[v.NodeType](v.type_factory)
+pub fn parse_code_with_tree(code string, old_tree &ts.Tree[ts.NodeType]) ParseResult {
+	mut parser := ts.new_parser[ts.NodeType](ts.type_factory)
 	parser.set_language(tree_sitter_v.language)
 	raw_tree := if isnil(old_tree) { unsafe { nil } } else { old_tree.raw_tree }
 	tree := parser.parse_string(source: code, tree: raw_tree)

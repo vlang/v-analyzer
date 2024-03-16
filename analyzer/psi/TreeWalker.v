@@ -1,12 +1,11 @@
 module psi
 
-import v_tree_sitter.tree_sitter
-import v_tree_sitter
+import tree_sitter as ts
 
 struct TreeWalker {
 mut:
 	already_visited_children bool
-	cursor                   tree_sitter.TreeCursor[v_tree_sitter.NodeType] @[required]
+	cursor                   ts.TreeCursor[ts.NodeType] @[required]
 }
 
 pub fn (mut tw TreeWalker) next() ?AstNode {
