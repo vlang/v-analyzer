@@ -1,4 +1,4 @@
-name: Build nightly release
+name: Release Development Version
 
 on:
   workflow_dispatch:
@@ -12,13 +12,13 @@ on:
       - '**/*_test.v'
       - '**/*.md'
       - '.github/**'
-      - '!.github/workflows/nightly_release.yml'
+      - '!**/nightly_release.yml'
 
 permissions:
   contents: write
 
 jobs:
-  dist:
+  release:
     strategy:
       matrix:
         include:
@@ -34,7 +34,6 @@ jobs:
             vflags: -d cross_compile_macos_arm64
       fail-fast: false
 
-    name: Build binary artifact for ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
     env:
       VFLAGS: ${{ matrix.vflags }}
@@ -48,14 +47,9 @@ jobs:
 
       - name: Checkout v-analyzer
         uses: actions/checkout@v4
-        with:
-          path: v-analyzer
-          submodules: true
 
       - name: Compile
-        run: |
-          cd v-analyzer
-          v run build.vsh debug
+        run: v run build.vsh debug
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

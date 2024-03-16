@@ -1,12 +1,14 @@
-name: VS Code extension tests
+name: VS Code Extension CI
 
 on:
   push:
     paths:
       - 'editors/code/**'
+      - '**/vscode_extension_tests.yml'
   pull_request:
     paths:
       - 'editors/code/**'
+      - '**/vscode_extension_tests.yml'
 
 jobs:
   test:
@@ -26,15 +28,9 @@ jobs:
 
       - name: Checkout v-analyzer
         uses: actions/checkout@v4
-        with:
-          path: v-analyzer
 
       - name: Install dependencies
-        run: |
-          cd v-analyzer/editors/code
-          npm update
+        run: cd editors/code && npm update
 
       - name: Run tests
-        run: |
-          cd v-analyzer/editors/code
-          npm run test
+        run: cd editors/code && npm run test
