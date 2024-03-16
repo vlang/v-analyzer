@@ -11,7 +11,6 @@ import term
 import v.vmod
 
 const version = vmod.decode(@VMOD_FILE) or { panic(err) }.version
-const code_path = './cmd/v-analyzer'
 const bin_path = './bin/v-analyzer' + $if windows { '.exe' } $else { '' }
 
 const build_commit = os.execute('git rev-parse --short HEAD').output.trim_space()
@@ -28,7 +27,7 @@ fn errorln(msg string) {
 }
 
 fn (m ReleaseMode) compile_cmd() string {
-	base_build_cmd := '${@VEXE} ${code_path} -o ${bin_path} -no-parallel'
+	base_build_cmd := '${@VEXE} ${@VMODROOT} -o ${bin_path} -no-parallel'
 	cc := if v := os.getenv_opt('CC') {
 		'-cc ${v}'
 	} else {
