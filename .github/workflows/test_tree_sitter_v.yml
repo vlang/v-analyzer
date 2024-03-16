@@ -16,6 +16,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install V
+        uses: vlang/setup-v@v1.4
+        with:
+          check-latest: true
+
       - name: Install Nodejs
         uses: actions/setup-node@v4
         with:
@@ -24,8 +29,8 @@ jobs:
       - name: Checkout v-analyzer
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: cd tree_sitter_v && npm update
+      - name: Install dependencies && generate
+        run: cd tree_sitter_v && npm install && npm run generate
 
       - name: Run tests
         run: cd tree_sitter_v && npm run test

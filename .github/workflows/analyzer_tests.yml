@@ -43,6 +43,9 @@ jobs:
         with:
           submodules: true
 
+      - name: Generate tree-sitter grammar
+        run: cd tree_sitter_v && npm install && npm run generate
+
       - name: Run tests
         run: cd tests && v run .
 

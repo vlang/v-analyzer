@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "tree-sitter test",
-    "generate": "tree-sitter generate && v run generate_types.vsh",
+    "generate": "tree-sitter generate --no-bindings && v run generate_types.vsh",
     "parse": "tree-sitter parse",
     "parseg": "tree-sitter parse --debug-graph",
     "format": "prettier --write \"**/*.cjs\""

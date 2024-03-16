@@ -22,3 +22,7 @@ Cargo.toml
 bindings/node/
 bindings/rust/
 binding.gyp
+
+src/
+
+node_types.v

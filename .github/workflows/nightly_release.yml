@@ -50,6 +50,9 @@ jobs:
         with:
           submodules: true
 
+      - name: Insrall dependencies
+        run: cd tree_sitter_v && npm install
+
       - name: Compile
         run: v run build.vsh debug
 
@@ -78,7 +81,6 @@ jobs:
         with:
           artifacts: ${{ env.ARTIFACT }}.zip
           tag: nightly
-          body: ${{ env.BODY }}
           name: v-analyzer development build
           prerelease: true
           allowUpdates: true

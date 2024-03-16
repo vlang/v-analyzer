@@ -62,8 +62,20 @@ fn prepare_output_dir() {
 	os.mkdir('./bin') or { errorln('Failed to create output directory: ${err}') }
 }
 
+fn generate() ! {
+	os.chdir('./tree_sitter_v')!
+	os.execute_opt('npm run generate')!
+	os.chdir('../')!
+}
+
 fn build(mode ReleaseMode, explicit_debug bool) {
 	println('Building v-analyzer at commit: ${build_commit}, build time: ${build_datetime} ...')
+
+	generate() or {
+		eprintln('Failed to generate tree-sitter grammar. ${err}')
+		exit(1)
+	}
+	println('${term.green('✓')} Generated tree-sitter grammar')
 
 	prepare_output_dir()
 	println('${term.green('✓')} Prepared output directory')

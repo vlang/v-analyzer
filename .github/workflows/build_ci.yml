@@ -42,7 +42,10 @@ jobs:
         with:
           submodules: true
 
-      - name: Build
+      - name: Install dependencies
+        run: cd tree_sitter_v && npm install
+
+      - name: Build ${{ matrix.mode }}
         run: v run build.vsh ${{ matrix.mode }}
 
       - name: Check if the build is successful
