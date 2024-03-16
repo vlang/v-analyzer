@@ -1,5 +1,9 @@
 (ERROR) @error
-(comment) @comment
+
+[
+ (comment)
+ (shebang)
+] @comment
 
 (identifier) @variable
 (import_path) @variable
