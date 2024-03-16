@@ -47,6 +47,8 @@ jobs:
 
       - name: Checkout v-analyzer
         uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: Compile
         run: v run build.vsh debug
@@ -55,14 +57,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT }}
-          path: ./v-analyzer/bin/v-analyzer${{ matrix.bin_ext }}
+          path: ./bin/v-analyzer${{ matrix.bin_ext }}
 
       - name: Prepare release
         shell: bash
         run: |
           now=$(date -u +'%Y-%m-%d %H:%M:%S UTC')
           echo "BODY=Generated on <samp>$now</samp> from commit ${{ github.sha }}." >> $GITHUB_ENV
-          7z a -tzip ${{ env.ARTIFACT }}.zip ./v-analyzer/bin/v-analyzer${{ matrix.bin_ext }}
+          7z a -tzip ${{ env.ARTIFACT }}.zip ./bin/v-analyzer${{ matrix.bin_ext }}
 
       - name: Update nightly tag
         uses: richardsimko/update-tag@v1
