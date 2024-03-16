@@ -10,9 +10,10 @@ import cli
 import net.http
 
 const installer_version = '0.0.2'
-const analyzer_sources_path = norm_expand_tilde_to_home('~/.config/v-analyzer/sources')
-const analyzer_bin_path = norm_expand_tilde_to_home('~/.config/v-analyzer/bin')
-const analyzer_bin_path_with_name = norm_expand_tilde_to_home('~/.config/v-analyzer/bin/v-analyzer')
+const analyzer_config_dir_path = join_path(home_dir(), '.config', 'v-analyzer')
+const analyzer_sources_dir_path = join_path(analyzer_config_dir_path, 'sources')
+const analyzer_bin_dir_path = join_path(analyzer_config_dir_path, 'bin')
+const analyzer_bin_file_path = join_path(analyzer_bin_dir_path, 'v-analyzer')
 
 struct ReleaseAsset {
 	tag_name             string @[json: '-']
@@ -138,12 +139,12 @@ fn install_from_binary(asset ReleaseAsset, update bool) ! {
 	println('${term.green('✓')} Successfully downloaded ${term.bold('v-analyzer')} archive')
 
 	println('Extracting ${term.bold('v-analyzer')} archive...')
-	os.mkdir_all(analyzer_bin_path) or {
-		println('Failed to create directory: ${analyzer_bin_path}')
+	os.mkdir_all(analyzer_bin_dir_path) or {
+		println('Failed to create directory: ${analyzer_bin_dir_path}')
 		return
 	}
 
-	szip.extract_zip_to_dir(archive_temp_path, analyzer_bin_path) or {
+	szip.extract_zip_to_dir(archive_temp_path, analyzer_bin_dir_path) or {
 		println('Failed to extract archive: ${err}')
 		return
 	}
@@ -154,14 +155,14 @@ fn install_from_binary(asset ReleaseAsset, update bool) ! {
 		println('${term.green('✓')} ${term.bold('v-analyzer')} successfully updated to ${term.bold(asset.tag_name)}')
 	}
 
-	println('Path to the ${term.bold('binary')}: ${analyzer_bin_path_with_name}')
+	println('Path to the ${term.bold('binary')}: ${analyzer_bin_file_path}')
 
 	if !update {
-		show_hint_about_path_if_needed(analyzer_bin_path_with_name)
+		show_hint_about_path_if_needed(analyzer_bin_file_path)
 	}
 
-	os.mkdir_all(analyzer_sources_path) or {
-		println('Failed to create directory: ${analyzer_sources_path}')
+	os.mkdir_all(analyzer_sources_dir_path) or {
+		println('Failed to create directory: ${analyzer_sources_dir_path}')
 		return
 	}
 }
@@ -239,7 +240,7 @@ fn update_from_sources(update bool, nightly bool) ! {
 	if need_pull {
 		println('Updating ${term.bold('v-analyzer')} sources...')
 
-		res := os.execute('git -C ${analyzer_sources_path} pull')
+		res := os.execute('git -C ${analyzer_sources_dir_path} pull')
 		if res.exit_code != 0 {
 			errorln('Failed to update sources: ${res.output}')
 			return
@@ -265,12 +266,12 @@ fn update_from_sources(update bool, nightly bool) ! {
 		println('${term.green('✓')} ${term.bold('v-analyzer')} successfully updated to ${updated_version}')
 	}
 
-	println('Path to the ${term.bold('binary')}: ${analyzer_bin_path_with_name}')
+	println('Path to the ${term.bold('binary')}: ${analyzer_bin_file_path}')
 	return
 }
 
 fn get_latest_commit_hash() !string {
-	hash_res := os.execute('git -C ${analyzer_sources_path} log -1 --format=%H')
+	hash_res := os.execute('git -C ${analyzer_sources_dir_path} log -1 --format=%H')
 	if hash_res.exit_code != 0 {
 		return error('Failed to get hash of the latest commit: ${hash_res.output}')
 	}
@@ -295,15 +296,15 @@ fn install_from_sources(no_interaction bool) ! {
 			println('cd v-analyzer')
 			println('v build.vsh')
 			println(term.gray('# Optionally you can move the binary to the standard location:'))
-			println('mkdir -p ${analyzer_bin_path}')
-			println('cp ./bin/v-analyzer ${analyzer_bin_path}')
+			println('mkdir -p ${analyzer_bin_dir_path}')
+			println('cp ./bin/v-analyzer ${analyzer_bin_dir_path}')
 			return
 		}
 	}
 
 	if already_cloned() {
-		os.rmdir_all(analyzer_sources_path) or {
-			errorln('Failed to remove directory: ${analyzer_sources_path}: ${err}')
+		os.rmdir_all(analyzer_sources_dir_path) or {
+			errorln('Failed to remove directory: ${analyzer_sources_dir_path}: ${err}')
 			return
 		}
 	}
@@ -313,15 +314,15 @@ fn install_from_sources(no_interaction bool) ! {
 	clone_repository()!
 	build_from_sources()!
 
-	println('Path to the ${term.bold('binary')}: ${analyzer_bin_path_with_name}')
+	println('Path to the ${term.bold('binary')}: ${analyzer_bin_file_path}')
 
-	show_hint_about_path_if_needed(analyzer_bin_path_with_name)
+	show_hint_about_path_if_needed(analyzer_bin_file_path)
 }
 
 fn clone_repository() ! {
 	println('Cloning ${term.bold('v-analyzer')} repository...')
 
-	exit_code := run_command('git clone ${git_clone_options} https://github.com/vlang/v-analyzer.git ${analyzer_sources_path} 2>&1') or {
+	exit_code := run_command('git clone ${git_clone_options} https://github.com/vlang/v-analyzer.git ${analyzer_sources_dir_path} 2>&1') or {
 		errorln('Failed to clone v-analyzer repository: ${err}')
 		return
 	}
@@ -338,7 +339,7 @@ fn build_from_sources() ! {
 
 	compiler_flag := $if windows { '-cc gcc' } $else { '' }
 
-	chdir(analyzer_sources_path)!
+	chdir(analyzer_sources_dir_path)!
 	install_deps_cmd := os.execute('v ${compiler_flag} install')
 	if install_deps_cmd.exit_code != 0 {
 		errorln('Failed to install dependencies for ${term.bold('v-analyzer')}')
@@ -348,7 +349,7 @@ fn build_from_sources() ! {
 
 	println('${term.green('✓')} Dependencies for ${term.bold('v-analyzer')} installed successfully')
 
-	chdir(analyzer_sources_path)!
+	chdir(analyzer_sources_dir_path)!
 	exit_code := run_command('v ${compiler_flag} build.vsh 1>/dev/null') or {
 		errorln('Failed to build ${term.bold('v-analyzer')}: ${err}')
 		return
@@ -360,27 +361,27 @@ fn build_from_sources() ! {
 
 	println('Moving ${term.bold('v-analyzer')} binary to the standard location...')
 
-	os.mkdir_all(analyzer_bin_path) or {
-		println('Failed to create directory: ${analyzer_bin_path}')
+	os.mkdir_all(analyzer_bin_dir_path) or {
+		println('Failed to create directory: ${analyzer_bin_dir_path}')
 		return
 	}
 
-	os.cp_all('${analyzer_sources_path}/bin/v-analyzer', analyzer_bin_path, true) or {
-		println('Failed to copy ${term.bold('v-analyzer')} binary to ${analyzer_bin_path}: ${err}')
+	os.cp_all('${analyzer_sources_dir_path}/bin/v-analyzer', analyzer_bin_dir_path, true) or {
+		println('Failed to copy ${term.bold('v-analyzer')} binary to ${analyzer_bin_dir_path}: ${err}')
 		return
 	}
 
-	println('${term.green('✓')} Successfully moved ${term.bold('v-analyzer')} binary to ${analyzer_bin_path}')
+	println('${term.green('✓')} Successfully moved ${term.bold('v-analyzer')} binary to ${analyzer_bin_dir_path}')
 
 	println('${term.green('✓')} ${term.bold('v-analyzer')} built successfully')
 }
 
 fn already_cloned() bool {
-	if !os.exists(analyzer_sources_path) {
+	if !os.exists(analyzer_sources_dir_path) {
 		return false
 	}
 
-	files := os.ls(analyzer_sources_path) or { return false }
+	files := os.ls(analyzer_sources_dir_path) or { return false }
 	return files.len > 0
 }
 
@@ -457,11 +458,6 @@ fn run_command(cmd string) !int {
 	command.close()!
 
 	return command.exit_code
-}
-
-fn norm_expand_tilde_to_home(path string) string {
-	norm_path := os.norm_path(path)
-	return os.expand_tilde_to_home(norm_path)
 }
 
 pub fn errorln(msg string) {
