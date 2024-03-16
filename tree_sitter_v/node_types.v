@@ -182,6 +182,7 @@ pub enum NodeType {
 	nil_
 	none_
 	rune_literal
+	shebang
 	true_
 }
 
@@ -491,5 +492,6 @@ const node_type_name_to_enum = {
 	'nil':                              NodeType.nil_
 	'none':                             NodeType.none_
 	'rune_literal':                     NodeType.rune_literal
+	'shebang':                          NodeType.shebang
 	'true':                             NodeType.true_
 }

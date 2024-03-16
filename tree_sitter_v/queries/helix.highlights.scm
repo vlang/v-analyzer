@@ -1,4 +1,7 @@
-(comment) @comment
+[
+ (comment)
+ (shebang)
+] @comment
 
 (module_clause
  (identifier) @namespace)

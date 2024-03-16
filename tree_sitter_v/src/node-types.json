@@ -3530,6 +3530,10 @@
         {
           "type": "module_clause",
           "named": true
+        },
+        {
+          "type": "shebang",
+          "named": true
         }
       ]
     }
@@ -4632,6 +4636,10 @@
   {
     "type": "shared",
     "named": false
+  },
+  {
+    "type": "shebang",
+    "named": true
   },
   {
     "type": "spawn",
