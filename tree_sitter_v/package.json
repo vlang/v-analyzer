@@ -15,11 +15,11 @@
     "format": "prettier --write \"**/*.cjs\""
   },
   "dependencies": {
-    "nan": "^2.18.0"
+    "nan": "^2.19.0"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
-    "tree-sitter-cli": "^0.21.0"
+    "tree-sitter-cli": "^0.22.1"
   },
   "tree-sitter": [
     {
