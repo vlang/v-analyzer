@@ -6,7 +6,7 @@ import sync
 import os
 import time
 import analyzer.parser
-import tree_sitter
+import tree_sitter as ts
 
 fn main() {
 	mut checker := Checker{
@@ -15,7 +15,7 @@ fn main() {
 	checker.check()
 }
 
-pub type AstNode = tree_sitter.Node[tree_sitter.NodeType]
+pub type AstNode = ts.Node[ts.NodeType]
 
 struct ErrorInfo {
 	path string

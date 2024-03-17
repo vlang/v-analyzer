@@ -1,8 +1,8 @@
 module psi
 
-import tree_sitter
+import tree_sitter as ts
 
-pub fn (node AstNode) parent_of_type(typ tree_sitter.NodeType) ?AstNode {
+pub fn (node AstNode) parent_of_type(typ ts.NodeType) ?AstNode {
 	mut res := node
 	for {
 		res = res.parent()?

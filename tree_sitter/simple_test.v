@@ -1,8 +1,8 @@
-import tree_sitter
+import tree_sitter as ts
 
 fn test_simple() {
-	mut p := tree_sitter.new_parser[tree_sitter.NodeType](tree_sitter.type_factory)
-	p.set_language(tree_sitter.language)
+	mut p := ts.new_parser[ts.NodeType](ts.type_factory)
+	p.set_language(ts.language)
 
 	code := 'fn main() {}'
 	tree := p.parse_string(source: code)

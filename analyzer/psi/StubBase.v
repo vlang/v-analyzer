@@ -1,6 +1,6 @@
 module psi
 
-import tree_sitter
+import tree_sitter as ts
 
 pub type StubId = int
 
@@ -74,7 +74,7 @@ pub fn (s &StubBase) stub_type() StubType {
 	return s.stub_type
 }
 
-pub fn (s &StubBase) element_type() tree_sitter.NodeType {
+pub fn (s &StubBase) element_type() ts.NodeType {
 	return match s.stub_type {
 		.root { .unknown }
 		.function_declaration { .function_declaration }
