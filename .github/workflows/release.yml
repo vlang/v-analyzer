@@ -1,4 +1,4 @@
-name: Release Development Version
+name: Release
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ on:
       - '**/*_test.v'
       - '**/*.md'
       - '.github/**'
-      - '!**/nightly_release.yml'
+      - '!**/release.yml'
 
 permissions:
   contents: write
@@ -51,7 +51,10 @@ jobs:
           submodules: true
 
       - name: Compile
-        run: v run build.vsh debug
+        shell: bash
+        run: |
+          [ $GITHUB_REF_TYPE == tag ] && mode="release" || mode="debug"
+          v run build.vsh $mode
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -62,23 +65,36 @@ jobs:
       - name: Prepare release
         shell: bash
         run: |
-          now=$(date -u +'%Y-%m-%d %H:%M:%S UTC')
-          echo "BODY=Generated on <samp>$now</samp> from commit ${{ github.sha }}." >> $GITHUB_ENV
           7z a -tzip ${{ env.ARTIFACT }}.zip ./bin/v-analyzer${{ matrix.bin_ext }}
+          if [ $GITHUB_REF_TYPE != tag ]; then
+            now=$(date -u +'%Y-%m-%d %H:%M:%S UTC')
+            echo "BODY=Generated on <samp>$now</samp> from commit ${{ github.sha }}." >> $GITHUB_ENV
+          fi
 
       - name: Update nightly tag
+        if: env.IS_PRERELEASE
         uses: richardsimko/update-tag@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: nightly
 
-      - name: Release
+      - name: Release development version
+        if: github.ref_type != 'tag'
         uses: ncipollo/release-action@v1
         with:
           artifacts: ${{ env.ARTIFACT }}.zip
           tag: nightly
           body: ${{ env.BODY }}
           name: v-analyzer development build
-          prerelease: true
           allowUpdates: true
+          prerelease: true
+
+      - name: Release latest version
+        if: github.ref_type == 'tag'
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ${{ env.ARTIFACT }}.zip
+          allowUpdates: true
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
