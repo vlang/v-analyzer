@@ -72,7 +72,7 @@ jobs:
           fi
 
       - name: Update nightly tag
-        if: env.IS_PRERELEASE
+        if: github.ref_type != 'tag'
         uses: richardsimko/update-tag@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
