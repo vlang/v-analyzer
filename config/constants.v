@@ -1,7 +1,6 @@
 module config
 
 import os
-import utils
 
 // analyzer_name is the name of the analyzer.
 pub const analyzer_name = 'v-analyzer'
@@ -11,7 +10,7 @@ pub const analyzer_config_name = 'config.toml'
 
 // analyzer_configs_path is the path to the directory containing the
 // root configuration files for the analyzer.
-pub const analyzer_configs_path = utils.expand_tilde_to_home('~/.config/v-analyzer')
+pub const analyzer_configs_path = os.join_path(os.home_dir(), '.config', 'v-analyzer')
 
 // analyzer_local_configs_folder_name is the name of the directory
 // containing the local configuration files for the analyzer.
