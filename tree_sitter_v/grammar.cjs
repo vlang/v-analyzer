@@ -578,17 +578,7 @@ module.exports = grammar({
       prec.dynamic(2, seq(token.immediate("["), comma_sep1($.plain_type), "]")),
 
     argument_list: ($) =>
-      seq(
-        "(",
-        optional(
-          seq(
-            choice($.argument),
-            repeat(seq(list_separator, choice($.argument))),
-            optional(list_separator),
-          ),
-        ),
-        ")",
-      ),
+      seq("(", repeat(seq($.argument, optional(list_separator))), ")"),
 
     argument: ($) =>
       choice(

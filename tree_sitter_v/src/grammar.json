@@ -2677,24 +2677,19 @@
           "value": "("
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "argument"
-                    }
-                  ]
-                },
-                {
-                  "type": "REPEAT",
-                  "content": {
-                    "type": "SEQ",
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "argument"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "CHOICE",
                     "members": [
                       {
                         "type": "CHOICE",
@@ -2703,95 +2698,38 @@
                             "type": "CHOICE",
                             "members": [
                               {
-                                "type": "CHOICE",
-                                "members": [
-                                  {
-                                    "type": "STRING",
-                                    "value": "\n"
-                                  },
-                                  {
-                                    "type": "STRING",
-                                    "value": "\r"
-                                  },
-                                  {
-                                    "type": "STRING",
-                                    "value": "\r\n"
-                                  }
-                                ]
+                                "type": "STRING",
+                                "value": "\n"
                               },
                               {
                                 "type": "STRING",
-                                "value": ";"
+                                "value": "\r"
+                              },
+                              {
+                                "type": "STRING",
+                                "value": "\r\n"
                               }
                             ]
                           },
                           {
                             "type": "STRING",
-                            "value": ","
+                            "value": ";"
                           }
                         ]
                       },
                       {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "SYMBOL",
-                            "name": "argument"
-                          }
-                        ]
+                        "type": "STRING",
+                        "value": ","
                       }
                     ]
+                  },
+                  {
+                    "type": "BLANK"
                   }
-                },
-                {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "CHOICE",
-                      "members": [
-                        {
-                          "type": "CHOICE",
-                          "members": [
-                            {
-                              "type": "CHOICE",
-                              "members": [
-                                {
-                                  "type": "STRING",
-                                  "value": "\n"
-                                },
-                                {
-                                  "type": "STRING",
-                                  "value": "\r"
-                                },
-                                {
-                                  "type": "STRING",
-                                  "value": "\r\n"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "STRING",
-                              "value": ";"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "STRING",
-                          "value": ","
-                        }
-                      ]
-                    },
-                    {
-                      "type": "BLANK"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
+                ]
+              }
+            ]
+          }
         },
         {
           "type": "STRING",
