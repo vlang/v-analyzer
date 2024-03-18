@@ -2998,21 +2998,6 @@
     }
   },
   {
-    "type": "pseudo_compile_time_identifier",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "qualified_type",
     "named": true,
     "fields": {
@@ -4442,10 +4427,6 @@
     "named": false
   },
   {
-    "type": "@",
-    "named": false
-  },
-  {
     "type": "@[",
     "named": false
   },
@@ -4612,6 +4593,10 @@
   {
     "type": "or",
     "named": false
+  },
+  {
+    "type": "pseudo_compile_time_identifier",
+    "named": true
   },
   {
     "type": "pub",

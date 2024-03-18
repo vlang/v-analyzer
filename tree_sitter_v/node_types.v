@@ -122,7 +122,6 @@ pub enum NodeType {
 	parenthesized_expression
 	plain_type
 	pointer_type
-	pseudo_compile_time_identifier
 	qualified_type
 	range
 	range_clause
@@ -181,6 +180,7 @@ pub enum NodeType {
 	interpolation_opening
 	nil_
 	none_
+	pseudo_compile_time_identifier
 	rune_literal
 	shebang
 	true_
@@ -288,8 +288,8 @@ const declaration_node_types = [
 
 const identifier_node_types = [
 	NodeType.mutable_identifier,
-	.pseudo_compile_time_identifier,
 	.identifier,
+	.pseudo_compile_time_identifier,
 ]
 
 const literal_node_types = [
@@ -432,7 +432,6 @@ const node_type_name_to_enum = {
 	'parenthesized_expression':         NodeType.parenthesized_expression
 	'plain_type':                       NodeType.plain_type
 	'pointer_type':                     NodeType.pointer_type
-	'pseudo_compile_time_identifier':   NodeType.pseudo_compile_time_identifier
 	'qualified_type':                   NodeType.qualified_type
 	'range':                            NodeType.range
 	'range_clause':                     NodeType.range_clause
@@ -491,6 +490,7 @@ const node_type_name_to_enum = {
 	'interpolation_opening':            NodeType.interpolation_opening
 	'nil':                              NodeType.nil_
 	'none':                             NodeType.none_
+	'pseudo_compile_time_identifier':   NodeType.pseudo_compile_time_identifier
 	'rune_literal':                     NodeType.rune_literal
 	'shebang':                          NodeType.shebang
 	'true':                             NodeType.true_
