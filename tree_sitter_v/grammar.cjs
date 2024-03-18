@@ -1100,8 +1100,13 @@ module.exports = grammar({
     string_interpolation: ($) =>
       seq(
         alias($.__dolcbr, $.interpolation_opening),
-        alias($._expression, $.interpolation_expression),
-        optional($.format_specifier),
+        choice(
+          repeat(alias($._expression, $.interpolation_expression)),
+          seq(
+            alias($._expression, $.interpolation_expression),
+            $.format_specifier,
+          ),
+        ),
         alias($.__rcbr, $.interpolation_closing),
       ),
 

@@ -6339,23 +6339,37 @@
           "value": "interpolation_opening"
         },
         {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "_expression"
-          },
-          "named": true,
-          "value": "interpolation_expression"
-        },
-        {
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "format_specifier"
+              "type": "REPEAT",
+              "content": {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_expression"
+                },
+                "named": true,
+                "value": "interpolation_expression"
+              }
             },
             {
-              "type": "BLANK"
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "_expression"
+                  },
+                  "named": true,
+                  "value": "interpolation_expression"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "format_specifier"
+                }
+              ]
             }
           ]
         },
