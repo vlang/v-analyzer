@@ -3,6 +3,7 @@ node_modules/
 *.log
 build/
 package-lock.json
+package.swift
 
 # Ignore binary output folders
 bin/
@@ -19,6 +20,12 @@ yarn.lock
 
 Cargo.toml
 
+bindings/go/
 bindings/node/
+bindings/python/
 bindings/rust/
+bindings/swift/
 binding.gyp
+
+pyproject.toml
+setup.py

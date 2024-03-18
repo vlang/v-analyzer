@@ -1,7 +1,6 @@
 grammar.js symlink=file
 
-bindings/node/* linguist-generated
-bindings/rust/* linguist-generated
+bindings/c/* linguist-generated
 
 src/tree_sitter/* linguist-generated
 src/grammar.json linguist-generated
