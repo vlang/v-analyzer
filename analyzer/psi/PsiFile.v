@@ -4,8 +4,8 @@ import lsp
 import time
 import utils
 import loglib
-import tree_sitter as ts
 import analyzer.parser
+import tree_sitter_v_api as api
 
 @[heap]
 pub struct PsiFile {
@@ -13,12 +13,12 @@ pub:
 	path      string
 	stub_list &StubList = unsafe { nil }
 pub mut:
-	tree        &ts.Tree[ts.NodeType] = unsafe { nil }
+	tree        &api.Tree[api.NodeType] = unsafe { nil }
 	source_text string
 	root        PsiElement
 }
 
-pub fn new_psi_file(path string, tree &ts.Tree[ts.NodeType], source_text string) &PsiFile {
+pub fn new_psi_file(path string, tree &api.Tree[api.NodeType], source_text string) &PsiFile {
 	mut file := &PsiFile{
 		path: path
 		tree: unsafe { tree }

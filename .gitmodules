@@ -1,4 +1,4 @@
-[submodule "v_tree_sitter/core"]
-	path = tree_sitter/core
+[submodule "tree_sitter_v_api/core"]
+	path = tree_sitter_v_api/core
 	url = https://github.com/tree-sitter/tree-sitter.git
 	branch = master

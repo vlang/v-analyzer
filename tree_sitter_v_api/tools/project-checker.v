@@ -6,7 +6,7 @@ import sync
 import os
 import time
 import analyzer.parser
-import tree_sitter as ts
+import tree_sitter_v_api as api
 
 fn main() {
 	mut checker := Checker{
@@ -15,7 +15,7 @@ fn main() {
 	checker.check()
 }
 
-pub type AstNode = ts.Node[ts.NodeType]
+pub type AstNode = api.Node[api.NodeType]
 
 struct ErrorInfo {
 	path string

@@ -1,9 +1,9 @@
-module tree_sitter
+module tree_sitter_v_api
 
 import x.json2
 import os
 
-#flag -I @VMODROOT/tree_sitter
+#flag -I @VMODROOT/tree_sitter_v_api
 #flag -I @VMODROOT/tree_sitter_v/src
 #flag @VMODROOT/tree_sitter_v/src/parser.c
 

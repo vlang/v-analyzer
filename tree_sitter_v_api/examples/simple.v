@@ -1,10 +1,10 @@
 module main
 
-import tree_sitter as ts
+import tree_sitter_v_api as api
 
 fn main() {
-	mut p := ts.new_parser[ts.NodeType](ts.type_factory)
-	p.set_language(ts.language)
+	mut p := api.new_parser[api.NodeType](api.type_factory)
+	p.set_language(api.language)
 
 	code := 'fn main() {}'
 	tree := p.parse_string(source: code)

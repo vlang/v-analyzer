@@ -1,15 +1,14 @@
-module tree_sitter
+module tree_sitter_v_api
 
 // This file contains the bindings for C API of tree-sitter.
-// They are not indented to be used directly, but rather to be used by the
-// wrapper from "tree_sitter.v".
+// They are indented to be used by wrapper functions in "tree_sitter.v".
 //
-// See the header file "./lib/api.h" for comments for functions and structures.
+// See "core/lib/include/tree_sitter/api.h" for function references.
 
 // We directly build "lib.c" rather using the static library.
-#flag -I @VMODROOT/tree_sitter/core/lib/include
-#flag -I @VMODROOT/tree_sitter/core/lib/src
-#flag @VMODROOT/tree_sitter/core/lib/src/lib.c
+#flag -I @VMODROOT/tree_sitter_v_api/core/lib/include
+#flag -I @VMODROOT/tree_sitter_v_api/core/lib/src
+#flag @VMODROOT/tree_sitter_v_api/core/lib/src/lib.c
 #include "tree_sitter/api.h"
 
 pub enum TSVInputEncoding {
