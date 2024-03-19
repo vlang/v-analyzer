@@ -1,6 +1,5 @@
 #!/usr/bin/env -S v
 
-// This script is used to install and update v-analyzer.
 import os
 import json
 import term
@@ -8,6 +7,8 @@ import time
 import compress.szip
 import cli
 import net.http
+
+// This script is used to install and update v-analyzer.
 
 const installer_version = '0.0.2'
 const analyzer_config_dir_path = join_path(home_dir(), '.config', 'v-analyzer')

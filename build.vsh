@@ -1,14 +1,15 @@
 #!/usr/bin/env -S v
 
-// This script is used to build the v-analyzer binary.
-// Usage:
-//  v build.vsh [debug|dev|release]
-// By default, just `v build.vsh` will use debug mode.
 import os
 import cli
 import time
 import term
 import v.vmod
+
+// This script is used to build the v-analyzer binary.
+// Usage:
+//  v build.vsh [debug|dev|release]
+// By default, just `v build.vsh` will use debug mode.
 
 const version = vmod.decode(@VMOD_FILE) or { panic(err) }.version
 const bin_path = './bin/v-analyzer' + $if windows { '.exe' } $else { '' }
