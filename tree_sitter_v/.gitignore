@@ -3,7 +3,7 @@ node_modules/
 *.log
 build/
 package-lock.json
-package.swift
+Package.swift
 
 # Ignore binary output folders
 bin/
