@@ -1,7 +1,4 @@
 grammar.js symlink=file
-bindings/v/tree-sitter-v.h symlink=file
-
-bindings/c/* linguist-generated
 
 src/tree_sitter/* linguist-generated
 src/grammar.json linguist-generated

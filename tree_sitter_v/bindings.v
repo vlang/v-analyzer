@@ -8,7 +8,7 @@ import v_tree_sitter.tree_sitter
 #flag -I @VMODROOT/src
 #flag @VMODROOT/src/parser.c
 
-#include "tree-sitter-v.h"
+#include "bindings.h"
 
 fn C.tree_sitter_v() &tree_sitter.TSLanguage
 
