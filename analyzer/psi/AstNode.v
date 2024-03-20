@@ -1,8 +1,8 @@
 module psi
 
-import tree_sitter_v_api as api
+import tree_sitter_v.bindings
 
-pub fn (node AstNode) parent_of_type(typ api.NodeType) ?AstNode {
+pub fn (node AstNode) parent_of_type(typ bindings.NodeType) ?AstNode {
 	mut res := node
 	for {
 		res = res.parent()?

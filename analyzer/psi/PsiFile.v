@@ -5,7 +5,7 @@ import time
 import utils
 import loglib
 import analyzer.parser
-import tree_sitter_v_api as api
+import tree_sitter_v.bindings
 
 @[heap]
 pub struct PsiFile {
@@ -13,12 +13,12 @@ pub:
 	path      string
 	stub_list &StubList = unsafe { nil }
 pub mut:
-	tree        &api.Tree[api.NodeType] = unsafe { nil }
+	tree        &bindings.Tree[bindings.NodeType] = unsafe { nil }
 	source_text string
 	root        PsiElement
 }
 
-pub fn new_psi_file(path string, tree &api.Tree[api.NodeType], source_text string) &PsiFile {
+pub fn new_psi_file(path string, tree &bindings.Tree[bindings.NodeType], source_text string) &PsiFile {
 	mut file := &PsiFile{
 		path: path
 		tree: unsafe { tree }

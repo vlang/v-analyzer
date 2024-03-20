@@ -1,8 +1,8 @@
-import tree_sitter_v_api as api
+import bindings
 
 fn test_simple() {
-	mut p := api.new_parser[api.NodeType](api.type_factory)
-	p.set_language(api.language)
+	mut p := bindings.new_parser[bindings.NodeType](bindings.type_factory)
+	p.set_language(bindings.language)
 
 	code := 'fn main() {}'
 	tree := p.parse_string(source: code)

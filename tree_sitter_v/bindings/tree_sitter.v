@@ -1,4 +1,4 @@
-module tree_sitter_v_api
+module bindings
 
 pub type TSParser = C.TSParser
 pub type TSLanguage = C.TSLanguage

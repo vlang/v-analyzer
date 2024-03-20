@@ -1,7 +1,7 @@
 module psi
 
 import utils
-import tree_sitter_v_api as api
+import tree_sitter_v.bindings
 
 pub enum StubType as u8 {
 	root
@@ -60,7 +60,7 @@ pub enum StubType as u8 {
 	embedded_definition
 }
 
-pub fn node_type_to_stub_type(typ api.NodeType) StubType {
+pub fn node_type_to_stub_type(typ bindings.NodeType) StubType {
 	return match typ {
 		.function_declaration { .function_declaration }
 		.receiver { .receiver }

@@ -1,9 +1,9 @@
 module psi
 
-import tree_sitter_v_api as api
+import tree_sitter_v.bindings
 
 pub interface PsiNamedElement {
-	parent_of_type(typ api.NodeType) ?PsiElement
+	parent_of_type(typ bindings.NodeType) ?PsiElement
 	identifier_text_range() TextRange
 	identifier() ?PsiElement
 	name() string

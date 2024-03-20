@@ -1,10 +1,10 @@
 module main
 
-import tree_sitter_v_api as api
+import tree_sitter_v.bindings
 
 fn main() {
-	mut p := api.new_parser[api.NodeType](api.type_factory)
-	p.set_language(api.language)
+	mut p := bindings.new_parser[.NodeType](bindings.type_factory)
+	p.set_language(v.language)
 
 	code := '
 fn foo() int {
