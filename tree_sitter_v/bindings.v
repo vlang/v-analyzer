@@ -4,7 +4,7 @@ import x.json2
 import os
 import v_tree_sitter.tree_sitter
 
-#flag -I @VMODROOT/bindings/c
+#flag -I @VMODROOT/bindings/v
 #flag -I @VMODROOT/src
 #flag @VMODROOT/src/parser.c
 
