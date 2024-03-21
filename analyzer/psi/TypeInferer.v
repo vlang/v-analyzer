@@ -27,6 +27,9 @@ pub fn (t &TypeInferer) infer_type(elem ?PsiElement) types.Type {
 
 pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 	element := elem or { return types.unknown_type }
+
+	mut visited := map[string]types.Type{}
+
 	if element.node.type_name in [
 		.in_expression,
 		.not_in_expression,
@@ -179,7 +182,6 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 
 	if element is TypeInitializer {
 		type_element := element.find_child_by_type(.plain_type) or { return types.unknown_type }
-		mut visited := map[string]types.Type{}
 		return t.convert_type(type_element, mut visited)
 	}
 
@@ -252,6 +254,12 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 	}
 
 	if element is CallExpression {
+		if grand := element.expression() {
+			if grand is FunctionLiteral {
+				signature := grand.signature() or { return types.unknown_type }
+				return t.convert_type(signature.result(), mut visited)
+			}
+		}
 		return t.infer_call_expr_type(element)
 	}
 
@@ -347,7 +355,6 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 	}
 
 	if element is TypeReferenceExpression {
-		mut visited := map[string]types.Type{}
 		return t.infer_type_reference_type(element, mut visited)
 	}
 
@@ -355,13 +362,10 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 		type_element := element.find_child_by_type_or_stub(.plain_type) or {
 			return types.unknown_type
 		}
-		mut visited := map[string]types.Type{}
 		return t.convert_type(type_element, mut visited)
 	}
 
 	if element is EmbeddedDefinition {
-		mut visited := map[string]types.Type{}
-
 		if qualified_type := element.find_child_by_type_or_stub(.qualified_type) {
 			return t.convert_type_inner(qualified_type, mut visited)
 		}
