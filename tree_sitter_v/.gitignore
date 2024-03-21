@@ -20,6 +20,7 @@ yarn.lock
 
 Cargo.toml
 
+bindings/c/
 bindings/go/
 bindings/node/
 bindings/python/
