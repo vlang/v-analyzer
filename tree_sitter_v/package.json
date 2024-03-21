@@ -2,6 +2,7 @@
   "name": "tree-sitter-v",
   "version": "0.0.4-beta.1",
   "main": "bindings/node",
+  "types": "bindings/node",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -9,17 +10,29 @@
   },
   "scripts": {
     "test": "tree-sitter test",
-    "generate": "tree-sitter generate && v run generate_types.vsh",
+    "generate": "tree-sitter generate --no-bindings && v run generate_types.vsh",
     "parse": "tree-sitter parse",
     "parseg": "tree-sitter parse --debug-graph",
+    "install": "node-gyp-build",
+    "prebuildify": "prebuildify --napi --strip",
     "format": "prettier --write \"**/*.cjs\""
   },
   "dependencies": {
-    "nan": "^2.19.0"
+    "node-addon-api": "^8.0.0",
+    "node-gyp-build": "^4.8.0"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.21.0"
+  },
+  "peerDependenciesMeta": {
+    "tree_sitter": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "prettier": "^3.2.5",
-    "tree-sitter-cli": "^0.22.1"
+    "tree-sitter-cli": "^0.22.2",
+    "prebuildify": "^6.0.0"
   },
   "tree-sitter": [
     {
@@ -30,5 +43,12 @@
         "v.mod"
       ]
     }
+  ],
+  "files": [
+    "grammar.js",
+    "prebuilds/**",
+    "bindings/node/*",
+    "queries/*",
+    "src/**"
   ]
 }

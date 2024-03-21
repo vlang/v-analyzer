@@ -1,13 +1,13 @@
 #ifndef TREE_SITTER_V_H_
 #define TREE_SITTER_V_H_
 
-#include <tree_sitter/parser.h>
+typedef struct TSLanguage TSLanguage;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern TSLanguage *tree_sitter_v();
+const TSLanguage *tree_sitter_v(void);
 
 #ifdef __cplusplus
 }
