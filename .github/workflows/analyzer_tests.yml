@@ -44,7 +44,4 @@ jobs:
           submodules: true
 
       - name: Run tests
-        run: cd tests && v run .
-
-      - name: Run other V tests
         run: v test .

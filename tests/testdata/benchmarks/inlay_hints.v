@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2023 Alexander Medvednikov. All rights reserved.
+// Copyright (c) 2019-2024 Alexander Medvednikov. All rights reserved.
 // Use of this source code is governed by an MIT license
 // that can be found in the LICENSE file.
 module builtin
@@ -77,7 +77,7 @@ pub fn (s string) runes() []rune {
 // cstring_to_vstring creates a new V string copy of the C style string,
 // pointed by `s`. This function is most likely what you want to use when
 // working with C style pointers to 0 terminated strings (i.e. `char*`).
-// It is recomended to use it, unless you *do* understand the implications of
+// It is recommended to use it, unless you *do* understand the implications of
 // tos/tos2/tos3/tos4/tos5 in terms of memory management and interactions with
 // -autofree and `[manualfree]`.
 // It will panic, if the pointer `s` is 0.
@@ -313,9 +313,16 @@ fn (a string) clone_static() string {
 	return a.clone()
 }
 
+// option_clone_static returns an independent copy of a given array when lhs is an option type.
+// It should be used only in -autofree generated code.
+@[inline; markused]
+fn (a string) option_clone_static() ?string {
+	return ?string(a.clone())
+}
+
 // clone returns a copy of the V string `a`.
 pub fn (a string) clone() string {
-	if a.len == 0 {
+	if a.len <= 0 {
 		return ''
 	}
 	mut b := string{
@@ -329,7 +336,7 @@ pub fn (a string) clone() string {
 	return b
 }
 
-// replace_once replaces the first occurence of `rep` with the string passed in `with`.
+// replace_once replaces the first occurrence of `rep` with the string passed in `with`.
 pub fn (s string) replace_once(rep string, with string) string {
 	idx := s.index_(rep)
 	if idx == -1 {
@@ -338,7 +345,7 @@ pub fn (s string) replace_once(rep string, with string) string {
 	return s.substr(0, idx) + with + s.substr(idx + rep.len, s.len)
 }
 
-// replace replaces all occurences of `rep` with the string passed in `with`.
+// replace replaces all occurrences of `rep` with the string passed in `with`.
 @[direct_array_access]
 pub fn (s string) replace(rep string, with string) string {
 	if s.len == 0 || rep.len == 0 || rep.len > s.len {
@@ -406,7 +413,7 @@ struct RepIndex {
 	val_idx int
 }
 
-// replace_each replaces all occurences of the string pairs given in `vals`.
+// replace_each replaces all occurrences of the string pairs given in `vals`.
 // Example: assert 'ABCD'.replace_each(['B','C/','C','D','D','C']) == 'AC/DC'
 @[direct_array_access]
 pub fn (s string) replace_each(vals []string) string {
@@ -496,7 +503,7 @@ pub fn (s string) replace_each(vals []string) string {
 	}
 }
 
-// replace_char replaces all occurences of the character `rep` multiple occurences of the character passed in `with` with respect to `repeat`.
+// replace_char replaces all occurrences of the character `rep` multiple occurrences of the character passed in `with` with respect to `repeat`.
 // Example: assert '\tHello!'.replace_char(`\t`,` `,8) == '        Hello!'
 @[direct_array_access]
 pub fn (s string) replace_char(rep u8, with u8, repeat int) string {
@@ -611,6 +618,59 @@ pub fn (s string) f64() f64 {
 @[inline]
 pub fn (s string) u8() u8 {
 	return u8(strconv.common_parse_uint(s, 0, 8, false, false) or { 0 })
+}
+
+// u8_array returns the value of the hex/bin string as u8 array.
+// hex string example: `'0x11223344ee'.u8_array() == [u8(0x11),0x22,0x33,0x44,0xee]`.
+// bin string example: `'0b1101_1101'.u8_array() == [u8(0xdd)]`.
+// underscore in the string will be stripped.
+pub fn (s string) u8_array() []u8 {
+	// strip underscore in the string
+	mut tmps := s.replace('_', '')
+	if tmps.len == 0 {
+		return []u8{}
+	}
+	tmps = tmps.to_lower()
+	if tmps.starts_with('0x') {
+		tmps = tmps[2..]
+		if tmps.len == 0 {
+			return []u8{}
+		}
+		// make sure every digit is valid hex digit
+		if !tmps.contains_only('0123456789abcdef') {
+			return []u8{}
+		}
+		// make sure tmps has even hex digits
+		if tmps.len % 2 == 1 {
+			tmps = '0' + tmps
+		}
+
+		mut ret := []u8{len: tmps.len / 2}
+		for i in 0 .. ret.len {
+			ret[i] = u8(tmps[2 * i..2 * i + 2].parse_uint(16, 8) or { 0 })
+		}
+		return ret
+	} else if tmps.starts_with('0b') {
+		tmps = tmps[2..]
+		if tmps.len == 0 {
+			return []u8{}
+		}
+		// make sure every digit is valid binary digit
+		if !tmps.contains_only('01') {
+			return []u8{}
+		}
+		// make sure tmps has multiple of 8 binary digits
+		if tmps.len % 8 != 0 {
+			tmps = '0'.repeat(8 - tmps.len % 8) + tmps
+		}
+
+		mut ret := []u8{len: tmps.len / 8}
+		for i in 0 .. ret.len {
+			ret[i] = u8(tmps[8 * i..8 * i + 8].parse_uint(2, 8) or { 0 })
+		}
+		return ret
+	}
+	return []u8{}
 }
 
 // u16 returns the value of the string as u16 `'1'.u16() == u16(1)`.
@@ -745,7 +805,7 @@ pub fn (s string) split_any(delim string) []string {
 	mut i := 0
 	// check empty source string
 	if s.len > 0 {
-		// if empty delimiter string using defautl split
+		// if empty delimiter string using default split
 		if delim.len <= 0 {
 			return s.split('')
 		}
@@ -795,7 +855,7 @@ pub fn (s string) rsplit_any(delim string) []string {
 	return res
 }
 
-// split splits the string to an array by `delim`.
+// split splits the string into an array of strings at the given delimiter.
 // Example: assert 'A B C'.split(' ') == ['A','B','C']
 // If `delim` is empty the string is split by it's characters.
 // Example: assert 'DEF'.split('') == ['D','E','F']
@@ -804,7 +864,7 @@ pub fn (s string) split(delim string) []string {
 	return s.split_nth(delim, 0)
 }
 
-// rsplit splits the string to an array by `delim` in reverse order.
+// rsplit splits the string into an array of strings at the given delimiter, starting from the right.
 // Example: assert 'A B C'.rsplit(' ') == ['C','B','A']
 // If `delim` is empty the string is split by it's characters.
 // Example: assert 'DEF'.rsplit('') == ['F','E','D']
@@ -813,15 +873,12 @@ pub fn (s string) rsplit(delim string) []string {
 	return s.rsplit_nth(delim, 0)
 }
 
-// split_once devides string into pair of string by `delim`.
+// split_once splits the string into a pair of strings at the given delimiter.
 // Example:
 // ```v
-// path, ext := 'file.ts.dts'.splice_once('.')?
+// path, ext := 'file.ts.dts'.split_once('.')?
 // assert path == 'file'
 // assert ext == 'ts.dts'
-// ```
-// Note that rsplit_once returns splitted string string as first part of pair,
-// and returns remaining as second part of pair.
 pub fn (s string) split_once(delim string) ?(string, string) {
 	result := s.split_nth(delim, 2)
 
@@ -832,15 +889,14 @@ pub fn (s string) split_once(delim string) ?(string, string) {
 	return result[0], result[1]
 }
 
-// rsplit_once devides string into pair of string by `delim`.
+// rsplit_once splits the string into a pair of strings at the given delimiter, starting from the right.
 // Example:
 // ```v
-// path, ext := 'file.ts.dts'.splice_once('.')?
+// path, ext := 'file.ts.dts'.rsplit_once('.')?
 // assert path == 'file.ts'
 // assert ext == 'dts'
 // ```
-// Note that rsplit_once returns remaining string as first part of pair,
-// and returns splitted string as second part of pair.
+// NOTE: rsplit_once returns the string at the left side of the delimiter as first part of the pair.
 pub fn (s string) rsplit_once(delim string) ?(string, string) {
 	result := s.rsplit_nth(delim, 2)
 
@@ -865,7 +921,7 @@ pub fn (s string) split_nth(delim string, nth int) []string {
 			i = 1
 			for ch in s {
 				if nth > 0 && i >= nth {
-					res << s[i..]
+					res << s[i - 1..]
 					break
 				}
 				res << ch.ascii_str()
@@ -900,7 +956,7 @@ pub fn (s string) split_nth(delim string, nth int) []string {
 		}
 		else {
 			mut start := 0
-			// Take the left part for each delimiter occurence
+			// Take the left part for each delimiter occurrence
 			for i <= s.len {
 				is_delim := i + delim.len <= s.len && s.substr(i, i + delim.len) == delim
 				if is_delim {
@@ -938,7 +994,7 @@ pub fn (s string) rsplit_nth(delim string, nth int) []string {
 		0 {
 			for i >= 0 {
 				if nth > 0 && res.len == nth - 1 {
-					res << s[..i]
+					res << s[..i + 1]
 					break
 				}
 				res << s[i].ascii_str()
@@ -1027,17 +1083,11 @@ pub fn (s string) split_into_lines() []string {
 	return res
 }
 
-// used internally for [2..4]
-@[inline]
-fn (s string) substr2(start int, _end int, end_max bool) string {
-	end := if end_max { s.len } else { _end }
-	return s.substr(start, end)
-}
-
 // substr returns the string between index positions `start` and `end`.
 // Example: assert 'ABCD'.substr(1,3) == 'BC'
 @[direct_array_access]
-pub fn (s string) substr(start int, end int) string {
+pub fn (s string) substr(start int, _end int) string {
+	end := if _end == max_int { s.len } else { _end } // max_int
 	$if !no_bounds_checking {
 		if start > end || start > s.len || end > s.len || start < 0 || end < 0 {
 			panic('substr(${start}, ${end}) out of bounds (len=${s.len})')
@@ -1058,10 +1108,25 @@ pub fn (s string) substr(start int, end int) string {
 	return res
 }
 
+// substr_unsafe works like substr(), but doesn't copy (allocate) the substring
+@[direct_array_access]
+pub fn (s string) substr_unsafe(start int, _end int) string {
+	end := if _end == 2147483647 { s.len } else { _end } // max_int
+	len := end - start
+	if len == s.len {
+		return s
+	}
+	return string{
+		str: unsafe { s.str + start }
+		len: len
+	}
+}
+
 // version of `substr()` that is used in `a[start..end] or {`
 // return an error when the index is out of range
 @[direct_array_access]
-pub fn (s string) substr_with_check(start int, end int) !string {
+pub fn (s string) substr_with_check(start int, _end int) !string {
+	end := if _end == max_int { s.len } else { _end } // max_int
 	if start > end || start > s.len || end > s.len || start < 0 || end < 0 {
 		return error('substr(${start}, ${end}) out of bounds (len=${s.len})')
 	}
@@ -1085,7 +1150,7 @@ pub fn (s string) substr_with_check(start int, end int) !string {
 @[direct_array_access]
 pub fn (s string) substr_ni(_start int, _end int) string {
 	mut start := _start
-	mut end := _end
+	mut end := if _end == max_int { s.len } else { _end } // max_int
 
 	// borders math
 	if start < 0 {
@@ -1147,14 +1212,31 @@ fn (s string) index_(p string) int {
 	return -1
 }
 
-// index returns the position of the first character of the input string.
-// It will return `none` if the input string can't be found.
+// index returns the position of the first character of the first occurrence of the `needle` string in `s`.
+// It will return `none` if the `needle` string can't be found in `s`.
 pub fn (s string) index(p string) ?int {
 	idx := s.index_(p)
 	if idx == -1 {
 		return none
 	}
 	return idx
+}
+
+// index_last returns the position of the first character of the *last* occurrence of the `needle` string in `s`.
+pub fn (s string) index_last(needle string) ?int {
+	idx := s.index_last_(needle)
+	if idx == -1 {
+		return none
+	}
+	return idx
+}
+
+// last_index returns the position of the first character of the *last* occurrence of the `needle` string in `s`.
+@[deprecated: 'use `.index_last(needle string)` instead']
+@[deprecated_after: '2023-12-18']
+@[inline]
+pub fn (s string) last_index(needle string) ?int {
+	return s.index_last(needle)
 }
 
 // index_kmp does KMP search.
@@ -1204,9 +1286,9 @@ pub fn (s string) index_any(chars string) int {
 	return -1
 }
 
-// last_index returns the position of the last occurence of the input string.
+// index_last_ returns the position of the last occurrence of the given string `p` in `s`.
 @[direct_array_access]
-fn (s string) last_index_(p string) int {
+fn (s string) index_last_(p string) int {
 	if p.len > s.len || p.len == 0 {
 		return -1
 	}
@@ -1222,15 +1304,6 @@ fn (s string) last_index_(p string) int {
 		i--
 	}
 	return -1
-}
-
-// last_index returns the position of the last occurence of the input string.
-pub fn (s string) last_index(p string) ?int {
-	idx := s.last_index_(p)
-	if idx == -1 {
-		return none
-	}
-	return idx
 }
 
 // index_after returns the position of the input string, starting search from `start` position.
@@ -1274,16 +1347,25 @@ pub fn (s string) index_u8(c u8) int {
 	return -1
 }
 
-// last_index_byte returns the index of the last occurence of byte `c` if found in the string.
-// last_index_byte returns -1 if the byte is not found.
+// index_u8_last returns the index of the *last* occurrence of the byte `c` (if found) in the string.
+// It returns -1, if `c` is not found.
 @[direct_array_access]
-pub fn (s string) last_index_u8(c u8) int {
+pub fn (s string) index_u8_last(c u8) int {
 	for i := s.len - 1; i >= 0; i-- {
 		if unsafe { s.str[i] == c } {
 			return i
 		}
 	}
 	return -1
+}
+
+// last_index_u8 returns the index of the last occurrence of byte `c` if found in the string.
+// It returns -1, if the byte `c` is not found.
+@[deprecated: 'use `.index_u8_last(c u8)` instead']
+@[deprecated_after: '2023-12-18']
+@[inline]
+pub fn (s string) last_index_u8(c u8) int {
+	return s.index_u8_last(c)
 }
 
 // count returns the number of occurrences of `substr` in the string.
@@ -1432,7 +1514,7 @@ pub fn (s string) to_lower() string {
 	}
 }
 
-// is_lower returns `true` if all characters in the string is lowercase.
+// is_lower returns `true` if all characters in the string are lowercase.
 // Example: assert 'hello developer'.is_lower() == true
 @[direct_array_access]
 pub fn (s string) is_lower() bool {
@@ -1462,7 +1544,7 @@ pub fn (s string) to_upper() string {
 	}
 }
 
-// is_upper returns `true` if all characters in the string is uppercase.
+// is_upper returns `true` if all characters in the string are uppercase.
 // See also: [`byte.is_capital`](#byte.is_capital)
 // Example: assert 'HELLO V'.is_upper() == true
 @[direct_array_access]
@@ -1485,6 +1567,24 @@ pub fn (s string) capitalize() string {
 	s0 := s[0]
 	letter := s0.ascii_str()
 	uletter := letter.to_upper()
+	if s.len == 1 {
+		return uletter
+	}
+	srest := s[1..]
+	res := uletter + srest
+	return res
+}
+
+// uncapitalize returns the string with the first character uncapitalized.
+// Example: assert 'Hello, Bob!'.uncapitalize() == 'hello, Bob!'
+@[direct_array_access]
+pub fn (s string) uncapitalize() string {
+	if s.len == 0 {
+		return ''
+	}
+	s0 := s[0]
+	letter := s0.ascii_str()
+	uletter := letter.to_lower()
 	if s.len == 1 {
 		return uletter
 	}
@@ -1579,7 +1679,7 @@ pub fn (s string) trim(cutset string) string {
 	return s.substr(left, right)
 }
 
-// trim_indexes gets the new start and end indicies of a string when any of the characters given in `cutset` were stripped from the start and end of the string. Should be used as an input to `substr()`. If the string contains only the characters in `cutset`, both values returned are zero.
+// trim_indexes gets the new start and end indices of a string when any of the characters given in `cutset` were stripped from the start and end of the string. Should be used as an input to `substr()`. If the string contains only the characters in `cutset`, both values returned are zero.
 // Example: left, right := '-hi-'.trim_indexes('-')
 @[direct_array_access]
 pub fn (s string) trim_indexes(cutset string) (int, int) {
@@ -1677,22 +1777,6 @@ pub fn (s string) trim_string_right(str string) string {
 	return s.clone()
 }
 
-// trim_prefix strips `str` from the start of the string.
-// Example: assert 'WorldHello V'.trim_prefix('World') == 'Hello V'
-@[deprecated: 'use s.trim_string_left(x) instead']
-@[deprecated_after: '2022-01-19']
-pub fn (s string) trim_prefix(str string) string {
-	return s.trim_string_left(str)
-}
-
-// trim_suffix strips `str` from the end of the string.
-// Example: assert 'Hello VWorld'.trim_suffix('World') == 'Hello V'
-@[deprecated: 'use s.trim_string_right(x) instead']
-@[deprecated_after: '2022-01-19']
-pub fn (s string) trim_suffix(str string) string {
-	return s.trim_string_right(str)
-}
-
 // compare_strings returns `-1` if `a < b`, `1` if `a > b` else `0`.
 pub fn compare_strings(a &string, b &string) int {
 	if a < b {
@@ -1722,13 +1806,13 @@ fn compare_lower_strings(a &string, b &string) int {
 	return compare_strings(&aa, &bb)
 }
 
-// sort_ignore_case sorts the string array using case insesitive comparing.
+// sort_ignore_case sorts the string array using case insensitive comparing.
 @[inline]
 pub fn (mut s []string) sort_ignore_case() {
 	s.sort_with_compare(compare_lower_strings)
 }
 
-// sort_by_len sorts the the string array by each string's `.len` length.
+// sort_by_len sorts the string array by each string's `.len` length.
 @[inline]
 pub fn (mut s []string) sort_by_len() {
 	s.sort_with_compare(compare_strings_by_len)
@@ -1742,15 +1826,13 @@ pub fn (s string) str() string {
 
 // at returns the byte at index `idx`.
 // Example: assert 'ABC'.at(1) == u8(`B`)
-fn (s string) at(idx int) byte {
+fn (s string) at(idx int) u8 {
 	$if !no_bounds_checking {
 		if idx < 0 || idx >= s.len {
 			panic('string index out of range: ${idx} / ${s.len}')
 		}
 	}
-	unsafe {
-		return s.str[idx]
-	}
+	return unsafe { s.str[idx] }
 }
 
 // version of `at()` that is used in `a[i] or {`
@@ -1762,6 +1844,165 @@ fn (s string) at_with_check(idx int) ?u8 {
 	unsafe {
 		return s.str[idx]
 	}
+}
+
+// Check if a string is an octal value. Returns 'true' if it is, or 'false' if it is not
+@[direct_array_access]
+pub fn (str string) is_oct() bool {
+	mut i := 0
+
+	if str.len == 0 {
+		return false
+	}
+
+	if str[i] == `0` {
+		i++
+	} else if str[i] == `-` || str[i] == `+` {
+		i++
+
+		if str[i] == `0` {
+			i++
+		} else {
+			return false
+		}
+	} else {
+		return false
+	}
+
+	if str[i] == `o` {
+		i++
+	} else {
+		return false
+	}
+
+	if i == str.len {
+		return false
+	}
+
+	for i < str.len {
+		if str[i] < `0` || str[i] > `7` {
+			return false
+		}
+		i++
+	}
+
+	return true
+}
+
+// is_bin returns `true` if the string is a binary value.
+@[direct_array_access]
+pub fn (str string) is_bin() bool {
+	mut i := 0
+
+	if str.len == 0 {
+		return false
+	}
+
+	if str[i] == `0` {
+		i++
+	} else if str[i] == `-` || str[i] == `+` {
+		i++
+
+		if str[i] == `0` {
+			i++
+		} else {
+			return false
+		}
+	} else {
+		return false
+	}
+
+	if str[i] == `b` {
+		i++
+	} else {
+		return false
+	}
+
+	if i == str.len {
+		return false
+	}
+
+	for i < str.len {
+		if str[i] < `0` || str[i] > `1` {
+			return false
+		}
+		i++
+	}
+
+	return true
+}
+
+// is_hex returns 'true' if the string is a hexadecimal value.
+@[direct_array_access]
+pub fn (str string) is_hex() bool {
+	mut i := 0
+
+	if str.len == 0 {
+		return false
+	}
+
+	if str[i] == `0` {
+		i++
+	} else if str[i] == `-` || str[i] == `+` {
+		i++
+
+		if str[i] == `0` {
+			i++
+		} else {
+			return false
+		}
+	} else {
+		return false
+	}
+
+	if str[i] == `x` {
+		i++
+	} else {
+		return false
+	}
+
+	if i == str.len {
+		return false
+	}
+
+	for i < str.len {
+		if (str[i] < `0` || str[i] > `9`) && ((str[i] < `a` || str[i] > `f`)
+			&& (str[i] < `A` || str[i] > `F`)) {
+			return false
+		}
+		i++
+	}
+
+	return true
+}
+
+// Check if a string is an integer value. Returns 'true' if it is, or 'false' if it is not
+@[direct_array_access]
+pub fn (str string) is_int() bool {
+	mut i := 0
+
+	if str.len == 0 {
+		return false
+	}
+
+	if (str[i] != `-` && str[i] != `+`) && (!str[i].is_digit()) {
+		return false
+	} else {
+		i++
+	}
+
+	if i == str.len && (!str[i - 1].is_digit()) {
+		return false
+	}
+
+	for i < str.len {
+		if str[i] < `0` || str[i] > `9` {
+			return false
+		}
+		i++
+	}
+
+	return true
 }
 
 // is_space returns `true` if the byte is a white space character.
@@ -1838,6 +2079,7 @@ pub fn (s &string) free() {
 	unsafe {
 		// C.printf(c's: %x %s\n', s.str, s.str)
 		free(s.str)
+		s.str = nil
 	}
 	s.is_lit = -98761234
 }
@@ -1868,12 +2110,12 @@ pub fn (s string) all_before(sub string) string {
 	return s[..pos]
 }
 
-// all_before_last returns the contents before the last occurence of `sub` in the string.
+// all_before_last returns the contents before the last occurrence of `sub` in the string.
 // If the substring is not found, it returns the full input string.
 // Example: assert '23:34:45.234'.all_before_last(':') == '23:34'
 // Example: assert 'abcd'.all_before_last('.') == 'abcd'
 pub fn (s string) all_before_last(sub string) string {
-	pos := s.last_index_(sub)
+	pos := s.index_last_(sub)
 	if pos == -1 {
 		return s.clone()
 	}
@@ -1892,19 +2134,19 @@ pub fn (s string) all_after(sub string) string {
 	return s[pos + sub.len..]
 }
 
-// all_after_last returns the contents after the last occurence of `sub` in the string.
+// all_after_last returns the contents after the last occurrence of `sub` in the string.
 // If the substring is not found, it returns the full input string.
 // Example: assert '23:34:45.234'.all_after_last(':') == '45.234'
 // Example: assert 'abcd'.all_after_last('z') == 'abcd'
 pub fn (s string) all_after_last(sub string) string {
-	pos := s.last_index_(sub)
+	pos := s.index_last_(sub)
 	if pos == -1 {
 		return s.clone()
 	}
 	return s[pos + sub.len..]
 }
 
-// all_after_first returns the contents after the first occurence of `sub` in the string.
+// all_after_first returns the contents after the first occurrence of `sub` in the string.
 // If the substring is not found, it returns the full input string.
 // Example: assert '23:34:45.234'.all_after_first(':') == '34:45.234'
 // Example: assert 'abcd'.all_after_first('z') == 'abcd'
@@ -1916,7 +2158,7 @@ pub fn (s string) all_after_first(sub string) string {
 	return s[pos + sub.len..]
 }
 
-// after returns the contents after the last occurence of `sub` in the string.
+// after returns the contents after the last occurrence of `sub` in the string.
 // If the substring is not found, it returns the full input string.
 // Example: assert '23:34:45.234'.after(':') == '45.234'
 // Example: assert 'abcd'.after('z') == 'abcd'
@@ -1926,7 +2168,7 @@ pub fn (s string) after(sub string) string {
 	return s.all_after_last(sub)
 }
 
-// after_char returns the contents after the first occurence of `sub` character in the string.
+// after_char returns the contents after the first occurrence of `sub` character in the string.
 // If the substring is not found, it returns the full input string.
 // Example: assert '23:34:45.234'.after_char(`:`) == '34:45.234'
 // Example: assert 'abcd'.after_char(`:`) == 'abcd'
@@ -2098,7 +2340,7 @@ pub fn (s string) fields() []string {
 }
 
 // strip_margin allows multi-line strings to be formatted in a way that removes white-space
-// before a delimeter. by default `|` is used.
+// before a delimiter. By default `|` is used.
 // Note: the delimiter has to be a byte at this time. That means surrounding
 // the value in ``.
 //
@@ -2196,7 +2438,7 @@ pub fn (s string) trim_indent() string {
 		.filter(!it.is_blank())
 		.map(it.indent_width())
 
-	mut min_common_indent := int(2147483647) // max int
+	mut min_common_indent := int(max_int) // max int
 	for line_indent in lines_indents {
 		if line_indent < min_common_indent {
 			min_common_indent = line_indent
@@ -2205,12 +2447,12 @@ pub fn (s string) trim_indent() string {
 
 	// trim first line if it's blank
 	if lines.len > 0 && lines.first().is_blank() {
-		lines = lines[1..]
+		lines = unsafe { lines[1..] }
 	}
 
 	// trim last line if it's blank
 	if lines.len > 0 && lines.last().is_blank() {
-		lines = lines[..lines.len - 1]
+		lines = unsafe { lines[..lines.len - 1] }
 	}
 
 	mut trimmed_lines := []string{cap: lines.len}

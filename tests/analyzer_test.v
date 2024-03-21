@@ -1,15 +1,16 @@
-module main
+module tests
 
 import os
 import term
 import testing
 
-fn main() {
+fn test_all() {
 	defer {
 		os.rmdir_all(testing.temp_path) or {
 			println('Failed to remove temp path: ${testing.temp_path}')
 		}
 	}
+	os.chdir(os.join_path(@VMODROOT, 'tests'))!
 
 	mut testers := []testing.Tester{}
 

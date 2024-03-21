@@ -29,4 +29,7 @@ fn calls() {
 
 	func1 := fn (i int) int {}
 	expr_type(func1(), 'int')
+
+	func2 := fn (i int) int {}()
+	expr_type(func2, 'int')
 }
