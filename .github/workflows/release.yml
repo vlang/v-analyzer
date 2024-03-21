@@ -139,15 +139,13 @@ jobs:
         with:
           tag_name: ${{ env.RELEASE_TAG }}
 
-      - name: Generate release body
+      - name: Generate development release body
         if: github.ref_type != 'tag'
         id: generate_body
         shell: bash
         run: |
-          if [ $GITHUB_REF_TYPE != tag ]; then
-            now=$(date -u +'%Y-%m-%d %H:%M:%S UTC')
-            echo "BODY=Generated on <samp>$now</samp> from commit ${{ github.sha }}." >> "$GITHUB_OUTPUT"
-          fi
+          now=$(date -u +'%Y-%m-%d %H:%M:%S UTC')
+          echo "BODY=Generated on <samp>$now</samp> from commit ${{ github.sha }}." >> "$GITHUB_OUTPUT"
 
       - name: Release development version
         if: github.ref_type != 'tag'
