@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - '*'
     paths-ignore:
       - '**/test/**'
       - '**/tests/**'
@@ -17,27 +19,31 @@ on:
 permissions:
   contents: write
 
+env:
+  PROJECT_NAME: v-analyzer
+
 jobs:
-  release:
+  build-v-analyzer:
     strategy:
       matrix:
+        target: [linux-x86_64, darwin-x86_64, darwin-arm64, windows-x86_64]
+        build_type: [dev, debug, release]
         include:
-          - os: windows-latest
-            target: windows-x86_64
+          - target: windows-x86_64
+            os: windows-latest
             bin_ext: .exe
-          - os: ubuntu-20.04
-            target: linux-x86_64
-          - os: macos-latest
-            target: darwin-x86_64
-          - os: macos-latest
-            target: darwin-arm64
+          - target: linux-x86_64
+            os: ubuntu-20.04
+          - target: darwin-x86_64
+            os: macos-latest
+          - target: darwin-arm64
+            os: macos-latest
             vflags: -d cross_compile_macos_arm64
+          - build_type: release
+            cflags: -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -frename-registers -ftree-vectorize
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
-    env:
-      VFLAGS: ${{ matrix.vflags }}
-      ARTIFACT: v-analyzer-${{ matrix.target }}
 
     steps:
       - name: Install V
@@ -50,26 +56,77 @@ jobs:
         with:
           submodules: true
 
-      - name: Compile
+      - name: Compile ${{ matrix.build_type }} build
+        id: compile
+        env:
+          CFLAGS: ${{ matrix.cflags }} -pipe
+          VFLAGS: ${{ matrix.vflags }}
         shell: bash
         run: |
-          [ $GITHUB_REF_TYPE == tag ] && mode="release" || mode="debug"
-          v run build.vsh $mode
+          v run build.vsh ${{ matrix.build_type }}
+          if [[ "${{ matrix.os }}" != "macos-latest" ]]; then
+            strip --strip-unneeded ./bin/v-analyzer${{ matrix.bin_ext }}
+            strip --discard-all ./bin/v-analyzer${{ matrix.bin_ext }}
+          fi
+          if [[ "${{ matrix.build_type }}" != "release" ]]; then
+            echo "SUFFIX=-${{ matrix.build_type }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create artifact
+        env:
+          ARTIFACT_NAME: ${{ env.PROJECT_NAME }}-${{ matrix.target }}${{ steps.compile.outputs.SUFFIX }}
+        shell: bash
+        run: 7z a -tzip ${{ env.ARTIFACT_NAME }}.zip ./bin/v-analyzer${{ matrix.bin_ext }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
+        env:
+          ARTIFACT_NAME: ${{ env.PROJECT_NAME }}-${{ matrix.target }}${{ steps.compile.outputs.SUFFIX }}
         with:
-          name: ${{ env.ARTIFACT }}
-          path: ./bin/v-analyzer${{ matrix.bin_ext }}
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACT_NAME }}.zip
 
-      - name: Prepare release
+  build-vscode:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Checkout v-analyzer
+        uses: actions/checkout@v4
+
+      - name: Compile
+        id: compile
         shell: bash
         run: |
-          7z a -tzip ${{ env.ARTIFACT }}.zip ./bin/v-analyzer${{ matrix.bin_ext }}
-          if [ $GITHUB_REF_TYPE != tag ]; then
-            now=$(date -u +'%Y-%m-%d %H:%M:%S UTC')
-            echo "BODY=Generated on <samp>$now</samp> from commit ${{ github.sha }}." >> $GITHUB_ENV
-          fi
+          pushd editors/code
+          version=$(sed -E -n 's/^\s+"version": "([^"]+)".*/\1/gp' package.json)
+          echo "VERSION=$version" >> "$GITHUB_OUTPUT"
+          npm install
+          npm run package
+          popd
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        env:
+          ARTIFACT_NAME: vscode-${{ env.PROJECT_NAME }}-${{ steps.compile.outputs.VERSION }}
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: editors/code/${{ env.ARTIFACT_NAME }}.vsix
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [build-v-analyzer, build-vscode]
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ env.PROJECT_NAME }}
+          merge-multiple: true
 
       - name: Update nightly tag
         if: github.ref_type != 'tag'
@@ -79,13 +136,21 @@ jobs:
         with:
           tag_name: nightly
 
+      - name: Generate development release body
+        if: github.ref_type != 'tag'
+        id: generate_body
+        shell: bash
+        run: |
+          now=$(date -u +'%Y-%m-%d %H:%M:%S UTC')
+          echo "BODY=Generated on <samp>$now</samp> from commit ${{ github.sha }}." >> "$GITHUB_OUTPUT"
+
       - name: Release development version
         if: github.ref_type != 'tag'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ${{ env.ARTIFACT }}.zip
+          artifacts: ${{ env.PROJECT_NAME }}/*
           tag: nightly
-          body: ${{ env.BODY }}
+          body: ${{ steps.generate_body.outputs.BODY }}
           name: v-analyzer development build
           allowUpdates: true
           prerelease: true
@@ -94,7 +159,7 @@ jobs:
         if: github.ref_type == 'tag'
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ${{ env.ARTIFACT }}.zip
+          artifacts: ${{ env.PROJECT_NAME }}/*
           allowUpdates: true
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
