@@ -18,7 +18,7 @@ const PREC = {
   or: 1,
   resolve: 1,
   composite_literal: -1,
-  strictly_expression_list: -3,
+  strictly_expression_list: -2,
 };
 
 const multiplicative_operators = ["*", "/", "%", "<<", ">>", ">>>", "&", "&^"];
@@ -578,7 +578,14 @@ module.exports = grammar({
       prec.dynamic(2, seq(token.immediate("["), comma_sep1($.plain_type), "]")),
 
     argument_list: ($) =>
-      seq("(", repeat(seq($.argument, optional(list_separator))), ")"),
+      seq(
+        "(",
+        choice(
+          repeat(seq($.argument, optional(list_separator))),
+          seq("|", comma_sep($.identifier), "|", $._expression_without_blocks),
+        ),
+        ")",
+      ),
 
     argument: ($) =>
       choice(
@@ -1505,14 +1512,23 @@ module.exports = grammar({
   },
 });
 
+/**
+ * @param {RuleOrLiteral} rule
+ */
 function comp_time(rule) {
   return seq("$", rule);
 }
 
+/**
+ * @param {RuleOrLiteral} rules
+ */
 function comma_sep1(rules) {
   return seq(rules, repeat(seq(",", rules)));
 }
 
+/**
+ * @param {RuleOrLiteral} rule
+ */
 function comma_sep(rule) {
   return optional(comma_sep1(rule));
 }

@@ -2321,7 +2321,7 @@
     },
     "strictly_expression_list": {
       "type": "PREC",
-      "value": -3,
+      "value": -2,
       "content": {
         "type": "SEQ",
         "members": [
@@ -2677,17 +2677,17 @@
           "value": "("
         },
         {
-          "type": "REPEAT",
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "argument"
-              },
-              {
-                "type": "CHOICE",
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "REPEAT",
+              "content": {
+                "type": "SEQ",
                 "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "argument"
+                  },
                   {
                     "type": "CHOICE",
                     "members": [
@@ -2698,38 +2698,93 @@
                             "type": "CHOICE",
                             "members": [
                               {
-                                "type": "STRING",
-                                "value": "\n"
+                                "type": "CHOICE",
+                                "members": [
+                                  {
+                                    "type": "STRING",
+                                    "value": "\n"
+                                  },
+                                  {
+                                    "type": "STRING",
+                                    "value": "\r"
+                                  },
+                                  {
+                                    "type": "STRING",
+                                    "value": "\r\n"
+                                  }
+                                ]
                               },
                               {
                                 "type": "STRING",
-                                "value": "\r"
-                              },
-                              {
-                                "type": "STRING",
-                                "value": "\r\n"
+                                "value": ";"
                               }
                             ]
                           },
                           {
                             "type": "STRING",
-                            "value": ";"
+                            "value": ","
                           }
                         ]
                       },
                       {
-                        "type": "STRING",
-                        "value": ","
+                        "type": "BLANK"
                       }
                     ]
-                  },
-                  {
-                    "type": "BLANK"
                   }
                 ]
               }
-            ]
-          }
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "|"
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "identifier"
+                        },
+                        {
+                          "type": "REPEAT",
+                          "content": {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "STRING",
+                                "value": ","
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "identifier"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "STRING",
+                  "value": "|"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_expression_without_blocks"
+                }
+              ]
+            }
+          ]
         },
         {
           "type": "STRING",

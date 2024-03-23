@@ -568,3 +568,64 @@ foo(...name)
           (spread_expression
             (reference_expression
               (identifier))))))))
+
+================================================================================
+Call short lambda
+================================================================================
+foo(|| println(''))
+foo(|a| println(a))
+foo(|a, b| println('${a}${b}'))
+--------------------------------------------------------------------------------
+
+(source_file
+  (simple_statement
+    (call_expression
+      (reference_expression
+        (identifier))
+      (argument_list
+        (call_expression
+          (reference_expression
+            (identifier))
+          (argument_list
+            (argument
+              (literal
+                (interpreted_string_literal))))))))
+  (simple_statement
+    (call_expression
+      (reference_expression
+        (identifier))
+      (argument_list
+        (identifier)
+        (call_expression
+          (reference_expression
+            (identifier))
+          (argument_list
+            (argument
+              (reference_expression
+                (identifier))))))))
+  (simple_statement
+    (call_expression
+      (reference_expression
+        (identifier))
+      (argument_list
+        (identifier)
+        (identifier)
+        (call_expression
+          (reference_expression
+            (identifier))
+          (argument_list
+            (argument
+              (literal
+                (interpreted_string_literal
+                  (string_interpolation
+                    (interpolation_opening)
+                    (interpolation_expression
+                      (reference_expression
+                        (identifier)))
+                    (interpolation_closing))
+                  (string_interpolation
+                    (interpolation_opening)
+                    (interpolation_expression
+                      (reference_expression
+                        (identifier)))
+                    (interpolation_closing)))))))))))
