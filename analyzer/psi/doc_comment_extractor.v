@@ -18,8 +18,16 @@ pub fn extract_doc_comment(el PsiElement) string {
 			break
 		}
 
-		comments << comment
-		comment = comment.prev_sibling() or { break }
+		if prev := comment.prev_sibling() {
+			if prev.node.start_point().row == comment_start_line {
+				break
+			}
+			comments << comment
+			comment = prev
+		} else {
+			comments << comment
+			break
+		}
 	}
 
 	comments.reverse_in_place()
