@@ -105,8 +105,20 @@ jobs:
           pushd editors/code
           version=$(sed -E -n 's/^\s+"version": "([^"]+)".*/\1/gp' package.json)
           echo "VERSION=$version" >> "$GITHUB_OUTPUT"
+          retry=0
+          echo "[+] Install dependencies"
           npm install
-          npm run package
+          echo "[+] Package start"
+          while [[ ${retry} < 3 ]]; do
+            if npm run package; then
+              echo "[+] Package done"
+              break
+            else
+              sleep 1
+              let retry++
+              echo "[+] Package fail, ${retry} retry"
+            fi
+          done
           popd
 
       - name: Upload artifact
