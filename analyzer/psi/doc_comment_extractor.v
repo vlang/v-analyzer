@@ -32,14 +32,14 @@ pub fn extract_doc_comment(el PsiElement) string {
 			if next is Comment {
 				comment_start_line := next.node.start_point().row
 				if comment_start_line == el_start_line {
-					field_eol_comment = '... ' + next.get_text().trim_string_left('//').trim_space()
+					field_eol_comment = next.get_text().trim_string_left('//').trim_space()
 				}
 			}
 		}
 	}
 
 	if comments.len == 0 {
-		return field_eol_comment
+		return if field_eol_comment != '' { '... ' + field_eol_comment } else { '' }
 	}
 
 	comments.reverse_in_place()
@@ -100,6 +100,6 @@ pub fn extract_doc_comment(el PsiElement) string {
 		}
 	}
 
-	res_str := res.str() + if field_eol_comment != '' { '\n\n' + field_eol_comment } else { '' }
+	res_str := res.str() + if field_eol_comment != '' { '\n\n... ' + field_eol_comment } else { '' }
 	return res_str
 }
