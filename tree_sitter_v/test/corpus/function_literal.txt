@@ -579,8 +579,7 @@ fn test_with_value() {
                 (element_list
                   (keyed_element
                     (field_name
-                      (reference_expression
-                        (identifier)))
+                      (identifier))
                     (literal
                       (interpreted_string_literal)))))))))
       (simple_statement

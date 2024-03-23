@@ -582,10 +582,13 @@ module.exports = grammar({
         "(",
         choice(
           repeat(seq($.argument, optional(list_separator))),
-          seq("|", comma_sep($.identifier), "|", $._expression_without_blocks),
+          $.short_lambda,
         ),
         ")",
       ),
+
+    short_lambda: ($) =>
+      seq("|", comma_sep($.identifier), "|", $._expression_without_blocks),
 
     argument: ($) =>
       choice(
@@ -634,14 +637,14 @@ module.exports = grammar({
       ),
 
     short_element_list: ($) =>
-      repeat1(seq($.element, optional(list_separator))),
-
-    element: ($) => $._expression,
+      repeat1(seq(alias($._expression, $.element), optional(list_separator))),
 
     keyed_element: ($) =>
-      seq(field("key", $.field_name), ":", field("value", $._expression)),
-
-    field_name: ($) => $.reference_expression,
+      seq(
+        field("key", alias($.reference_expression, $.field_name)),
+        ":",
+        field("value", $._expression),
+      ),
 
     function_literal: ($) =>
       prec.right(
