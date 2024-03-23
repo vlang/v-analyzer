@@ -32,15 +32,25 @@ jobs:
           - target: windows-x86_64
             os: windows-latest
             bin_ext: .exe
+            cc: gcc
+            cflags: -ffunction-sections -fdata-sections
+            ldflags: -Wl,--gc-sections
           - target: linux-x86_64
             os: ubuntu-20.04
+            cc: gcc
+            cflags: -ffunction-sections -fdata-sections
+            ldflags: -Wl,--gc-sections
           - target: darwin-x86_64
             os: macos-latest
+            cc: clang
+            cflags: -ffunction-sections -fdata-sections
+            ldflags: -Wl,-dead_strip
           - target: darwin-arm64
             os: macos-latest
+            cc: clang
+            cflags: -ffunction-sections -fdata-sections
+            ldflags: -Wl,-dead_strip
             vflags: -d cross_compile_macos_arm64
-          - build_type: release
-            cflags: -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -frename-registers -ftree-vectorize
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -59,14 +69,15 @@ jobs:
       - name: Compile ${{ matrix.build_type }} build
         id: compile
         env:
-          CFLAGS: ${{ matrix.cflags }} -pipe
-          VFLAGS: ${{ matrix.vflags }}
+          CFLAGS: ${{ matrix.cflags }}
+          LDFLAGS: ${{ matrix.ldflags }}
+          VFLAGS: ${{ matrix.vflags }} -cc ${{ matrix.cc }} -showcc
         shell: bash
         run: |
+          ${{ matrix.cc }} --version
           v run build.vsh ${{ matrix.build_type }}
           if [[ "${{ matrix.os }}" != "macos-latest" ]]; then
             strip --strip-unneeded ./bin/v-analyzer${{ matrix.bin_ext }}
-            strip --discard-all ./bin/v-analyzer${{ matrix.bin_ext }}
           fi
           if [[ "${{ matrix.build_type }}" != "release" ]]; then
             echo "SUFFIX=-${{ matrix.build_type }}" >> "$GITHUB_OUTPUT"
