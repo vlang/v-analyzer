@@ -11,6 +11,11 @@ module bindings
 #flag @VMODROOT/tree_sitter_v/bindings/core/lib/src/lib.c
 #include "tree_sitter/api.h"
 
+#flag -I @VMODROOT/tree_sitter_v/bindings
+#flag -I @VMODROOT/tree_sitter_v/src
+#flag @VMODROOT/tree_sitter_v/src/parser.c
+#include "bindings.h"
+
 pub enum TSVInputEncoding {
 	utf8
 	utf16
@@ -27,8 +32,12 @@ mut:
 }
 
 @[typedef]
+pub struct C.TSLanguage {}
+
+@[typedef]
 pub struct C.TSParser {}
 
+fn C.tree_sitter_v() &C.TSLanguage
 fn C.ts_parser_new() &C.TSParser
 fn C.ts_parser_set_language(parser &C.TSParser, language &C.TSLanguage) bool
 fn C.ts_parser_parse_string(parser &C.TSParser, const_old_tree &C.TSTree, str &char, len u32) &C.TSTree
