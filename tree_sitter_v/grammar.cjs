@@ -578,17 +578,7 @@ module.exports = grammar({
       prec.dynamic(2, seq(token.immediate("["), comma_sep1($.plain_type), "]")),
 
     argument_list: ($) =>
-      seq(
-        "(",
-        optional(
-          seq(
-            choice($.argument),
-            repeat(seq(list_separator, choice($.argument))),
-            optional(list_separator),
-          ),
-        ),
-        ")",
-      ),
+      seq("(", repeat(seq($.argument, optional(list_separator))), ")"),
 
     argument: ($) =>
       choice(
@@ -1032,76 +1022,90 @@ module.exports = grammar({
       ),
 
     c_string_literal: ($) =>
-      choice(
-        seq(
-          $.__c_single_quote,
-          repeat(
-            choice(
-              token.immediate(prec(1, /[^'\\$]+/)),
-              $.escape_sequence,
-              $.string_interpolation,
+      prec(
+        1,
+        choice(
+          seq(
+            $.__c_single_quote,
+            repeat(
+              choice(
+                token.immediate(prec.right(1, /[^'\\$]+/)),
+                $.escape_sequence,
+                $.string_interpolation,
+              ),
             ),
+            $.__single_quote,
           ),
-          $.__single_quote,
-        ),
-        seq(
-          $.__c_double_quote,
-          repeat(
-            choice(
-              token.immediate(prec(1, /[^"\\$]+/)),
-              $.escape_sequence,
-              $.string_interpolation,
+          seq(
+            $.__c_double_quote,
+            repeat(
+              choice(
+                token.immediate(prec.right(1, /[^"\\$]+/)),
+                $.escape_sequence,
+                $.string_interpolation,
+              ),
             ),
+            $.__double_quote,
           ),
-          $.__double_quote,
         ),
       ),
 
     raw_string_literal: ($) =>
-      choice(
-        seq(
-          $.__r_single_quote,
-          repeat(token.immediate(prec(1, /[^'\\]+/))),
-          $.__single_quote,
-        ),
-        seq(
-          $.__r_double_quote,
-          repeat(token.immediate(prec(1, /[^"\\]+/))),
-          $.__double_quote,
+      prec(
+        1,
+        choice(
+          seq(
+            $.__r_single_quote,
+            repeat(token.immediate(prec.right(1, /[^'\\]+/))),
+            $.__single_quote,
+          ),
+          seq(
+            $.__r_double_quote,
+            repeat(token.immediate(prec.right(1, /[^"\\]+/))),
+            $.__double_quote,
+          ),
         ),
       ),
 
     interpreted_string_literal: ($) =>
-      choice(
-        seq(
-          $.__single_quote,
-          repeat(
-            choice(
-              token.immediate(prec(1, /[^'\\$]+/)),
-              $.escape_sequence,
-              $.string_interpolation,
+      prec(
+        1,
+        choice(
+          seq(
+            $.__single_quote,
+            repeat(
+              choice(
+                token.immediate(prec.right(1, /[^'\\$]+/)),
+                $.escape_sequence,
+                $.string_interpolation,
+              ),
             ),
+            $.__single_quote,
           ),
-          $.__single_quote,
-        ),
-        seq(
-          $.__double_quote,
-          repeat(
-            choice(
-              token.immediate(prec(1, /[^"\\$]+/)),
-              $.escape_sequence,
-              $.string_interpolation,
+          seq(
+            $.__double_quote,
+            repeat(
+              choice(
+                token.immediate(prec.right(1, /[^"\\$]+/)),
+                $.escape_sequence,
+                $.string_interpolation,
+              ),
             ),
+            $.__double_quote,
           ),
-          $.__double_quote,
         ),
       ),
 
     string_interpolation: ($) =>
       seq(
         alias($.__dolcbr, $.interpolation_opening),
-        alias($._expression, $.interpolation_expression),
-        optional($.format_specifier),
+        choice(
+          repeat(alias($._expression, $.interpolation_expression)),
+          seq(
+            alias($._expression, $.interpolation_expression),
+            $.format_specifier,
+          ),
+        ),
         alias($.__rcbr, $.interpolation_closing),
       ),
 
@@ -1120,7 +1124,7 @@ module.exports = grammar({
       ),
 
     pseudo_compile_time_identifier: ($) =>
-      seq("@", alias(/[A-Z][A-Z0-9_]+/, $.identifier)),
+      token(seq("@", alias(token.immediate(/[A-Z][A-Z0-9_]+/), $.identifier))),
 
     identifier: () =>
       token(
