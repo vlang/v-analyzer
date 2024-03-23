@@ -27,18 +27,18 @@ pub fn extract_doc_comment(el PsiElement) string {
 	}
 
 	if comments.len == 0 {
-		if el !is FieldDeclaration {
-			return ''
-		}
-		if next := el.next_sibling() {
-			if next is Comment {
-				func_start_line := el.node.start_point().row
-				comment_start_line := next.node.start_point().row
-				if comment_start_line == func_start_line {
-					return next.get_text().trim_string_left('//').trim_space()
+		if el is FieldDeclaration {
+			if next := el.next_sibling() {
+				if next is Comment {
+					func_start_line := el.node.start_point().row
+					comment_start_line := next.node.start_point().row
+					if comment_start_line == func_start_line {
+						return next.get_text().trim_string_left('//').trim_space()
+					}
 				}
 			}
 		}
+		return ''
 	}
 
 	comments.reverse_in_place()
