@@ -26,18 +26,20 @@ pub fn extract_doc_comment(el PsiElement) string {
 		comment = line
 	}
 
-	if comments.len == 0 {
-		if el is FieldDeclaration {
-			if next := el.next_sibling() {
-				if next is Comment {
-					comment_start_line := next.node.start_point().row
-					if comment_start_line == el_start_line {
-						return next.get_text().trim_string_left('//').trim_space()
-					}
+	mut field_eol_comment := ''
+	if el is FieldDeclaration {
+		if next := el.next_sibling() {
+			if next is Comment {
+				comment_start_line := next.node.start_point().row
+				if comment_start_line == el_start_line {
+					field_eol_comment = '... ' + next.get_text().trim_string_left('//').trim_space()
 				}
 			}
 		}
-		return ''
+	}
+
+	if comments.len == 0 {
+		return field_eol_comment
 	}
 
 	comments.reverse_in_place()
@@ -98,5 +100,6 @@ pub fn extract_doc_comment(el PsiElement) string {
 		}
 	}
 
-	return res.str()
+	res_str := res.str() + if field_eol_comment != '' { '\n\n' + field_eol_comment } else { '' }
+	return res_str
 }
