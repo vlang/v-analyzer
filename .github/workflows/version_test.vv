@@ -1,0 +1,19 @@
+import os
+import v.vmod
+
+fn test_version() {
+	if os.getenv('CI') != 'true' {
+		eprintln('WARNING: expecting usage in combination with CI workflow.')
+	}
+
+	git_ref := os.getenv('GITHUB_WORKFLOW_SHA').trim_space()[..7]
+	manifest := vmod.decode(@VMOD_FILE)!
+	assert manifest.name == 'v-analyzer'
+
+	// Move out of the project directory to ensure that we exclude the possiblity of
+	// deriving the commit reference from v-analyzer's directory at program startup.
+	os.chdir('/tmp/')!
+	analyzer_version := os.execute_opt('v-analyzer --version')!.output.all_after_last(' ').trim_space()
+
+	assert '${manifest.version}.${git_ref}' == analyzer_version
+}
