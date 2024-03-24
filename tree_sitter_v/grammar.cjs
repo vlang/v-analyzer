@@ -588,7 +588,7 @@ module.exports = grammar({
       ),
 
     short_lambda: ($) =>
-      seq("|", comma_sep($.identifier), "|", $._expression_without_blocks),
+      seq("|", comma_sep($.reference_expression), "|", $._expression_without_blocks),
 
     argument: ($) =>
       choice(

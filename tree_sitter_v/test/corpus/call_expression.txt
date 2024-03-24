@@ -581,7 +581,8 @@ foo(|a, b| println('${a}${b}'))
         (identifier))
       (argument_list
         (short_lambda
-          (identifier)
+          (reference_expression
+            (identifier))
           (call_expression
             (reference_expression
               (identifier))
@@ -595,8 +596,10 @@ foo(|a, b| println('${a}${b}'))
         (identifier))
       (argument_list
         (short_lambda
-          (identifier)
-          (identifier)
+          (reference_expression
+            (identifier))
+          (reference_expression
+            (identifier))
           (call_expression
             (reference_expression
               (identifier))

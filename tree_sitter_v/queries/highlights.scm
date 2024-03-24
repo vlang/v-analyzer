@@ -16,8 +16,10 @@
   receiver: (receiver)
   name: (identifier) @method)
 
+(short_lambda
+  (reference_expression) @parameter)
 (call_expression
- name: (selector_expression
+  name: (selector_expression
     field: (reference_expression) @method))
 
 (type_reference_expression) @type

@@ -2761,7 +2761,7 @@
               "members": [
                 {
                   "type": "SYMBOL",
-                  "name": "identifier"
+                  "name": "reference_expression"
                 },
                 {
                   "type": "REPEAT",
@@ -2774,7 +2774,7 @@
                       },
                       {
                         "type": "SYMBOL",
-                        "name": "identifier"
+                        "name": "reference_expression"
                       }
                     ]
                   }
