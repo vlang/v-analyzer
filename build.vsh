@@ -6,15 +6,10 @@
 // By default, just `v build.vsh` will use debug mode.
 import os
 import cli
-import time
 import term
-import v.vmod
+import metadata
 
-const version = vmod.decode(@VMOD_FILE) or { panic(err) }.version
 const bin_path = './bin/v-analyzer' + $if windows { '.exe' } $else { '' }
-
-const build_commit = os.execute('git rev-parse --short HEAD').output.trim_space()
-const build_datetime = time.now().format_ss()
 
 enum ReleaseMode {
 	release
@@ -63,7 +58,7 @@ fn prepare_output_dir() {
 }
 
 fn build(mode ReleaseMode, explicit_debug bool) {
-	println('Building v-analyzer at commit: ${build_commit}, build time: ${build_datetime} ...')
+	println('Building v-analyzer at commit: ${metadata.build_commit}, build time: ${metadata.build_datetime} ...')
 
 	prepare_output_dir()
 	println('${term.green('✓')} Prepared output directory')
@@ -91,12 +86,9 @@ fn build(mode ReleaseMode, explicit_debug bool) {
 
 // main program:
 
-os.setenv('BUILD_DATETIME', build_datetime, true)
-os.setenv('BUILD_COMMIT', build_commit, true)
-
 mut cmd := cli.Command{
 	name: 'v-analyzer-builder'
-	version: version
+	version: metadata.full_version
 	description: 'Builds the v-analyzer binary.'
 	posix_mode: true
 	execute: fn (_ cli.Command) ! {
