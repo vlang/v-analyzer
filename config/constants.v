@@ -33,7 +33,7 @@ pub const analyzer_caches_path = os.join_path(os.cache_dir(), 'v-analyzer')
 
 // analyzer_stubs_path is the path to the directory containing the
 // unpacked stub files for the analyzer.
-pub const analyzer_stubs_path = os.join_path(analyzer_configs_path, 'metadata')
+pub const analyzer_stubs_path = os.join_path(analyzer_caches_path, 'metadata')
 
 // analyzer_stubs_version_path is the path to the file containing the version of the stubs.
 pub const analyzer_stubs_version_path = os.join_path(analyzer_stubs_path, 'version.txt')
