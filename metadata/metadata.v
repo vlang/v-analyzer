@@ -43,7 +43,7 @@ pub fn embed_fs() EmbedFS {
 	files << $embed_file('stubs/attributes/Flag.v', .zlib)
 	files << $embed_file('stubs/attributes/Noreturn.v', .zlib)
 	files << $embed_file('stubs/attributes/Manualfree.v', .zlib)
-	files << $embed_file('stubs/implicit.vv', .zlib)
+	files << $embed_file('stubs/implicit.v', .zlib)
 	files << $embed_file('stubs/compile_time.vv', .zlib)
 	files << $embed_file('stubs/c_decl.vv', .zlib)
 	files << $embed_file('stubs/errors.vv', .zlib)
