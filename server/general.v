@@ -229,6 +229,7 @@ fn (mut ls LanguageServer) setup() {
 	}
 
 	if ls.cache_dir == '' {
+		// if custom cache dir is not set, use default
 		ls.setup_cache_dir()
 	}
 
@@ -236,23 +237,54 @@ fn (mut ls LanguageServer) setup() {
 }
 
 fn (mut ls LanguageServer) setup_cache_dir() {
-	if !os.exists(config.analyzer_caches_path) {
-		os.mkdir_all(config.analyzer_caches_path) or {
-			ls.client.log_message('Failed to create analyzer caches directory: ${err}',
-				.error)
+	if os.exists(config.analyzer_caches_path) {
+		if os.exists(config.analyzer_caches_version_path) {
+			version := os.read_file(config.analyzer_caches_version_path) or {
+				ls.client.log_message('Failed to read caches version: ${err}', .error)
+
+				loglib.with_fields({
+					'err': err.str()
+				}).error('Failed to read caches version')
+				'0'
+			}
+
+			if version.trim_space() == metadata.build_commit {
+				return
+			}
+		}
+
+		ls.client.log_message('Caches version mismatch, creating new cache', .info)
+		loglib.info('Caches version mismatch, creating new cache')
+
+		os.rmdir_all(config.analyzer_caches_path) or {
+			ls.client.log_message('Failed to remove old caches: ${err}', .error)
 
 			loglib.with_fields({
 				'err': err.str()
-			}).error('Failed to create analyzer caches directory')
-			return
+			}).error('Failed to remove old caches')
 		}
 	}
 
-	// if custom cache dir is not set, use default
 	ls.cache_dir = config.analyzer_caches_path
-
 	ls.client.log_message('Using "${ls.cache_dir}" as cache dir', .info)
 	loglib.info('Using "${ls.cache_dir}" as cache dir')
+
+	os.mkdir_all(config.analyzer_caches_path) or {
+		ls.client.log_message('Failed to create caches directory: ${err}', .error)
+
+		loglib.with_fields({
+			'err': err.str()
+		}).error('Failed to create caches directory')
+		return
+	}
+
+	os.write_file(config.analyzer_caches_version_path, metadata.build_commit) or {
+		ls.client.log_message('Failed to write caches version: ${err}', .error)
+
+		loglib.with_fields({
+			'err': err.str()
+		}).error('Failed to write caches version')
+	}
 }
 
 fn (mut ls LanguageServer) find_config() string {

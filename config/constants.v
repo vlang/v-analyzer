@@ -31,6 +31,10 @@ pub const analyzer_global_config_path = os.join_path(analyzer_configs_path, anal
 // cache files for the analyzer.
 pub const analyzer_caches_path = os.join_path(os.cache_dir(), 'v-analyzer')
 
+// analyzer_caches_path is the path to the directory containing the
+// cache files for the analyzer.
+pub const analyzer_caches_version_path = os.join_path(analyzer_caches_path, 'version.txt')
+
 // analyzer_stubs_path is the path to the directory containing the
 // unpacked stub files for the analyzer.
 pub const analyzer_stubs_path = os.join_path(analyzer_configs_path, 'metadata')
