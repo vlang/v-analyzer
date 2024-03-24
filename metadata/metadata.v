@@ -1,7 +1,14 @@
 module metadata
 
 import os
+import v.vmod
 import v.embed_file
+import time
+
+pub const manifest = vmod.decode(@VMOD_FILE) or { panic(err) }
+pub const build_commit = os.execute('git rev-parse --short HEAD').output.trim_space()
+pub const build_datetime = time.now().format_ss()
+pub const full_version = manifest.version + '.' + build_commit
 
 struct EmbedFS {
 pub mut:

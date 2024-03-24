@@ -13,11 +13,6 @@ import server.protocol
 import server.semantic
 import server.progress
 import server.intentions
-import v.vmod
-
-pub const manifest = vmod.decode(@VMOD_FILE) or { panic(err) }
-pub const build_datetime = $env('BUILD_DATETIME')
-pub const build_commit = $env('BUILD_COMMIT')
 
 // initialize sends the server capabilities to the client
 pub fn (mut ls LanguageServer) initialize(params lsp.InitializeParams, mut wr ResponseWriter) lsp.InitializeResult {
@@ -90,8 +85,8 @@ pub fn (mut ls LanguageServer) initialize(params lsp.InitializeParams, mut wr Re
 			}
 		}
 		server_info: lsp.ServerInfo{
-			name: server.manifest.name
-			version: server.manifest.version
+			name: metadata.manifest.name
+			version: metadata.manifest.version
 		}
 	}
 }
@@ -421,11 +416,11 @@ fn (mut ls LanguageServer) print_info(process_id int, client_info lsp.ClientInfo
 	} else {
 		'Unknown'
 	}
-	ls.client.log_message('v-analyzer version: ${server.manifest.version}, commit: ${server.build_commit}, OS: ${os.user_os()} x${arch}',
+	ls.client.log_message('v-analyzer version: ${metadata.manifest.version}, commit: ${metadata.build_commit}, OS: ${os.user_os()} x${arch}',
 		.info)
 	ls.client.log_message('v-analyzer executable path: ${os.executable()}', .info)
 	ls.client.log_message('v-analyzer build with V ${@VHASH}', .info)
-	ls.client.log_message('v-analyzer build at ${server.build_datetime}', .info)
+	ls.client.log_message('v-analyzer build at ${metadata.build_datetime}', .info)
 	ls.client.log_message('Client / Editor: ${client_name} (PID: ${process_id})', .info)
 
 	loglib.with_fields({
@@ -435,7 +430,7 @@ fn (mut ls LanguageServer) print_info(process_id int, client_info lsp.ClientInfo
 		'arch':         'x${arch}'
 		'executable':   os.executable()
 		'build_with':   @VHASH
-		'build_at':     server.build_datetime
-		'build_commit': server.build_commit
+		'build_at':     metadata.build_datetime
+		'build_commit': metadata.build_commit
 	}).info('v-analyzer started')
 }

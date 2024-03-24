@@ -11,11 +11,7 @@ import jsonrpc
 import streams
 import analyzer
 import lsp.log
-import v.vmod
-
-const manifest = vmod.decode(@VMOD_FILE) or { panic(err) }
-
-const full_version = manifest.version + '.' + server.build_commit
+import metadata
 
 // default_tcp_port is default TCP port that the analyzer uses to connect to the socket
 // when the --socket flag is passed at startup.
@@ -90,9 +86,9 @@ fn setup_logger(to_file bool) {
 
 fn main() {
 	mut cmd := cli.Command{
-		name: manifest.name
-		version: full_version
-		description: manifest.description
+		name: metadata.manifest.name
+		version: metadata.full_version
+		description: metadata.manifest.description
 		execute: run
 		posix_mode: true
 	}
@@ -128,7 +124,7 @@ fn main() {
 		description: 'Checks for v-analyzer updates.'
 		execute: check_updates_cmd
 		posix_mode: true
-		version: full_version
+		version: metadata.full_version
 	})
 
 	cmd.add_flags([
