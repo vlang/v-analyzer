@@ -109,6 +109,7 @@ jobs:
           echo "[+] Install dependencies"
           npm install
           echo "[+] Package start"
+          set +e
           while [[ ${retry} < 3 ]]; do
             if npm run package; then
               echo "[+] Package done"
@@ -119,6 +120,7 @@ jobs:
               echo "[+] Package fail, ${retry} retry"
             fi
           done
+          set -e
           popd
 
       - name: Upload artifact
