@@ -8,7 +8,7 @@ import os
 import cli
 import term
 import time
-import metadata
+import src.metadata
 
 const bin_path = './bin/v-analyzer' + $if windows { '.exe' } $else { '' }
 const build_commit = os.execute('git rev-parse --short HEAD').output.trim_space()
