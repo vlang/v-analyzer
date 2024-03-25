@@ -1,6 +1,7 @@
 module config
 
 import os
+import metadata
 
 // analyzer_name is the name of the analyzer.
 pub const analyzer_name = 'v-analyzer'
@@ -29,7 +30,7 @@ pub const analyzer_global_config_path = os.join_path(analyzer_configs_path, anal
 
 // analyzer_caches_path is the path to the directory containing the
 // cache files for the analyzer.
-pub const analyzer_caches_path = os.join_path(os.cache_dir(), 'v-analyzer')
+pub const analyzer_caches_path = os.join_path(os.cache_dir(), 'v-analyzer', '${metadata.build_commit}_${os.file_last_mod_unix(os.executable())}')
 
 // analyzer_stubs_path is the path to the directory containing the
 // unpacked stub files for the analyzer.
