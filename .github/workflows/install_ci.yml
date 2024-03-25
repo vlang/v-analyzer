@@ -10,6 +10,10 @@ on:
       - '**/install.vsh'
       - 'install_ci.yml'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
 jobs:
   install:
     strategy:
