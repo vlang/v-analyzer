@@ -1,8 +1,8 @@
-import bindings
+module bindings
 
 fn test_simple() {
-	mut p := bindings.new_parser[bindings.NodeType](bindings.type_factory)
-	p.set_language(bindings.language)
+	mut p := new_parser[NodeType](type_factory)
+	p.set_language(language)
 
 	code := 'fn main() {}'
 	tree := p.parse_string(source: code)
