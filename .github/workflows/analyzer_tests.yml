@@ -45,3 +45,16 @@ jobs:
 
       - name: Run tests
         run: v test .
+
+      - name: Install v-analyzer
+        if: runner.os != 'Windows'
+        run: |
+          # Build and install v-analyzer at the head ref of the submitted changes.
+          v run build.vsh
+          sudo mv ./bin/v-analyzer /usr/local/bin/v-analyzer
+          v-analyzer --version
+
+      - name: Verify version
+        # TODO: include Windows
+        if: runner.os != 'Windows'
+        run: v .github/workflows/version_test.vv

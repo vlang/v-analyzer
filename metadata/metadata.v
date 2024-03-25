@@ -3,11 +3,10 @@ module metadata
 import os
 import v.vmod
 import v.embed_file
-import time
 
 pub const manifest = vmod.decode(@VMOD_FILE) or { panic(err) }
-pub const build_commit = os.execute('git rev-parse --short HEAD').output.trim_space()
-pub const build_datetime = time.now().format_ss()
+pub const build_datetime = $env('BUILD_DATETIME')
+pub const build_commit = $env('BUILD_COMMIT')
 pub const full_version = manifest.version + '.' + build_commit
 
 struct EmbedFS {
@@ -35,7 +34,6 @@ pub fn embed_fs() EmbedFS {
 	files << $embed_file('stubs/compile_time_reflection.v', .zlib)
 	files << $embed_file('stubs/builtin_compile_time.v', .zlib)
 	files << $embed_file('stubs/channels.v', .zlib)
-	files << $embed_file('stubs/README.md', .zlib)
 	files << $embed_file('stubs/attributes/Deprecated.v', .zlib)
 	files << $embed_file('stubs/attributes/Table.v', .zlib)
 	files << $embed_file('stubs/attributes/Attribute.v', .zlib)
@@ -49,7 +47,6 @@ pub fn embed_fs() EmbedFS {
 	files << $embed_file('stubs/c_decl.v', .zlib)
 	files << $embed_file('stubs/errors.v', .zlib)
 	files << $embed_file('stubs/threads.v', .zlib)
-	files << $embed_file('v.mod', .zlib)
 
 	return EmbedFS{
 		files: files
