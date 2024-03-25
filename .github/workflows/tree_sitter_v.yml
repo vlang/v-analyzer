@@ -16,20 +16,23 @@ concurrency:
 
 jobs:
   test:
-    name: Test tree-sitter
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tree_sitter_v
 
     steps:
-      - name: Install Nodejs
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
       - name: Checkout v-analyzer
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: cd tree_sitter_v && npm update
+        run: npm update
 
       - name: Run tests
-        run: cd tree_sitter_v && npm run test
+        run: npm run test
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Verify formatting
+        run: npm run format:check
