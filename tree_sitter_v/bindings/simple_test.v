@@ -1,11 +1,8 @@
-module tests
-
-import v_tree_sitter.tree_sitter
-import tree_sitter_v
+import bindings
 
 fn test_simple() {
-	mut p := tree_sitter.new_parser[tree_sitter_v.NodeType](tree_sitter_v.type_factory)
-	p.set_language(tree_sitter_v.language)
+	mut p := bindings.new_parser[bindings.NodeType](bindings.type_factory)
+	p.set_language(bindings.language)
 
 	code := 'fn main() {}'
 	tree := p.parse_string(source: code)

@@ -1,16 +1,20 @@
-module tree_sitter
+module bindings
 
 // This file contains the bindings for C API of tree-sitter.
-// They are not indented to be used directly, but rather to be used by the
-// wrapper from "tree_sitter.v".
+// They are indented to be used by wrapper functions in "tree_sitter.v".
 //
-// See the header file "./lib/api.h" for comments for functions and structures.
+// See "core/lib/include/tree_sitter/api.h" for function references.
 
 // We directly build "lib.c" rather using the static library.
-#flag -I @VMODROOT/core/lib/include
-#flag -I @VMODROOT/core/lib/src
-#flag @VMODROOT/core/lib/src/lib.c
+#flag -I @VMODROOT/tree_sitter_v/bindings/core/lib/include
+#flag -I @VMODROOT/tree_sitter_v/bindings/core/lib/src
+#flag @VMODROOT/tree_sitter_v/bindings/core/lib/src/lib.c
 #include "tree_sitter/api.h"
+
+#flag -I @VMODROOT/tree_sitter_v/bindings
+#flag -I @VMODROOT/tree_sitter_v/src
+#flag @VMODROOT/tree_sitter_v/src/parser.c
+#include "bindings.h"
 
 pub enum TSVInputEncoding {
 	utf8
@@ -28,8 +32,12 @@ mut:
 }
 
 @[typedef]
+pub struct C.TSLanguage {}
+
+@[typedef]
 pub struct C.TSParser {}
 
+fn C.tree_sitter_v() &C.TSLanguage
 fn C.ts_parser_new() &C.TSParser
 fn C.ts_parser_set_language(parser &C.TSParser, language &C.TSLanguage) bool
 fn C.ts_parser_parse_string(parser &C.TSParser, const_old_tree &C.TSTree, str &char, len u32) &C.TSTree

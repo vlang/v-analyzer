@@ -32,4 +32,5 @@ cache
 
 # generated executables on unix:
 install
+generate_types
 cmd/v-analyzer/v-analyzer

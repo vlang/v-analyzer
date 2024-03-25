@@ -1,6 +1,6 @@
 module psi
 
-import tree_sitter_v as v
+import tree_sitter_v.bindings
 
 pub struct PsiElementImpl {
 pub:
@@ -48,7 +48,7 @@ pub fn (n &PsiElementImpl) stub_list() &StubList {
 	return n.stubs_list
 }
 
-pub fn (n &PsiElementImpl) element_type() v.NodeType {
+pub fn (n &PsiElementImpl) element_type() bindings.NodeType {
 	if stub := n.get_stub() {
 		return stub.element_type()
 	}
@@ -138,7 +138,7 @@ pub fn (n &PsiElementImpl) parent_nth(depth int) ?PsiElement {
 	return create_element(parent, n.containing_file)
 }
 
-pub fn (n &PsiElementImpl) parent_of_type(typ v.NodeType) ?PsiElement {
+pub fn (n &PsiElementImpl) parent_of_type(typ bindings.NodeType) ?PsiElement {
 	mut res := PsiElement(n)
 	for {
 		res = res.parent()?
@@ -150,7 +150,7 @@ pub fn (n &PsiElementImpl) parent_of_type(typ v.NodeType) ?PsiElement {
 	return none
 }
 
-pub fn (n &PsiElementImpl) parent_of_any_type(types ...v.NodeType) ?PsiElement {
+pub fn (n &PsiElementImpl) parent_of_any_type(types ...bindings.NodeType) ?PsiElement {
 	mut res := PsiElement(n)
 	for {
 		res = res.parent()?
@@ -163,7 +163,7 @@ pub fn (n &PsiElementImpl) parent_of_any_type(types ...v.NodeType) ?PsiElement {
 	return none
 }
 
-pub fn (n &PsiElementImpl) inside(typ v.NodeType) bool {
+pub fn (n &PsiElementImpl) inside(typ bindings.NodeType) bool {
 	mut res := PsiElement(n)
 	for {
 		res = res.parent() or { return false }
@@ -196,7 +196,7 @@ pub fn (n &PsiElementImpl) is_parent_of(element PsiElement) bool {
 	return false
 }
 
-pub fn (n &PsiElementImpl) sibling_of_type_backward(typ v.NodeType) ?PsiElement {
+pub fn (n &PsiElementImpl) sibling_of_type_backward(typ bindings.NodeType) ?PsiElement {
 	mut res := PsiElement(n)
 	for {
 		res = res.prev_sibling_or_stub()?
@@ -208,7 +208,7 @@ pub fn (n &PsiElementImpl) sibling_of_type_backward(typ v.NodeType) ?PsiElement 
 	return none
 }
 
-pub fn (n &PsiElementImpl) parent_of_type_or_self(typ v.NodeType) ?PsiElement {
+pub fn (n &PsiElementImpl) parent_of_type_or_self(typ bindings.NodeType) ?PsiElement {
 	if n.node.type_name == typ {
 		return create_element(n.node, n.containing_file)
 	}
@@ -311,7 +311,7 @@ pub fn (n &PsiElementImpl) prev_sibling() ?PsiElement {
 	return create_element(sibling, n.containing_file)
 }
 
-pub fn (n &PsiElementImpl) prev_sibling_of_type(typ v.NodeType) ?PsiElement {
+pub fn (n &PsiElementImpl) prev_sibling_of_type(typ bindings.NodeType) ?PsiElement {
 	mut res := PsiElement(n)
 	for {
 		res = res.prev_sibling_or_stub()?
@@ -335,12 +335,12 @@ pub fn (n &PsiElementImpl) prev_sibling_or_stub() ?PsiElement {
 	return n.prev_sibling()
 }
 
-pub fn (n &PsiElementImpl) find_child_by_type(typ v.NodeType) ?PsiElement {
+pub fn (n &PsiElementImpl) find_child_by_type(typ bindings.NodeType) ?PsiElement {
 	ast_node := n.node.first_node_by_type(typ)?
 	return create_element(ast_node, n.containing_file)
 }
 
-pub fn (n &PsiElementImpl) has_child_of_type(typ v.NodeType) bool {
+pub fn (n &PsiElementImpl) has_child_of_type(typ bindings.NodeType) bool {
 	if stub := n.get_stub() {
 		return stub.has_child_of_type(node_type_to_stub_type(typ))
 	}
@@ -352,7 +352,7 @@ pub fn (n &PsiElementImpl) has_child_of_type(typ v.NodeType) bool {
 	return false
 }
 
-pub fn (n &PsiElementImpl) find_child_by_type_or_stub(typ v.NodeType) ?PsiElement {
+pub fn (n &PsiElementImpl) find_child_by_type_or_stub(typ bindings.NodeType) ?PsiElement {
 	if stub := n.get_stub() {
 		child := stub.get_child_by_type(node_type_to_stub_type(typ))?
 		return child.get_psi()
@@ -367,7 +367,7 @@ pub fn (n &PsiElementImpl) find_child_by_name(name string) ?PsiElement {
 	return create_element(ast_node, n.containing_file)
 }
 
-pub fn (n &PsiElementImpl) find_children_by_type(typ v.NodeType) []PsiElement {
+pub fn (n &PsiElementImpl) find_children_by_type(typ bindings.NodeType) []PsiElement {
 	mut result := []PsiElement{}
 	mut child := n.node.first_child() or { return [] }
 	for {
@@ -379,7 +379,7 @@ pub fn (n &PsiElementImpl) find_children_by_type(typ v.NodeType) []PsiElement {
 	return result
 }
 
-pub fn (n &PsiElementImpl) find_children_by_type_or_stub(typ v.NodeType) []PsiElement {
+pub fn (n &PsiElementImpl) find_children_by_type_or_stub(typ bindings.NodeType) []PsiElement {
 	if stub := n.get_stub() {
 		return stub.get_children_by_type(node_type_to_stub_type(typ)).get_psi()
 	}
@@ -395,7 +395,7 @@ pub fn (n &PsiElementImpl) find_children_by_type_or_stub(typ v.NodeType) []PsiEl
 	return result
 }
 
-pub fn (n &PsiElementImpl) find_last_child_by_type(typ v.NodeType) ?PsiElement {
+pub fn (n &PsiElementImpl) find_last_child_by_type(typ bindings.NodeType) ?PsiElement {
 	ast_node := n.node.last_node_by_type(typ)?
 	return create_element(ast_node, n.containing_file)
 }

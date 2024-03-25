@@ -1,7 +1,9 @@
-module tree_sitter
+module bindings
 
 pub type TSParser = C.TSParser
 pub type TSLanguage = C.TSLanguage
+
+pub const language = unsafe { C.tree_sitter_v() }
 
 pub struct Parser[T] {
 mut:

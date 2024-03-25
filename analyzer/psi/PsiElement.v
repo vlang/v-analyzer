@@ -1,11 +1,10 @@
 module psi
 
-import v_tree_sitter.tree_sitter
-import tree_sitter_v as v
+import tree_sitter_v.bindings
 
 pub type ID = int
 
-pub type AstNode = tree_sitter.Node[v.NodeType]
+pub type AstNode = bindings.Node[bindings.NodeType]
 
 pub interface PsiElement {
 	node            AstNode // base node from Tree Sitter
@@ -13,7 +12,7 @@ pub interface PsiElement {
 	stub_id         StubId
 	get_stub() ?&StubBase
 	stub_list() &StubList
-	element_type() v.NodeType
+	element_type() bindings.NodeType
 	node() AstNode // return base node from Tree Sitter
 	containing_file() &PsiFile // return file where the element is located
 	is_equal(other PsiElement) bool // return true if the element is equal to the other element
@@ -32,21 +31,21 @@ pub interface PsiElement {
 	parent_nth(depth int) ?PsiElement
 	// parent_of_type returns the parent node with the specified type.
 	// If no such node exists, none is returned.
-	parent_of_type(typ v.NodeType) ?PsiElement
+	parent_of_type(typ bindings.NodeType) ?PsiElement
 	// parent_of_any_type returns the parent node with one of the specified types.
 	// If no such node exists, none is returned.
-	parent_of_any_type(types ...v.NodeType) ?PsiElement
+	parent_of_any_type(types ...bindings.NodeType) ?PsiElement
 	// inside returns true if the node is inside a node with the specified type.
-	inside(typ v.NodeType) bool
+	inside(typ bindings.NodeType) bool
 	// is_parent_of returns true if the passed node is a child of the given node.
 	is_parent_of(element PsiElement) bool
 	// sibling_of_type_backward returns the previous node at the same nesting level with the specified type.
 	// If no such node exists, none is returned.
-	sibling_of_type_backward(typ v.NodeType) ?PsiElement
+	sibling_of_type_backward(typ bindings.NodeType) ?PsiElement
 	// parent_of_type_or_self returns the parent node with the specified type, or the
 	// node itself if its type matches the specified one.
 	// If no such node exists, none is returned.
-	parent_of_type_or_self(typ v.NodeType) ?PsiElement
+	parent_of_type_or_self(typ bindings.NodeType) ?PsiElement
 	// children returns all child nodes.
 	children() []PsiElement
 	// named_children returns child nodes except unknown nodes.
@@ -74,27 +73,27 @@ pub interface PsiElement {
 	prev_sibling() ?PsiElement
 	// prev_sibling_of_type returns the previous node at the same nesting level with the specified type.
 	// If no such node exists, none is returned.
-	prev_sibling_of_type(typ v.NodeType) ?PsiElement
+	prev_sibling_of_type(typ bindings.NodeType) ?PsiElement
 	// prev_sibling_or_stub returns the previous node at the same nesting level or stub.
 	// If the node is the first child node or stub, none is returned.
 	prev_sibling_or_stub() ?PsiElement
 	// find_child_by_type returns the first child node with the specified type.
 	// If no such node is found, none is returned.
-	find_child_by_type(typ v.NodeType) ?PsiElement
+	find_child_by_type(typ bindings.NodeType) ?PsiElement
 	// has_child_of_type returns true if the node has a child with the specified type.
-	has_child_of_type(typ v.NodeType) bool
+	has_child_of_type(typ bindings.NodeType) bool
 	// find_child_by_type_or_stub returns the first child node with the specified type or stub.
 	// If no such node is found, none is returned.
-	find_child_by_type_or_stub(typ v.NodeType) ?PsiElement
+	find_child_by_type_or_stub(typ bindings.NodeType) ?PsiElement
 	// find_child_by_name returns the first child node with the specified name.
 	// If no such node is found, none is returned.
 	find_child_by_name(name string) ?PsiElement
 	// find_children_by_type returns all child nodes with the specified type.
 	// If no such nodes are found, an empty array is returned.
-	find_children_by_type(typ v.NodeType) []PsiElement
+	find_children_by_type(typ bindings.NodeType) []PsiElement
 	// find_children_by_type_or_stub returns all child nodes with the specified type or stub.
 	// If no such nodes are found, an empty array is returned.
-	find_children_by_type_or_stub(typ v.NodeType) []PsiElement
+	find_children_by_type_or_stub(typ bindings.NodeType) []PsiElement
 	// get_text returns the text of the node.
 	get_text() string
 	// text_matches returns true if the text of the node matches the specified value.

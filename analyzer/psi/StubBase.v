@@ -1,6 +1,6 @@
 module psi
 
-import tree_sitter_v as v
+import tree_sitter_v.bindings
 
 pub type StubId = int
 
@@ -74,7 +74,7 @@ pub fn (s &StubBase) stub_type() StubType {
 	return s.stub_type
 }
 
-pub fn (s &StubBase) element_type() v.NodeType {
+pub fn (s &StubBase) element_type() bindings.NodeType {
 	return match s.stub_type {
 		.root { .unknown }
 		.function_declaration { .function_declaration }
