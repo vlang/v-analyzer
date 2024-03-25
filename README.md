@@ -6,7 +6,7 @@
 [![][badge__vscode_ext]](https://marketplace.visualstudio.com/items?itemName=VOSCA.vscode-v-analyzer)
 [![][badge__build_ci]](https://github.com/vlang/v-analyzer/actions/workflows/build_ci.yml?query=branch%3Amain)
 [![][badge__tests_ci]](https://github.com/vlang/v-analyzer/actions/workflows/analyzer_tests.yml?query=branch%3Amain)
-[![][badge__tree_sitter_ci]](https://github.com/vlang/v-analyzer/actions/workflows/test_tree_sitter_v.yml?query=branch%3Amain)
+[![][badge__tree_sitter_ci]](https://github.com/vlang/v-analyzer/actions/workflows/tree_sitter_v.yml?query=branch%3Amain)
 [![][badge__vscode_ext_ci]](https://github.com/vlang/v-analyzer/actions/workflows/vscode_extension_tests.yml?query=branch%3Amain)
 
 Bring IDE features for the V programming language to VS Code, Vim, and other editors.
@@ -185,5 +185,5 @@ file for the full license text.
 [badge__vscode_ext]: https://img.shields.io/badge/VS_Code-extension-1da2e2?logo=visualstudiocode&logoWidth=11&logoColor=959da5&labelColor=333
 [badge__build_ci]: https://img.shields.io/github/actions/workflow/status/vlang/v-analyzer/build_ci.yml?style=flat-rounded&branch=main&logo=github&&logoColor=959da5&labelColor=333&label=Build
 [badge__tests_ci]: https://img.shields.io/github/actions/workflow/status/vlang/v-analyzer/analyzer_tests.yml?style=flat-rounded&branch=main&logo=github&&logoColor=959da5&labelColor=333&label=Analyzer
-[badge__tree_sitter_ci]: https://img.shields.io/github/actions/workflow/status/vlang/v-analyzer/test_tree_sitter_v.yml?style=flat-rounded&branch=main&logo=github&&logoColor=959da5&labelColor=333&label=Tree-sitter
+[badge__tree_sitter_ci]: https://img.shields.io/github/actions/workflow/status/vlang/v-analyzer/tree_sitter_v.yml?style=flat-rounded&branch=main&logo=github&&logoColor=959da5&labelColor=333&label=Tree-sitter
 [badge__vscode_ext_ci]: https://img.shields.io/github/actions/workflow/status/vlang/v-analyzer/vscode_extension_tests.yml?style=flat-rounded&branch=main&logo=github&&logoColor=959da5&labelColor=333&label=VS%20Code%20Extension
