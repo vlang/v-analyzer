@@ -47,7 +47,7 @@ pub mut:
 	// stubs_version incremented on each change in stubs
 	//
 	// See also `LanguageServer.setup_stubs()`
-	stubs_version int = 1
+	stubs_version int = 2
 	// initialization_options is a list of custom initialization options.
 	// Used to pass custom options in tests.
 	initialization_options []string

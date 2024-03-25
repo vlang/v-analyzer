@@ -34,7 +34,7 @@
 		"watch": "tsc -watch -p ./",
 		"package": "npx vsce package",
 		"postpackage": "node ./scripts/minify_json.js --restore",
-		"testgrammar": "vscode-tmgrammar-test -g syntaxes/v.tmLanguage.json \"syntaxes/tests/*.v\"",
+		"testgrammar": "vscode-tmgrammar-test -g syntaxes/v.tmLanguage.json \"syntaxes/tests/*.vv\"",
 		"format": "prettier --write \"scripts/**/*.js\" \"src/**/*.ts\""
 	},
 	"main": "dist/extension.js",
