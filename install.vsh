@@ -46,8 +46,8 @@ fn current_version() !string {
 	return version_res.output.trim_string_left('v-analyzer version ').trim_space()
 }
 
-fn check_updates() ! {
-	asset := find_latest_asset() or {
+fn check_updates(release_type string) ! {
+	asset := find_latest_asset(release_type) or {
 		if err.msg().starts_with('Unsupported') {
 			update_from_sources(true, false)!
 			return
@@ -74,7 +74,7 @@ fn stable_version(ver string) string {
 	return ver.split('.')#[..4].join('.')
 }
 
-fn update(nightly bool) ! {
+fn update(nightly bool, release_type string) ! {
 	if nightly {
 		println('Installing latest nightly version...')
 		update_from_sources(true, true)!
@@ -84,7 +84,7 @@ fn update(nightly bool) ! {
 	println('Checking for updates...')
 
 	println('Fetching latest release info from GitHub...')
-	asset := find_latest_asset() or {
+	asset := find_latest_asset(release_type) or {
 		if err.msg().starts_with('Unsupported') {
 			update_from_sources(true, false)!
 			return
@@ -108,11 +108,11 @@ fn update(nightly bool) ! {
 	install_from_binary(asset, true)!
 }
 
-fn install(no_interaction bool) ! {
+fn install(no_interaction bool, release_type string) ! {
 	println('Downloading ${term.bold('v-analyzer')}...')
 
 	println('Fetching latest release info from GitHub...')
-	asset := find_latest_asset() or {
+	asset := find_latest_asset(release_type) or {
 		install_from_sources(no_interaction)!
 		return
 	}
@@ -167,7 +167,7 @@ fn install_from_binary(asset ReleaseAsset, update bool) ! {
 	}
 }
 
-fn find_latest_asset() !ReleaseAsset {
+fn find_latest_asset(release_type string) !ReleaseAsset {
 	text := http.get_text('https://api.github.com/repos/vlang/v-analyzer/releases/latest')
 	res := json.decode(ReleaseInfo, text) or {
 		errorln('Failed to decode JSON response from GitHub: ${err}')
@@ -178,7 +178,10 @@ fn find_latest_asset() !ReleaseAsset {
 
 	arch := arch_name() or { return error('Unsupported architecture') }
 
-	filename := build_os_arch(os_, arch)
+	mut filename := build_os_arch(os_, arch)
+	if release_type != '' {
+		filename += '-${release_type}'
+	}
 	asset := res.assets.filter(it.os_arch() == filename)[0] or {
 		return error('Unsupported OS or architecture')
 	}
@@ -468,6 +471,16 @@ pub fn warnln(msg string) {
 	println('${term.yellow('[WARNING]')} ${msg}')
 }
 
+pub fn get_release_type(cmd cli.Command) string {
+	return cmd.flags.get_string('debug') or {
+		return cmd.flags.get_string('dev') or {
+			if cmd.flags.get_string('release') or { return '' } != '' {
+				return ''
+			}
+		}
+	}
+}
+
 mut cmd := cli.Command{
 	name: 'v-analyzer-installer-updated'
 	version: installer_version
@@ -475,7 +488,8 @@ mut cmd := cli.Command{
 	posix_mode: true
 	execute: fn (cmd cli.Command) ! {
 		no_interaction := cmd.flags.get_bool('no-interaction') or { os.getenv('GITHUB_JOB') != '' }
-		install(no_interaction)!
+		release_type := get_release_type(cmd)
+		install(no_interaction, release_type)!
 	}
 	flags: [
 		cli.Flag{
@@ -492,7 +506,8 @@ cmd.add_command(cli.Command{
 	posix_mode: true
 	execute: fn (cmd cli.Command) ! {
 		nightly := cmd.flags.get_bool('nightly') or { false }
-		update(nightly)!
+		release_type := get_release_type(cmd)
+		update(nightly, release_type)!
 	}
 	flags: [
 		cli.Flag{
@@ -507,8 +522,9 @@ cmd.add_command(cli.Command{
 	name: 'check-availability'
 	description: 'Check if v-analyzer binary is available for the current platform (service command for editors)'
 	posix_mode: true
-	execute: fn (_ cli.Command) ! {
-		find_latest_asset() or {
+	execute: fn (cmd cli.Command) ! {
+		release_type := get_release_type(cmd)
+		find_latest_asset(release_type) or {
 			println('Prebuild v-analyzer binary is not available for your platform')
 			return
 		}
@@ -521,8 +537,9 @@ cmd.add_command(cli.Command{
 	name: 'check-updates'
 	description: 'Checks for v-analyzer updates.'
 	posix_mode: true
-	execute: fn (_ cli.Command) ! {
-		check_updates()!
+	execute: fn (cmd cli.Command) ! {
+		release_type := get_release_type(cmd)
+		check_updates(release_type)!
 	}
 })
 
