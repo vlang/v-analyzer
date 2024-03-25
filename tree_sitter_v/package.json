@@ -1,59 +1,59 @@
 {
-  "name": "tree-sitter-v",
-  "version": "0.0.4-beta.1",
-  "main": "bindings/node",
-  "types": "bindings/node",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vlang/v-analyzer.git"
-  },
-  "scripts": {
-    "test": "tree-sitter test",
-    "generate": "tree-sitter generate --no-bindings && v run bindings/generate_types.vsh",
-    "parse": "tree-sitter parse",
-    "parseg": "tree-sitter parse --debug-graph",
-    "install": "node-gyp-build",
-    "prebuildify": "prebuildify --napi --strip",
-    "lint": "eslint \"**/*.js\"",
-    "format": "prettier --write \"**/*.js\"",
-    "format:check": "prettier --check \"**/*.js\""
-  },
-  "dependencies": {
-    "node-addon-api": "^8.0.0",
-    "node-gyp-build": "^4.8.0"
-  },
-  "peerDependencies": {
-    "tree-sitter": "^0.21.0"
-  },
-  "peerDependenciesMeta": {
-    "tree_sitter": {
-      "optional": true
-    }
-  },
-  "devDependencies": {
-    "eslint": "^8.57.0",
-    "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^9.1.0",
-    "prebuildify": "^6.0.0",
-    "prettier": "^3.2.5",
-    "tree-sitter-cli": "^0.22.2"
-  },
-  "tree-sitter": [
-    {
-      "scope": "source.v",
-      "file-types": [
-        "v",
-        "vsh",
-        "v.mod"
-      ]
-    }
-  ],
-  "files": [
-    "grammar.js",
-    "prebuilds/**",
-    "bindings/node/*",
-    "queries/*",
-    "src/**"
-  ]
+	"name": "tree-sitter-v",
+	"version": "0.0.4-beta.1",
+	"main": "bindings/node",
+	"types": "bindings/node",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/vlang/v-analyzer.git"
+	},
+	"scripts": {
+		"test": "tree-sitter test",
+		"generate": "tree-sitter generate --no-bindings && v run bindings/generate_types.vsh",
+		"parse": "tree-sitter parse",
+		"parseg": "tree-sitter parse --debug-graph",
+		"install": "node-gyp-build",
+		"prebuildify": "prebuildify --napi --strip",
+		"lint": "eslint \"**/*.js\"",
+		"format": "prettier --write \"**/*.js\"",
+		"format:check": "prettier --check \"**/*.js\""
+	},
+	"dependencies": {
+		"node-addon-api": "^8.0.0",
+		"node-gyp-build": "^4.8.0"
+	},
+	"peerDependencies": {
+		"tree-sitter": "^0.21.0"
+	},
+	"peerDependenciesMeta": {
+		"tree_sitter": {
+			"optional": true
+		}
+	},
+	"devDependencies": {
+		"eslint": "^8.57.0",
+		"eslint-config-google": "^0.14.0",
+		"eslint-config-prettier": "^9.1.0",
+		"prebuildify": "^6.0.0",
+		"prettier": "^3.2.5",
+		"tree-sitter-cli": "^0.22.2"
+	},
+	"tree-sitter": [
+		{
+			"scope": "source.v",
+			"file-types": [
+				"v",
+				"vsh",
+				"v.mod"
+			]
+		}
+	],
+	"files": [
+		"grammar.js",
+		"prebuilds/**",
+		"bindings/node/*",
+		"queries/*",
+		"src/**"
+	]
 }
