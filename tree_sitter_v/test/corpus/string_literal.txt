@@ -425,3 +425,18 @@ String literal with interpolation after \n
               (reference_expression
                 (identifier))))
           (interpolation_closing))))))
+
+================================================================================
+Raw String literal with \
+================================================================================
+r'\'
+r"\"
+--------------------------------------------------------------------------------
+
+(source_file
+  (simple_statement
+    (literal
+      (raw_string_literal)))
+  (simple_statement
+    (literal
+      (raw_string_literal))))
