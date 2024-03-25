@@ -62,3 +62,6 @@ jobs:
         # TODO: include Windows
         if: runner.os != 'Windows'
         run: v .github/workflows/version_test.vv
+
+      - name: Verify formatting
+        run: v fmt -verify -diff .
