@@ -2,8 +2,11 @@
  * @file V grammar for tree-sitter
  */
 
+/* eslint-disable arrow-parens */
+/* eslint-disable camelcase */
+/* eslint-disable-next-line spaced-comment */
 /// <reference types="tree-sitter-cli/dsl" />
-/// @ts-check
+// @ts-check
 
 const PREC = {
 	attributes: 10,
@@ -926,11 +929,6 @@ module.exports = grammar({
 						repeat(token.immediate(prec.right(1, /[^"]+/))),
 						$.__double_quote,
 					),
-					seq(
-						$.__r_double_quote,
-						repeat(token.immediate(prec.right(1, /[^"]+/))),
-						$.__double_quote,
-					),
 				),
 			),
 
@@ -1305,6 +1303,8 @@ module.exports = grammar({
 
 /**
  * @param {RuleOrLiteral} rule
+ *
+ * @return {SeqRule}
  */
 function comp_time(rule) {
 	return seq('$', rule);
@@ -1312,6 +1312,8 @@ function comp_time(rule) {
 
 /**
  * @param {RuleOrLiteral} rules
+ *
+ * @return {SeqRule}
  */
 function comma_sep1(rules) {
 	return seq(rules, repeat(seq(',', rules)));
@@ -1319,6 +1321,8 @@ function comma_sep1(rules) {
 
 /**
  * @param {RuleOrLiteral} rule
+ *
+ * @return {ChoiceRule}
  */
 function comma_sep(rule) {
 	return optional(comma_sep1(rule));
