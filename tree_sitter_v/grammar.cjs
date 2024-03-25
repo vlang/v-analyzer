@@ -1056,12 +1056,12 @@ module.exports = grammar({
         choice(
           seq(
             $.__r_single_quote,
-            repeat(token.immediate(prec.right(1, /[^'\\]+/))),
+            repeat(token.immediate(prec.right(1, /[^']+/))),
             $.__single_quote,
           ),
           seq(
             $.__r_double_quote,
-            repeat(token.immediate(prec.right(1, /[^"\\]+/))),
+            repeat(token.immediate(prec.right(1, /[^"]+/))),
             $.__double_quote,
           ),
         ),
