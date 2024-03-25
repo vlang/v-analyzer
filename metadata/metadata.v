@@ -34,7 +34,6 @@ pub fn embed_fs() EmbedFS {
 	files << $embed_file('stubs/compile_time_reflection.vv', .zlib)
 	files << $embed_file('stubs/builtin_compile_time.vv', .zlib)
 	files << $embed_file('stubs/channels.vv', .zlib)
-	files << $embed_file('stubs/README.md', .zlib)
 	files << $embed_file('stubs/attributes/Deprecated.v', .zlib)
 	files << $embed_file('stubs/attributes/Table.v', .zlib)
 	files << $embed_file('stubs/attributes/Attribute.v', .zlib)
@@ -48,7 +47,6 @@ pub fn embed_fs() EmbedFS {
 	files << $embed_file('stubs/c_decl.vv', .zlib)
 	files << $embed_file('stubs/errors.vv', .zlib)
 	files << $embed_file('stubs/threads.vv', .zlib)
-	files << $embed_file('v.mod', .zlib)
 
 	return EmbedFS{
 		files: files
