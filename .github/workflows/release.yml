@@ -74,6 +74,11 @@ jobs:
           VFLAGS: ${{ matrix.vflags }} -cc ${{ matrix.cc }} -showcc
         shell: bash
         run: |
+          if [[ "${{ matrix.build_type }}" != "release" ]]; then
+            CFLAGS="-Og ${{ env.CFLAGS }}"
+          else
+            CFLAGS="-O3 ${{ env.CFLAGS }}"
+          fi
           ${{ matrix.cc }} --version
           v run build.vsh ${{ matrix.build_type }}
           if [[ "${{ matrix.os }}" != "macos-latest" ]]; then
