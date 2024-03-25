@@ -10,6 +10,10 @@ on:
       - 'tree_sitter_v/**'
       - '**/test_tree_sitter_v.yml'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Test tree-sitter
