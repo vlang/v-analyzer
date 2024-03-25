@@ -48,8 +48,10 @@
 (interface_method_definition
  name: (identifier) @function.method)
 
+(short_lambda
+  (reference_expression) @parameter)
 (call_expression
- name: (selector_expression
+  name: (selector_expression
   field: (reference_expression) @function.method))
 
 (call_expression

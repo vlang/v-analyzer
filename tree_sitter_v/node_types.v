@@ -45,7 +45,6 @@ pub enum NodeType {
 	continue_statement
 	dec_expression
 	defer_statement
-	element
 	element_list
 	else_branch
 	embedded_definition
@@ -141,6 +140,7 @@ pub enum NodeType {
 	send_statement
 	shared_type
 	short_element_list
+	short_lambda
 	signature
 	simple_statement
 	slice_expression
@@ -355,7 +355,6 @@ const node_type_name_to_enum = {
 	'continue_statement':               NodeType.continue_statement
 	'dec_expression':                   NodeType.dec_expression
 	'defer_statement':                  NodeType.defer_statement
-	'element':                          NodeType.element
 	'element_list':                     NodeType.element_list
 	'else_branch':                      NodeType.else_branch
 	'embedded_definition':              NodeType.embedded_definition
@@ -451,6 +450,7 @@ const node_type_name_to_enum = {
 	'send_statement':                   NodeType.send_statement
 	'shared_type':                      NodeType.shared_type
 	'short_element_list':               NodeType.short_element_list
+	'short_lambda':                     NodeType.short_lambda
 	'signature':                        NodeType.signature
 	'simple_statement':                 NodeType.simple_statement
 	'slice_expression':                 NodeType.slice_expression

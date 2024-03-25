@@ -376,6 +376,10 @@
         {
           "type": "argument",
           "named": true
+        },
+        {
+          "type": "short_lambda",
+          "named": true
         }
       ]
     }
@@ -1067,21 +1071,6 @@
     }
   },
   {
-    "type": "element",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "_expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "element_list",
     "named": true,
     "fields": {},
@@ -1291,7 +1280,7 @@
       "required": true,
       "types": [
         {
-          "type": "reference_expression",
+          "type": "identifier",
           "named": true
         }
       ]
@@ -3404,6 +3393,125 @@
       "types": [
         {
           "type": "element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "short_lambda",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "array_creation",
+          "named": true
+        },
+        {
+          "type": "as_type_cast_expression",
+          "named": true
+        },
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "call_expression",
+          "named": true
+        },
+        {
+          "type": "dec_expression",
+          "named": true
+        },
+        {
+          "type": "enum_fetch",
+          "named": true
+        },
+        {
+          "type": "fixed_array_creation",
+          "named": true
+        },
+        {
+          "type": "function_literal",
+          "named": true
+        },
+        {
+          "type": "go_expression",
+          "named": true
+        },
+        {
+          "type": "in_expression",
+          "named": true
+        },
+        {
+          "type": "inc_expression",
+          "named": true
+        },
+        {
+          "type": "index_expression",
+          "named": true
+        },
+        {
+          "type": "is_expression",
+          "named": true
+        },
+        {
+          "type": "literal",
+          "named": true
+        },
+        {
+          "type": "not_in_expression",
+          "named": true
+        },
+        {
+          "type": "not_is_expression",
+          "named": true
+        },
+        {
+          "type": "option_propagation_expression",
+          "named": true
+        },
+        {
+          "type": "or_block_expression",
+          "named": true
+        },
+        {
+          "type": "parenthesized_expression",
+          "named": true
+        },
+        {
+          "type": "pseudo_compile_time_identifier",
+          "named": true
+        },
+        {
+          "type": "receive_expression",
+          "named": true
+        },
+        {
+          "type": "reference_expression",
+          "named": true
+        },
+        {
+          "type": "result_propagation_expression",
+          "named": true
+        },
+        {
+          "type": "selector_expression",
+          "named": true
+        },
+        {
+          "type": "slice_expression",
+          "named": true
+        },
+        {
+          "type": "spawn_expression",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
           "named": true
         }
       ]
