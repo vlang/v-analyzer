@@ -1,7 +1,7 @@
 module main
 
 import time
-import tree_sitter_v.bindings
+import bindings
 
 fn main() {
 	mut p := bindings.new_parser[bindings.NodeType](bindings.type_factory)

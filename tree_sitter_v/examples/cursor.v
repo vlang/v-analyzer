@@ -1,10 +1,10 @@
 module main
 
-import tree_sitter_v.bindings
+import bindings
 
 fn main() {
-	mut p := bindings.new_parser[.NodeType](bindings.type_factory)
-	p.set_language(v.language)
+	mut p := bindings.new_parser[bindings.NodeType](bindings.type_factory)
+	p.set_language(bindings.language)
 
 	code := '
 fn foo() int {

@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  test-grammar:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -36,3 +36,32 @@ jobs:
 
       - name: Verify formatting
         run: npm run format:check
+
+  test-bindings:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install V
+        id: install-v
+        uses: vlang/setup-v@v1.4
+        with:
+          check-latest: true
+
+      - name: Checkout v-analyzer
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Run examples
+        run: |
+          cd tree_sitter_v
+          exit_code=0
+          for example in $(find -wholename '*/examples/*.v'); do
+            v run $example
+            if [ $? -ne 0 ]; then
+              exit_code=1
+              echo $exit_code
+              echo "Failed to run example \`$example\`"
+            fi
+          done
+          exit $exit_code
