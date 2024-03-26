@@ -10,7 +10,7 @@ fn test_all() {
 			println('Failed to remove temp path: ${testing.temp_path}')
 		}
 	}
-	os.chdir(os.join_path(@VMODROOT, 'tests'))!
+	os.chdir(os.join_path(@VMODROOT, 'src', 'tests'))!
 
 	mut testers := []testing.Tester{}
 
