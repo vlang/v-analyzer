@@ -5,12 +5,14 @@ on:
     paths-ignore:
       - '.github/**'
       - '!**/analyzer_tests.yml'
+      - '!**/version_test.vv'
       - 'editors/code/**'
       - '**/*.md'
   pull_request:
     paths-ignore:
       - '.github/**'
       - '!**/analyzer_tests.yml'
+      - '!**/version_test.vv'
       - 'editors/code/**'
       - '**/*.md'
 
