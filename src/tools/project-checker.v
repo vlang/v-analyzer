@@ -5,8 +5,8 @@ import runtime
 import sync
 import os
 import time
-import analyzer.parser
-import tree_sitter_v.bidings
+import src.analyzer.parser
+import tree_sitter_v.bindings
 
 fn main() {
 	mut checker := Checker{
