@@ -31,6 +31,7 @@ pub enum NodeType {
 	attributes
 	binary_expression
 	block
+	block_comment
 	break_statement
 	c_string_literal
 	call_expression
@@ -92,6 +93,7 @@ pub enum NodeType {
 	label_definition
 	label_reference
 	labeled_statement
+	line_comment
 	literal
 	literal_attribute
 	lock_expression
@@ -139,6 +141,7 @@ pub enum NodeType {
 	selector_expression
 	send_statement
 	shared_type
+	shebang
 	short_element_list
 	short_lambda
 	signature
@@ -171,7 +174,6 @@ pub enum NodeType {
 	var_definition_list
 	visibility_modifiers
 	wrong_pointer_type
-	comment
 	escape_sequence
 	false_
 	float_literal
@@ -182,7 +184,6 @@ pub enum NodeType {
 	none_
 	pseudo_compile_time_identifier
 	rune_literal
-	shebang
 	true_
 }
 
@@ -341,6 +342,7 @@ const node_type_name_to_enum = {
 	'attributes':                       NodeType.attributes
 	'binary_expression':                NodeType.binary_expression
 	'block':                            NodeType.block
+	'block_comment':                    NodeType.block_comment
 	'break_statement':                  NodeType.break_statement
 	'c_string_literal':                 NodeType.c_string_literal
 	'call_expression':                  NodeType.call_expression
@@ -402,6 +404,7 @@ const node_type_name_to_enum = {
 	'label_definition':                 NodeType.label_definition
 	'label_reference':                  NodeType.label_reference
 	'labeled_statement':                NodeType.labeled_statement
+	'line_comment':                     NodeType.line_comment
 	'literal':                          NodeType.literal
 	'literal_attribute':                NodeType.literal_attribute
 	'lock_expression':                  NodeType.lock_expression
@@ -449,6 +452,7 @@ const node_type_name_to_enum = {
 	'selector_expression':              NodeType.selector_expression
 	'send_statement':                   NodeType.send_statement
 	'shared_type':                      NodeType.shared_type
+	'shebang':                          NodeType.shebang
 	'short_element_list':               NodeType.short_element_list
 	'short_lambda':                     NodeType.short_lambda
 	'signature':                        NodeType.signature
@@ -481,7 +485,6 @@ const node_type_name_to_enum = {
 	'var_definition_list':              NodeType.var_definition_list
 	'visibility_modifiers':             NodeType.visibility_modifiers
 	'wrong_pointer_type':               NodeType.wrong_pointer_type
-	'comment':                          NodeType.comment
 	'escape_sequence':                  NodeType.escape_sequence
 	'false':                            NodeType.false_
 	'float_literal':                    NodeType.float_literal
@@ -492,6 +495,5 @@ const node_type_name_to_enum = {
 	'none':                             NodeType.none_
 	'pseudo_compile_time_identifier':   NodeType.pseudo_compile_time_identifier
 	'rune_literal':                     NodeType.rune_literal
-	'shebang':                          NodeType.shebang
 	'true':                             NodeType.true_
 }
