@@ -97,7 +97,7 @@ fn exec_compiler_diagnostics(compiler_path string, uri lsp.DocumentUri) ?[]inspe
 				...report
 				filepath: os.join_path_single(dir_path, report.filepath)
 			}
-		} else if start_idx := dir_path.index_last(file_dir_path) {
+		} else if start_idx := dir_path.last_index(file_dir_path) {
 			// reported file appears to be in a subdirectory of dir_path
 			report = inspections.Report{
 				...report
