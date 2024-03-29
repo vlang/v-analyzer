@@ -748,6 +748,11 @@
     }
   },
   {
+    "type": "block_comment",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "break_statement",
     "named": true,
     "fields": {},
@@ -2221,6 +2226,11 @@
     }
   },
   {
+    "type": "line_comment",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "literal",
     "named": true,
     "fields": {},
@@ -3384,6 +3394,11 @@
     }
   },
   {
+    "type": "shebang",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "short_element_list",
     "named": true,
     "fields": {},
@@ -4347,6 +4362,10 @@
     "named": false
   },
   {
+    "type": "#!",
+    "named": false
+  },
+  {
     "type": "#[",
     "named": false
   },
@@ -4452,6 +4471,14 @@
   },
   {
     "type": "/",
+    "named": false
+  },
+  {
+    "type": "/*",
+    "named": false
+  },
+  {
+    "type": "//",
     "named": false
   },
   {
@@ -4581,10 +4608,6 @@
   {
     "type": "chan",
     "named": false
-  },
-  {
-    "type": "comment",
-    "named": true
   },
   {
     "type": "const",
@@ -4729,10 +4752,6 @@
   {
     "type": "shared",
     "named": false
-  },
-  {
-    "type": "shebang",
-    "named": true
   },
   {
     "type": "spawn",

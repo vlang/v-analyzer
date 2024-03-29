@@ -84,7 +84,7 @@ const list_separator = choice(semi, ',');
 module.exports = grammar({
 	name: 'v',
 
-	extras: ($) => [$.comment, /\s/],
+	extras: ($) => [/\s/, $.line_comment, $.block_comment],
 
 	word: ($) => $.identifier,
 
@@ -124,17 +124,18 @@ module.exports = grammar({
 				),
 			),
 
-		shebang: (_) => token(/\#\!([^\\\r\n]+)+/),
+		shebang: (_) => seq('#!', /.*/),
 
-		// http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
-		comment: (_) =>
-			token(
-				choice(
-					/\/\/[^\n\r]*/,
-					/\/\*(?:[^\/][^\*]+\/\*+[^\/][^\*]+)+(?:[^\*][^\/]+\*+\/[^\*][^\/]+)+\//,
-					/\/\*[^\*]*\*\//,
-				),
+		line_comment: (_) => seq('//', /.*/),
+
+		block_comment: (_) =>
+			seq(
+				'/*',
+				token(choice(/(?:[^/][^*]+\/\*+[^/][^*]+)+(?:[^*][^/]+\*+\/[^*][^/]+)+/, /[^*]*\*/)),
+				'/',
 			),
+
+		comment: ($) => choice($.line_comment, $.block_comment),
 
 		module_clause: ($) => seq(optional($.attributes), 'module', $.identifier),
 

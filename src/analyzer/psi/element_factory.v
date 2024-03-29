@@ -194,8 +194,14 @@ pub fn create_element(node AstNode, containing_file &PsiFile) PsiElement {
 		}
 	}
 
-	if node.type_name == .comment {
-		return Comment{
+	if node.type_name == .line_comment {
+		return LineComment{
+			PsiElementImpl: base_node
+		}
+	}
+
+	if node.type_name == .block_comment {
+		return BlockComment{
 			PsiElementImpl: base_node
 		}
 	}

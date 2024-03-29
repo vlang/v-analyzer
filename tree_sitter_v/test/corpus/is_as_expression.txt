@@ -197,7 +197,7 @@ fn test_parse_compact_text() {
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
+  (line_comment)
   (function_declaration
     (visibility_modifiers)
     (receiver
@@ -694,8 +694,8 @@ fn test_parse_compact_text() {
                           (identifier))
                         (type_reference_expression
                           (identifier)))))))))))
-      (comment)
-      (comment)
+      (line_comment)
+      (line_comment)
       (simple_statement
         (var_declaration
           (expression_list

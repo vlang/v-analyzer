@@ -7,8 +7,8 @@ module foo
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
-  (comment)
+  (line_comment)
+  (block_comment)
   (module_clause
     (identifier)))
 
@@ -21,8 +21,8 @@ module foo
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
-  (comment)
+  (line_comment)
+  (line_comment)
   (module_clause
     (identifier)))
 
@@ -37,7 +37,7 @@ module foo
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
+  (block_comment)
   (module_clause
     (identifier)))
 
@@ -69,8 +69,8 @@ module foo
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
-  (comment)
+  (block_comment)
+  (line_comment)
   (module_clause
     (identifier))
-  (comment))
+  (block_comment))

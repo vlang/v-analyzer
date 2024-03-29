@@ -19,7 +19,7 @@ pub fn (f &EnumFieldDeclaration) doc_comment() string {
 		return stub.comment
 	}
 
-	if comment := f.find_child_by_type(.comment) {
+	if comment := f.find_child_by_type(.line_comment) {
 		return comment.get_text().trim_string_left('//').trim(' \t')
 	}
 

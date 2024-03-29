@@ -17,8 +17,8 @@ module main
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
-  (comment)
+  (line_comment)
+  (line_comment)
   (module_clause
     (identifier)))
 
@@ -49,8 +49,8 @@ module main
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
-  (comment)
+  (line_comment)
+  (line_comment)
   (module_clause
     (attributes
       (attribute
