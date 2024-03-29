@@ -1,7 +1,8 @@
 (ERROR) @error
 
 [
- (comment)
+ (line_comment)
+ (block_comment)
  (shebang)
 ] @comment
 
