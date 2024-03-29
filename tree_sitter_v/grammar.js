@@ -124,11 +124,16 @@ module.exports = grammar({
 				),
 			),
 
-		shebang: (_) => token(/\#\!([^\\\r\n]+)+/),
+		shebang: (_) => seq('#!', /.*/),
 
-		line_comment: ($) => seq('//', /.*/),
+		line_comment: (_) => seq('//', /.*/),
 
-		block_comment: ($) => seq('/*', optional(repeat(/([^*]|\/[^/])/)), '*/'),
+		block_comment: (_) =>
+			seq(
+				'/*',
+				token(choice(/(?:[^/][^*]+\/\*+[^/][^*]+)+(?:[^*][^/]+\*+\/[^*][^/]+)+/, /[^*]*\*/)),
+				'/',
+			),
 
 		comment: ($) => choice($.line_comment, $.block_comment),
 
