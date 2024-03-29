@@ -427,7 +427,7 @@ fn foo() {}
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
+  (line_comment)
   (function_declaration
     (attributes
       (attribute
@@ -535,7 +535,7 @@ pub fn C.foo[T, U, ](foo string, age ...int) !(int, string, ) {}
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
+  (line_comment)
   (function_declaration
     (attributes
       (attribute

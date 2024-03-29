@@ -95,7 +95,7 @@ struct Foo {
 --------------------------------------------------------------------------------
 
 (source_file
-  (comment)
+  (line_comment)
   (struct_declaration
     (attributes
       (attribute

@@ -173,9 +173,9 @@ if select {
               (reference_expression
                 (identifier))))
           (block
-            (comment))))
+            (line_comment))))
       (block
-        (comment))
+        (line_comment))
       (else_branch
         (block
-          (comment))))))
+          (line_comment))))))
