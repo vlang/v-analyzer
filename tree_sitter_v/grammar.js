@@ -128,11 +128,16 @@ module.exports = grammar({
 
 		line_comment: (_) => seq('//', /.*/),
 
-		block_comment: (_) =>
-			seq(
-				'/*',
-				token(choice(/(?:[^/][^*]+\/\*+[^/][^*]+)+(?:[^*][^/]+\*+\/[^*][^/]+)+/, /[^*]*\*/)),
-				'/',
+		block_comment: ($) =>
+			token(
+				seq(
+					'/*',
+					choice(
+						/[^*]*.*\*/, // Block comment body.
+						/(?:[^/][^*]+\/\*+[^/][^*]+)+(?:[^*][^/]+\*+\/[^*][^/]+)+/, // Nested block comment body.
+					),
+					'/',
+				),
 			),
 
 		comment: ($) => choice($.line_comment, $.block_comment),

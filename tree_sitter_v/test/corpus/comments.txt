@@ -33,10 +33,16 @@ Multiline comment
   Multiline comment
   Multiline comment
 */
+/**foo**/
+/*foo**/
+/**foo*/
 module foo
 --------------------------------------------------------------------------------
 
 (source_file
+  (block_comment)
+  (block_comment)
+  (block_comment)
   (block_comment)
   (module_clause
     (identifier)))
@@ -45,26 +51,26 @@ module foo
 Multiline nested comment
 ================================================================================
 /*
-  /* Nested */
-  Multiline comment
-  /* Nested */
-  Multiline comment
+  /* Nested with ending asterisks **/
+
+  /** Nested with starting asterisks */
+
   /* Nested */
 */
 // comment /* comment */
 module foo
 /*
-  Multiline comment
+  Multiline
   /*
-    Multiline comment
+    Multiline
     /*
-      Multiline comment
+
       /* Nested */
-      Multiline comment
+      Multiline
     */
-    Multiline comment
+    Multiline
   */
-  Multiline comment
+  Multiline
 */
 --------------------------------------------------------------------------------
 
