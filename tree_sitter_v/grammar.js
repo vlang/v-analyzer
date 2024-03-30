@@ -128,16 +128,20 @@ module.exports = grammar({
 
 		line_comment: (_) => seq('//', /.*/),
 
-		block_comment: ($) =>
-			token(
-				seq(
-					'/*',
+		block_comment: (_) =>
+			seq(
+				'/*',
+				repeat(
 					choice(
-						/[^*]*\*+([^/*][^*]*\*+)*/, // Block comment body.
-						/(?:[^/][^*]+\/\*+[^/][^*]+)+(?:[^*][^/]+\*+\/[^*][^/]+)+/, // Nested block comment body.
+						/\*/,
+						regexOr(
+							'[^*]', // any symbol except reserved
+							'[/][^*]', // start of nested comment
+							'[^*][/]', // end of nested comment
+						),
 					),
-					'/',
 				),
+				'*/',
 			),
 
 		comment: ($) => choice($.line_comment, $.block_comment),
@@ -1332,4 +1336,17 @@ function comma_sep1(rules) {
  */
 function comma_sep(rule) {
 	return optional(comma_sep1(rule));
+}
+
+/**
+ * @param {...string} args - One or more regular expression patterns.
+ *
+ * @return {PatternRule}
+ */
+function regexOr(...args) {
+	const regex = args.length > 1 ? args.join('|') : args[0];
+	return {
+		type: 'PATTERN',
+		value: regex,
+	};
 }
