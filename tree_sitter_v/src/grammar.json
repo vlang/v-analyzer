@@ -146,33 +146,33 @@
       ]
     },
     "block_comment": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "/*"
-        },
-        {
-          "type": "TOKEN",
-          "content": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "/*"
+          },
+          {
             "type": "CHOICE",
             "members": [
               {
                 "type": "PATTERN",
-                "value": "(?:[^/][^*]+\\/\\*+[^/][^*]+)+(?:[^*][^/]+\\*+\\/[^*][^/]+)+"
+                "value": "[^*]*.*\\*"
               },
               {
                 "type": "PATTERN",
-                "value": "[^*]*\\*"
+                "value": "(?:[^/][^*]+\\/\\*+[^/][^*]+)+(?:[^*][^/]+\\*+\\/[^*][^/]+)+"
               }
             ]
+          },
+          {
+            "type": "STRING",
+            "value": "/"
           }
-        },
-        {
-          "type": "STRING",
-          "value": "/"
-        }
-      ]
+        ]
+      }
     },
     "comment": {
       "type": "CHOICE",
