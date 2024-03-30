@@ -6,20 +6,7 @@ module stubs
 // Any is any type in code.
 //
 // It is needed to define all implicit methods of all types.
-type Any = []Any
-	| bool
-	| f32
-	| f64
-	| i16
-	| i64
-	| i8
-	| int
-	| map[string]Any
-	| string
-	| u16
-	| u32
-	| u64
-	| u8
+type Any = any
 
 // str returns a string representation of the type.
 //
