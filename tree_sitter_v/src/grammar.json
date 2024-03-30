@@ -7954,6 +7954,10 @@
                 },
                 {
                   "type": "SYMBOL",
+                  "name": "mut_is_clause"
+                },
+                {
+                  "type": "SYMBOL",
                   "name": "_expression"
                 }
               ]
@@ -7972,6 +7976,23 @@
           }
         }
       ]
+    },
+    "mut_is_clause": {
+      "type": "PREC_LEFT",
+      "value": 7,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "mut"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "is_expression"
+          }
+        ]
+      }
     },
     "range_clause": {
       "type": "PREC_LEFT",

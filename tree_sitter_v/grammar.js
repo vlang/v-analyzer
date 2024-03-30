@@ -1190,9 +1190,11 @@ module.exports = grammar({
 		for_statement: ($) =>
 			seq(
 				'for',
-				optional(choice($.range_clause, $.for_clause, $._expression)),
+				optional(choice($.range_clause, $.for_clause, $.mut_is_clause, $._expression)),
 				field('body', $.block),
 			),
+
+		mut_is_clause: ($) => prec.left(PREC.primary, seq('mut', $.is_expression)),
 
 		range_clause: ($) =>
 			prec.left(
