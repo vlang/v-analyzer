@@ -52,10 +52,14 @@ module foo
 ================================================================================
 Multiline nested comment
 ================================================================================
-/**********************************************************************
-* Comment
-* /*** Nested ***/
-**********************************************************************/
+/*
+  /* Nested with ending asterisks **/
+
+  /** Nested with starting asterisks */
+
+  /* Nested */
+*/
+// comment /* comment */
 module main
 /* Recuresively nested
   > Level 1
@@ -72,15 +76,24 @@ module main
   <
 */
 foo := 'abc'
-/* asdf */
+/**********************************************************************
+* Comment
+* /*** Nested ***/
+**********************************************************************/
 --------------------------------------------------------------------------------
 
 (source_file
-  (block_comment)
+  (block_comment
+    (block_comment)
+    (block_comment)
+    (block_comment))
   (line_comment)
   (module_clause
     (identifier))
-  (block_comment)
+  (block_comment
+    (block_comment
+      (block_comment
+        (block_comment))))
   (simple_statement
     (var_declaration
       (expression_list
@@ -88,4 +101,6 @@ foo := 'abc'
           (identifier)))
       (expression_list
         (literal
-          (interpreted_string_literal))))))
+          (interpreted_string_literal)))))
+  (block_comment
+    (block_comment)))
