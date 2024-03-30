@@ -3,11 +3,13 @@ Empty comment
 ================================================================================
 //
 /**/
+/***/
 module foo
 --------------------------------------------------------------------------------
 
 (source_file
   (line_comment)
+  (block_comment)
   (block_comment)
   (module_clause
     (identifier)))
@@ -33,45 +35,44 @@ Multiline comment
   Multiline comment
   Multiline comment
 */
-/**foo**/
 /*foo**/
-/**foo*/
 module foo
+/**foo*/
+/**foo**/
 --------------------------------------------------------------------------------
 
 (source_file
   (block_comment)
   (block_comment)
-  (block_comment)
-  (block_comment)
   (module_clause
-    (identifier)))
+    (identifier))
+  (block_comment)
+  (block_comment))
 
 ================================================================================
 Multiline nested comment
 ================================================================================
-/*
-  /* Nested with ending asterisks **/
-
-  /** Nested with starting asterisks */
-
-  /* Nested */
-*/
-// comment /* comment */
-module foo
-/*
-  Multiline
+/**********************************************************************
+* Comment
+* /*** Nested ***/
+**********************************************************************/
+module main
+/* Recuresively nested
+  > Level 1
   /*
-    Multiline
+    >> Level 2
     /*
 
+      >>> Level 3
       /* Nested */
-      Multiline
+      <<<
     */
-    Multiline
+    <<
   */
-  Multiline
+  <
 */
+foo := 'abc'
+/* asdf */
 --------------------------------------------------------------------------------
 
 (source_file
@@ -79,4 +80,12 @@ module foo
   (line_comment)
   (module_clause
     (identifier))
-  (block_comment))
+  (block_comment)
+  (simple_statement
+    (var_declaration
+      (expression_list
+        (reference_expression
+          (identifier)))
+      (expression_list
+        (literal
+          (interpreted_string_literal))))))

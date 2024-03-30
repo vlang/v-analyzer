@@ -133,7 +133,7 @@ module.exports = grammar({
 				seq(
 					'/*',
 					choice(
-						/[^*]*.*\*/, // Block comment body.
+						/[^*]*\*+([^/*][^*]*\*+)*/, // Block comment body.
 						/(?:[^/][^*]+\/\*+[^/][^*]+)+(?:[^*][^/]+\*+\/[^*][^/]+)+/, // Nested block comment body.
 					),
 					'/',
