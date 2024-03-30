@@ -748,6 +748,11 @@
     }
   },
   {
+    "type": "block_comment",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "break_statement",
     "named": true,
     "fields": {},
@@ -4421,6 +4426,10 @@
     "named": false
   },
   {
+    "type": "*/",
+    "named": false
+  },
+  {
     "type": "*=",
     "named": false
   },
@@ -4466,6 +4475,10 @@
   },
   {
     "type": "/",
+    "named": false
+  },
+  {
+    "type": "/*",
     "named": false
   },
   {
@@ -4591,10 +4604,6 @@
   {
     "type": "atomic",
     "named": false
-  },
-  {
-    "type": "block_comment",
-    "named": true
   },
   {
     "type": "break",
