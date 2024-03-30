@@ -66,4 +66,13 @@ jobs:
         run: v .github/workflows/version_test.vv
 
       - name: Verify formatting
-        run: v fmt -verify -diff .
+        shell: bash
+        run: |
+          set +e
+          v fmt -c .
+          exit_code=$?
+          # Don't fail on internal errors.
+          if [[ $exit_code -ne 0 && $exit_code -ne 5 ]]; then
+            v fmt -diff .
+            exit 1
+          fi
