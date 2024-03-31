@@ -853,7 +853,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "capture",
@@ -950,20 +950,21 @@
   {
     "type": "compile_time_selector_expression",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "reference_expression",
-          "named": true
-        },
-        {
-          "type": "selector_expression",
-          "named": true
-        }
-      ]
+    "fields": {
+      "field": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "reference_expression",
+            "named": true
+          },
+          {
+            "type": "selector_expression",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -2061,11 +2062,6 @@
         ]
       }
     }
-  },
-  {
-    "type": "interpolation_closing",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "interpreted_string_literal",
@@ -4061,7 +4057,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "type_parameter_declaration",
@@ -4301,6 +4297,10 @@
     "named": false
   },
   {
+    "type": "\"",
+    "named": false
+  },
+  {
     "type": "#",
     "named": false
   },
@@ -4314,6 +4314,10 @@
   },
   {
     "type": "$",
+    "named": false
+  },
+  {
+    "type": "$(",
     "named": false
   },
   {
@@ -4354,6 +4358,10 @@
   },
   {
     "type": "&^=",
+    "named": false
+  },
+  {
+    "type": "'",
     "named": false
   },
   {
@@ -4553,6 +4561,14 @@
     "named": false
   },
   {
+    "type": "c\"",
+    "named": false
+  },
+  {
+    "type": "c'",
+    "named": false
+  },
+  {
     "type": "chan",
     "named": false
   },
@@ -4629,6 +4645,10 @@
     "named": false
   },
   {
+    "type": "interpolation_closing",
+    "named": true
+  },
+  {
     "type": "interpolation_opening",
     "named": true
   },
@@ -4678,6 +4698,14 @@
   },
   {
     "type": "pub",
+    "named": false
+  },
+  {
+    "type": "r\"",
+    "named": false
+  },
+  {
+    "type": "r'",
     "named": false
   },
   {
