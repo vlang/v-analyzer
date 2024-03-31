@@ -282,7 +282,8 @@ module.exports = grammar({
 				),
 			),
 
-		parameter_list: ($) => prec(PREC.resolve, seq('(', comma_sep($.parameter_declaration), ')')),
+		parameter_list: ($) =>
+			prec(PREC.resolve, seq('(', optional(sep($.parameter_declaration)), ')')),
 
 		parameter_declaration: ($) =>
 			seq(
@@ -292,7 +293,7 @@ module.exports = grammar({
 				field('type', $.plain_type),
 			),
 
-		type_parameter_list: ($) => seq('(', comma_sep($.type_parameter_declaration), ')'),
+		type_parameter_list: ($) => seq('(', sep($.type_parameter_declaration), ')'),
 
 		type_parameter_declaration: ($) =>
 			prec(
@@ -311,7 +312,7 @@ module.exports = grammar({
 				PREC.resolve,
 				seq(
 					choice(token.immediate('['), token.immediate('<')),
-					comma_sep1($.generic_parameter),
+					sep($.generic_parameter),
 					optional(','),
 					choice(']', '>'),
 				),
@@ -469,7 +470,7 @@ module.exports = grammar({
 				seq(
 					choice($._expression, $.mutable_expression),
 					',',
-					comma_sep1(choice($._expression, $.mutable_expression)),
+					sep(choice($._expression, $.mutable_expression)),
 				),
 			),
 
@@ -514,14 +515,13 @@ module.exports = grammar({
 				),
 			),
 
-		type_parameters: ($) =>
-			prec.dynamic(2, seq(token.immediate('['), comma_sep1($.plain_type), ']')),
+		type_parameters: ($) => prec.dynamic(2, seq(token.immediate('['), sep($.plain_type), ']')),
 
 		argument_list: ($) =>
 			seq('(', choice(repeat(seq($.argument, optional(list_separator))), $.short_lambda), ')'),
 
 		short_lambda: ($) =>
-			seq('|', comma_sep($.reference_expression), '|', $._expression_without_blocks),
+			seq('|', optional(sep($.reference_expression)), '|', $._expression_without_blocks),
 
 		argument: ($) =>
 			choice($._expression, $.mutable_expression, $.keyed_element, $.spread_expression),
@@ -582,7 +582,7 @@ module.exports = grammar({
 				),
 			),
 
-		capture_list: ($) => seq('[', comma_sep($.capture), optional(','), ']'),
+		capture_list: ($) => seq('[', sep($.capture), optional(','), ']'),
 
 		capture: ($) => seq(optional($.mutability_modifiers), $.reference_expression),
 
@@ -772,7 +772,7 @@ module.exports = grammar({
 		match_arm: ($) => seq(field('value', $.match_expression_list), field('block', $.block)),
 
 		match_expression_list: ($) =>
-			comma_sep1(
+			sep(
 				choice($._expression_without_blocks, $.match_arm_type, alias($._definite_range, $.range)),
 			),
 
@@ -995,13 +995,11 @@ module.exports = grammar({
 
 		mutable_expression: ($) => prec(PREC.resolve, seq($.mutability_modifiers, $._expression)),
 
-		identifier_list: ($) => prec(PREC.and, comma_sep1(choice($.mutable_identifier, $.identifier))),
+		identifier_list: ($) => prec(PREC.and, sep(choice($.mutable_identifier, $.identifier))),
 
-		expression_list: ($) =>
-			prec(PREC.resolve, comma_sep1(choice($._expression, $.mutable_expression))),
+		expression_list: ($) => prec(PREC.resolve, sep(choice($._expression, $.mutable_expression))),
 
-		expression_without_blocks_list: ($) =>
-			prec(PREC.resolve, comma_sep1($._expression_without_blocks)),
+		expression_without_blocks_list: ($) => prec(PREC.resolve, sep($._expression_without_blocks)),
 
 		// ==================== TYPES ====================
 
@@ -1034,7 +1032,7 @@ module.exports = grammar({
 
 		anon_struct_type: ($) => seq('struct', $._struct_body),
 
-		multi_return_type: ($) => seq('(', comma_sep1($.plain_type), optional(','), ')'),
+		multi_return_type: ($) => seq('(', sep($.plain_type), optional(','), ')'),
 
 		result_type: ($) => prec.right(seq('!', optional($.plain_type))),
 
@@ -1141,7 +1139,7 @@ module.exports = grammar({
 				),
 			),
 
-		var_definition_list: ($) => comma_sep1($.var_definition),
+		var_definition_list: ($) => sep($.var_definition),
 
 		var_definition: ($) =>
 			prec(
@@ -1279,21 +1277,15 @@ module.exports = grammar({
 });
 
 /**
- * @param {RuleOrLiteral} rules
+ * Creates a comma separated rule sequence to match one or more of the passed rule.
  *
- * @return {SeqRule}
- */
-function comma_sep1(rules) {
-	return seq(rules, repeat(seq(',', rules)));
-}
-
-/**
  * @param {RuleOrLiteral} rule
  *
- * @return {ChoiceRule}
+ * @return {SeqRule}
+ *
  */
-function comma_sep(rule) {
-	return optional(comma_sep1(rule));
+function sep(rule) {
+	return seq(rule, repeat(seq(',', rule)));
 }
 
 /**
