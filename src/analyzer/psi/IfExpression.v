@@ -22,13 +22,9 @@ pub fn (n IfExpression) var_definition() ?&VarDefinition {
 
 pub fn (n IfExpression) block() ?&Block {
 	block := n.find_child_by_type(.block)?
-	if block is Block {
-		return block
-	}
-	return none
+	return if block is Block { block } else { none }
 }
 
 pub fn (n IfExpression) else_branch() ?PsiElement {
-	else_branch := n.find_child_by_type(.else_branch)?
-	return else_branch.last_child()
+	return n.find_child_by_type(.else_branch)?.last_child()
 }

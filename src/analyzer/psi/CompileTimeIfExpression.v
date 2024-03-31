@@ -13,5 +13,5 @@ pub fn (n CompileTimeIfExpression) block() ?&Block {
 }
 
 pub fn (n CompileTimeIfExpression) else_branch() ?PsiElement {
-	return n.find_child_by_name('else_branch')
+	return n.find_child_by_type(.else_branch)?.last_child()
 }

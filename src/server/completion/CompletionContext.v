@@ -48,59 +48,37 @@ pub fn (mut c CompletionContext) compute() {
 
 	parent := c.element.parent() or { return }
 
-	if parent is psi.ImportName {
-		c.is_import_name = true
-	}
-
-	if parent.node.type_name == .reference_expression {
-		if grand := parent.parent() {
-			// do not consider as reference_expression if it is inside an attribute
-			c.is_expression = grand !is psi.ValueAttribute
-
-			if grand.node.type_name == .element_list {
-				c.inside_struct_init_with_keys = true
-			}
-
-			if _ := grand.prev_sibling_of_type(.keyed_element) {
-				c.inside_struct_init_with_keys = true
-			}
-		}
-	}
-
-	if parent.node.type_name == .keyed_element {
-		c.inside_struct_init_with_keys = true
-	}
-
-	if parent.node.type_name == .type_reference_expression {
-		c.is_type_reference = true
-	}
-
-	if parent.node.type_name == .for_statement {
-		c.inside_loop = true
+	match parent.node.type_name {
+		.import_name { c.is_import_name = true }
+		.keyed_element { c.inside_struct_init_with_keys = true }
+		.type_reference_expression { c.is_type_reference = true }
+		.for_statement, .compile_time_for_statement { c.inside_loop = true }
+		else {}
 	}
 
 	if grand := parent.parent() {
-		if grand.node.type_name == .simple_statement {
-			c.is_statement = true
-		}
-		if grand.node.type_name == .assert_statement {
-			c.is_assert_statement = true
-		}
-		if grand.node.type_name == .value_attribute {
-			c.is_attribute = true
+		// Do not consider as reference_expression if it is inside an attribute.
+		if parent.node.type_name == .reference_expression {
+			c.is_expression = grand.node.type_name != .key_value_attribute
+			if grand.node.type_name == .element_list
+				|| grand.prev_sibling_of_type(.keyed_element) != none {
+				c.inside_struct_init_with_keys = true
+			}
 		}
 
-		if grand.node.type_name == .for_statement {
-			c.inside_loop = true
+		match grand.node.type_name {
+			.simple_statement { c.is_statement = true }
+			.assert_statement { c.is_assert_statement = true }
+			.value_attribute { c.is_attribute = true }
+			.for_statement, .compile_time_for_statement { c.inside_loop = true }
+			else {}
 		}
 
 		if grand_grand := grand.parent() {
-			if grand_grand.node.type_name == .source_file {
-				c.is_top_level = true
-			}
-
-			if grand_grand.node.type_name == .for_statement {
-				c.inside_loop = true
+			match grand_grand.node.type_name {
+				.source_file { c.is_top_level = true }
+				.for_statement, .compile_time_for_statement { c.inside_loop = true }
+				else {}
 			}
 		}
 	}
