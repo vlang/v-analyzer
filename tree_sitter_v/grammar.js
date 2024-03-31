@@ -623,9 +623,6 @@ module.exports = grammar({
 
 		as_type_cast_expression: ($) => seq($._expression, 'as', $.plain_type),
 
-		compile_time_selector_expression: ($) =>
-			seq('$', seq('(', choice($.reference_expression, $.selector_expression), ')')),
-
 		or_block: ($) => seq('or', field('block', $.block)),
 
 		_max_group: ($) => prec.left(PREC.resolve, choice($.pseudo_compile_time_identifier, $.literal)),
@@ -693,6 +690,13 @@ module.exports = grammar({
 						field('field', choice($.reference_expression, $.compile_time_selector_expression)),
 					),
 				),
+			),
+
+		compile_time_selector_expression: ($) =>
+			seq(
+				token.immediate('$('),
+				field('field', choice($.reference_expression, $.selector_expression)),
+				')',
 			),
 
 		index_expression: ($) =>
@@ -1247,10 +1251,7 @@ function sep(rule) {
  *
  */
 function stringBody(re, $) {
-	return choice(
-		token.immediate(prec.right(1, re)),
-		choice($.escape_sequence, $.string_interpolation),
-	);
+	return choice(token.immediate(prec.right(1, re)), $.escape_sequence, $.string_interpolation);
 }
 
 /**
