@@ -6,7 +6,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable-next-line spaced-comment */
 /// <reference types="tree-sitter-cli/dsl" />
-// @ts-check
 
 const PREC = {
 	attributes: 10,
@@ -878,70 +877,21 @@ module.exports = grammar({
 			choice($.interpreted_string_literal, $.c_string_literal, $.raw_string_literal),
 
 		interpreted_string_literal: ($) =>
-			prec(
-				1,
-				choice(
-					seq(
-						"'",
-						repeat(
-							choice(
-								token.immediate(prec.right(1, /[^'\\$]+/)),
-								$.escape_sequence,
-								$.string_interpolation,
-							),
-						),
-						"'",
-					),
-					seq(
-						'"',
-						repeat(
-							choice(
-								token.immediate(prec.right(1, /[^"\\$]+/)),
-								$.escape_sequence,
-								$.string_interpolation,
-							),
-						),
-						'"',
-					),
-				),
+			choice(
+				seq("'", repeat(stringBody(/[^'\\$]+/, $)), "'"),
+				seq('"', repeat(stringBody(/[^"\\$]+/, $)), '"'),
 			),
 
 		c_string_literal: ($) =>
-			prec(
-				1,
-				choice(
-					seq(
-						"c'",
-						repeat(
-							choice(
-								token.immediate(prec.right(1, /[^'\\$]+/)),
-								$.escape_sequence,
-								$.string_interpolation,
-							),
-						),
-						"'",
-					),
-					seq(
-						'c"',
-						repeat(
-							choice(
-								token.immediate(prec.right(1, /[^"\\$]+/)),
-								$.escape_sequence,
-								$.string_interpolation,
-							),
-						),
-						'"',
-					),
-				),
+			choice(
+				seq("c'", repeat(stringBody(/[^'\\$]+/, $)), "'"),
+				seq('c"', repeat(stringBody(/[^"\\$]+/, $)), '"'),
 			),
 
 		raw_string_literal: (_) =>
-			prec(
-				1,
-				choice(
-					seq("r'", repeat(token.immediate(prec.right(1, /[^']+/))), "'"),
-					seq('r"', repeat(token.immediate(prec.right(1, /[^"]+/))), '"'),
-				),
+			choice(
+				seq("r'", repeat(token.immediate(prec.right(1, /[^']+/))), "'"),
+				seq('r"', repeat(token.immediate(prec.right(1, /[^"]+/))), '"'),
 			),
 
 		string_interpolation: ($) =>
@@ -1286,6 +1236,21 @@ module.exports = grammar({
  */
 function sep(rule) {
 	return seq(rule, repeat(seq(',', rule)));
+}
+
+/**
+ *
+ * @param {RegExp} re
+ * @param {$} $
+ *
+ * @return {SeqRule}
+ *
+ */
+function stringBody(re, $) {
+	return choice(
+		token.immediate(prec.right(1, re)),
+		choice($.escape_sequence, $.string_interpolation),
+	);
 }
 
 /**
