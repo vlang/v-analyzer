@@ -3,11 +3,13 @@ Empty comment
 ================================================================================
 //
 /**/
+/***/
 module foo
 --------------------------------------------------------------------------------
 
 (source_file
   (line_comment)
+  (block_comment)
   (block_comment)
   (module_clause
     (identifier)))
@@ -33,44 +35,72 @@ Multiline comment
   Multiline comment
   Multiline comment
 */
+/*foo**/
 module foo
+/**foo*/
+/**foo**/
 --------------------------------------------------------------------------------
 
 (source_file
   (block_comment)
+  (block_comment)
   (module_clause
-    (identifier)))
+    (identifier))
+  (block_comment)
+  (block_comment))
 
 ================================================================================
 Multiline nested comment
 ================================================================================
 /*
-  /* Nested */
-  Multiline comment
-  /* Nested */
-  Multiline comment
+  /* Nested with ending asterisks **/
+
+  /** Nested with starting asterisks */
+
   /* Nested */
 */
 // comment /* comment */
-module foo
-/*
-  Multiline comment
+module main
+/* Recuresively nested
+  > Level 1
   /*
-    Multiline comment
+    >> Level 2
     /*
-      Multiline comment
+
+      >>> Level 3
       /* Nested */
-      Multiline comment
+      <<<
     */
-    Multiline comment
+    <<
   */
-  Multiline comment
+  <
 */
+foo := 'abc'
+/**********************************************************************
+* Comment
+* /*** Nested ***/
+**********************************************************************/
 --------------------------------------------------------------------------------
 
 (source_file
-  (block_comment)
+  (block_comment
+    (block_comment)
+    (block_comment)
+    (block_comment))
   (line_comment)
   (module_clause
     (identifier))
-  (block_comment))
+  (block_comment
+    (block_comment
+      (block_comment
+        (block_comment))))
+  (simple_statement
+    (var_declaration
+      (expression_list
+        (reference_expression
+          (identifier)))
+      (expression_list
+        (literal
+          (interpreted_string_literal)))))
+  (block_comment
+    (block_comment)))
