@@ -405,6 +405,27 @@ String literal with escape sequences
         (escape_sequence)))))
 
 ================================================================================
+String literal with identifier tokens
+================================================================================
+'$Hello'
+'C.Hello $World'
+'@Hello
+$
+JS.World'
+--------------------------------------------------------------------------------
+
+(source_file
+  (simple_statement
+    (literal
+      (interpreted_string_literal)))
+  (simple_statement
+    (literal
+      (interpreted_string_literal)))
+  (simple_statement
+    (literal
+      (interpreted_string_literal))))
+
+================================================================================
 String literal with interpolation after \n
 ================================================================================
 'v fmt failed:\n\n${res.output}'

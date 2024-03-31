@@ -85,7 +85,6 @@ pub enum NodeType {
 	index_expression
 	interface_declaration
 	interface_method_definition
-	interpolation_closing
 	interpreted_string_literal
 	is_clause
 	is_expression
@@ -178,6 +177,7 @@ pub enum NodeType {
 	float_literal
 	identifier
 	int_literal
+	interpolation_closing
 	interpolation_opening
 	nil_
 	none_
@@ -393,7 +393,6 @@ const node_type_name_to_enum = {
 	'index_expression':                 NodeType.index_expression
 	'interface_declaration':            NodeType.interface_declaration
 	'interface_method_definition':      NodeType.interface_method_definition
-	'interpolation_closing':            NodeType.interpolation_closing
 	'interpreted_string_literal':       NodeType.interpreted_string_literal
 	'is_clause':                        NodeType.is_clause
 	'is_expression':                    NodeType.is_expression
@@ -486,6 +485,7 @@ const node_type_name_to_enum = {
 	'float_literal':                    NodeType.float_literal
 	'identifier':                       NodeType.identifier
 	'int_literal':                      NodeType.int_literal
+	'interpolation_closing':            NodeType.interpolation_closing
 	'interpolation_opening':            NodeType.interpolation_opening
 	'nil':                              NodeType.nil_
 	'none':                             NodeType.none_
