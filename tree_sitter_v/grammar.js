@@ -625,7 +625,7 @@ module.exports = grammar({
 		as_type_cast_expression: ($) => seq($._expression, 'as', $.plain_type),
 
 		compile_time_selector_expression: ($) =>
-			comp_time(seq('(', choice($.reference_expression, $.selector_expression), ')')),
+			seq('$', seq('(', choice($.reference_expression, $.selector_expression), ')')),
 
 		or_block: ($) => seq('or', field('block', $.block)),
 
@@ -875,60 +875,14 @@ module.exports = grammar({
 			),
 
 		_string_literal: ($) =>
-			choice($.c_string_literal, $.raw_string_literal, $.interpreted_string_literal),
-
-		c_string_literal: ($) =>
-			prec(
-				1,
-				choice(
-					seq(
-						$.__c_single_quote,
-						repeat(
-							choice(
-								token.immediate(prec.right(1, /[^'\\$]+/)),
-								$.escape_sequence,
-								$.string_interpolation,
-							),
-						),
-						$.__single_quote,
-					),
-					seq(
-						$.__c_double_quote,
-						repeat(
-							choice(
-								token.immediate(prec.right(1, /[^"\\$]+/)),
-								$.escape_sequence,
-								$.string_interpolation,
-							),
-						),
-						$.__double_quote,
-					),
-				),
-			),
-
-		raw_string_literal: ($) =>
-			prec(
-				1,
-				choice(
-					seq(
-						$.__r_single_quote,
-						repeat(token.immediate(prec.right(1, /[^']+/))),
-						$.__single_quote,
-					),
-					seq(
-						$.__r_double_quote,
-						repeat(token.immediate(prec.right(1, /[^"]+/))),
-						$.__double_quote,
-					),
-				),
-			),
+			choice($.interpreted_string_literal, $.c_string_literal, $.raw_string_literal),
 
 		interpreted_string_literal: ($) =>
 			prec(
 				1,
 				choice(
 					seq(
-						$.__single_quote,
+						"'",
 						repeat(
 							choice(
 								token.immediate(prec.right(1, /[^'\\$]+/)),
@@ -936,10 +890,10 @@ module.exports = grammar({
 								$.string_interpolation,
 							),
 						),
-						$.__single_quote,
+						"'",
 					),
 					seq(
-						$.__double_quote,
+						'"',
 						repeat(
 							choice(
 								token.immediate(prec.right(1, /[^"\\$]+/)),
@@ -947,19 +901,57 @@ module.exports = grammar({
 								$.string_interpolation,
 							),
 						),
-						$.__double_quote,
+						'"',
 					),
+				),
+			),
+
+		c_string_literal: ($) =>
+			prec(
+				1,
+				choice(
+					seq(
+						"c'",
+						repeat(
+							choice(
+								token.immediate(prec.right(1, /[^'\\$]+/)),
+								$.escape_sequence,
+								$.string_interpolation,
+							),
+						),
+						"'",
+					),
+					seq(
+						'c"',
+						repeat(
+							choice(
+								token.immediate(prec.right(1, /[^"\\$]+/)),
+								$.escape_sequence,
+								$.string_interpolation,
+							),
+						),
+						'"',
+					),
+				),
+			),
+
+		raw_string_literal: (_) =>
+			prec(
+				1,
+				choice(
+					seq("r'", repeat(token.immediate(prec.right(1, /[^']+/))), "'"),
+					seq('r"', repeat(token.immediate(prec.right(1, /[^"]+/))), '"'),
 				),
 			),
 
 		string_interpolation: ($) =>
 			seq(
-				alias($.__dolcbr, $.interpolation_opening),
+				alias('${', $.interpolation_opening),
 				choice(
 					repeat(alias($._expression, $.interpolation_expression)),
 					seq(alias($._expression, $.interpolation_expression), $.format_specifier),
 				),
-				alias($.__rcbr, $.interpolation_closing),
+				alias('}', $.interpolation_closing),
 			),
 
 		format_specifier: ($) =>
@@ -1283,26 +1275,8 @@ module.exports = grammar({
 				PREC.attributes,
 				seq($.value_attribute, ':', field('value', choice($.literal, $.identifier))),
 			),
-
-		__dolcbr: (_) => token('${'),
-		__rcbr: (_) => token('}'),
-		__double_quote: (_) => token('"'),
-		__single_quote: (_) => token("'"),
-		__c_double_quote: (_) => token('c"'),
-		__c_single_quote: (_) => token("c'"),
-		__r_double_quote: (_) => token('r"'),
-		__r_single_quote: (_) => token("r'"),
 	},
 });
-
-/**
- * @param {RuleOrLiteral} rule
- *
- * @return {SeqRule}
- */
-function comp_time(rule) {
-	return seq('$', rule);
-}
 
 /**
  * @param {RuleOrLiteral} rules
