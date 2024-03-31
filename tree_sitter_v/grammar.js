@@ -1251,7 +1251,7 @@ function sep(rule) {
  *
  */
 function stringBody(re, $) {
-	return choice(token.immediate(prec.right(1, re)), $.escape_sequence, $.string_interpolation);
+	return choice(token.immediate(prec.right(1, re)), '$', $.escape_sequence, $.string_interpolation);
 }
 
 /**
