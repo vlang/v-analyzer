@@ -7954,7 +7954,7 @@
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "mut_is_clause"
+                  "name": "is_clause"
                 },
                 {
                   "type": "SYMBOL",
@@ -7977,15 +7977,28 @@
         }
       ]
     },
-    "mut_is_clause": {
-      "type": "PREC_LEFT",
+    "is_clause": {
+      "type": "PREC",
       "value": 7,
       "content": {
         "type": "SEQ",
         "members": [
           {
-            "type": "STRING",
-            "value": "mut"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "STRING",
+                  "value": "mut"
+                },
+                "named": true,
+                "value": "mutability_modifiers"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           },
           {
             "type": "SYMBOL",

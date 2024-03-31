@@ -87,6 +87,7 @@ pub enum NodeType {
 	interface_method_definition
 	interpolation_closing
 	interpreted_string_literal
+	is_clause
 	is_expression
 	key_value_attribute
 	keyed_element
@@ -108,7 +109,6 @@ pub enum NodeType {
 	match_expression_list
 	module_clause
 	multi_return_type
-	mut_is_clause
 	mutability_modifiers
 	mutable_expression
 	mutable_identifier
@@ -395,6 +395,7 @@ const node_type_name_to_enum = {
 	'interface_method_definition':      NodeType.interface_method_definition
 	'interpolation_closing':            NodeType.interpolation_closing
 	'interpreted_string_literal':       NodeType.interpreted_string_literal
+	'is_clause':                        NodeType.is_clause
 	'is_expression':                    NodeType.is_expression
 	'key_value_attribute':              NodeType.key_value_attribute
 	'keyed_element':                    NodeType.keyed_element
@@ -416,7 +417,6 @@ const node_type_name_to_enum = {
 	'match_expression_list':            NodeType.match_expression_list
 	'module_clause':                    NodeType.module_clause
 	'multi_return_type':                NodeType.multi_return_type
-	'mut_is_clause':                    NodeType.mut_is_clause
 	'mutability_modifiers':             NodeType.mutability_modifiers
 	'mutable_expression':               NodeType.mutable_expression
 	'mutable_identifier':               NodeType.mutable_identifier
