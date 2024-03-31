@@ -90,7 +90,7 @@ if mut run !is Block {
 (source_file
   (simple_statement
     (if_expression
-      (not_is_expression
+      (is_expression
         (mutability_modifiers)
         (reference_expression
           (identifier))

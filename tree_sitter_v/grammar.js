@@ -105,7 +105,6 @@ module.exports = grammar({
 		[$.fixed_array_type, $.literal],
 		[$.reference_expression, $.type_reference_expression],
 		[$.is_expression],
-		[$.not_is_expression],
 		[$._type_union_list],
 		[$._expression_without_blocks, $.element_list],
 	],
@@ -437,9 +436,7 @@ module.exports = grammar({
 				$.receive_expression,
 				$.binary_expression,
 				$.is_expression,
-				$.not_is_expression,
 				$.in_expression,
-				$.not_in_expression,
 				$.index_expression,
 				$.slice_expression,
 				$.as_type_cast_expression,
@@ -748,17 +745,7 @@ module.exports = grammar({
 				2,
 				seq(
 					field('left', seq(optional($.mutability_modifiers), $._expression)),
-					'is',
-					field('right', $.plain_type),
-				),
-			),
-
-		not_is_expression: ($) =>
-			prec.dynamic(
-				2,
-				seq(
-					field('left', seq(optional($.mutability_modifiers), $._expression)),
-					'!is',
+					choice('is', '!is'),
 					field('right', $.plain_type),
 				),
 			),
@@ -766,13 +753,7 @@ module.exports = grammar({
 		in_expression: ($) =>
 			prec.left(
 				PREC.comparative,
-				seq(field('left', $._expression), 'in', field('right', $._expression)),
-			),
-
-		not_in_expression: ($) =>
-			prec.left(
-				PREC.comparative,
-				seq(field('left', $._expression), '!in', field('right', $._expression)),
+				seq(field('left', $._expression), choice('in', '!in'), field('right', $._expression)),
 			),
 
 		enum_fetch: ($) => prec.dynamic(-1, seq('.', $.reference_expression)),

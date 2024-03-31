@@ -2263,15 +2263,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "not_is_expression"
-        },
-        {
-          "type": "SYMBOL",
           "name": "in_expression"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "not_in_expression"
         },
         {
           "type": "SYMBOL",
@@ -4313,54 +4305,17 @@
             }
           },
           {
-            "type": "STRING",
-            "value": "is"
-          },
-          {
-            "type": "FIELD",
-            "name": "right",
-            "content": {
-              "type": "SYMBOL",
-              "name": "plain_type"
-            }
-          }
-        ]
-      }
-    },
-    "not_is_expression": {
-      "type": "PREC_DYNAMIC",
-      "value": 2,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "FIELD",
-            "name": "left",
-            "content": {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "mutability_modifiers"
-                    },
-                    {
-                      "type": "BLANK"
-                    }
-                  ]
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "_expression"
-                }
-              ]
-            }
-          },
-          {
-            "type": "STRING",
-            "value": "!is"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "is"
+              },
+              {
+                "type": "STRING",
+                "value": "!is"
+              }
+            ]
           },
           {
             "type": "FIELD",
@@ -4388,37 +4343,17 @@
             }
           },
           {
-            "type": "STRING",
-            "value": "in"
-          },
-          {
-            "type": "FIELD",
-            "name": "right",
-            "content": {
-              "type": "SYMBOL",
-              "name": "_expression"
-            }
-          }
-        ]
-      }
-    },
-    "not_in_expression": {
-      "type": "PREC_LEFT",
-      "value": 3,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "FIELD",
-            "name": "left",
-            "content": {
-              "type": "SYMBOL",
-              "name": "_expression"
-            }
-          },
-          {
-            "type": "STRING",
-            "value": "!in"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "in"
+              },
+              {
+                "type": "STRING",
+                "value": "!in"
+              }
+            ]
           },
           {
             "type": "FIELD",
@@ -8602,9 +8537,6 @@
     ],
     [
       "is_expression"
-    ],
-    [
-      "not_is_expression"
     ],
     [
       "_type_union_list"

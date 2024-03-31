@@ -30,12 +30,7 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 
 	mut visited := map[string]types.Type{}
 
-	if element.node.type_name in [
-		.in_expression,
-		.not_in_expression,
-		.is_expression,
-		.not_is_expression,
-	] {
+	if element.node.type_name in [.in_expression, .is_expression] {
 		return types.new_primitive_type('bool')
 	}
 
@@ -932,7 +927,7 @@ pub fn (t &TypeInferer) infer_context_type(elem ?PsiElement) types.Type {
 		}
 
 		bin_expr := parent.parent() or { return types.unknown_type }
-		if bin_expr.element_type() in [.binary_expression, .in_expression, .not_in_expression] {
+		if bin_expr.element_type() in [.binary_expression, .in_expression] {
 			left := bin_expr.first_child_or_stub() or { return types.unknown_type }
 			if left.is_parent_of(parent) {
 				return types.unknown_type

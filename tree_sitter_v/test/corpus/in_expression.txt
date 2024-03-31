@@ -25,7 +25,7 @@ Simple not in expression
 
 (source_file
   (simple_statement
-    (not_in_expression
+    (in_expression
       (literal
         (int_literal))
       (array_creation

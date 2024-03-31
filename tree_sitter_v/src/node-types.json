@@ -64,14 +64,6 @@
         "named": true
       },
       {
-        "type": "not_in_expression",
-        "named": true
-      },
-      {
-        "type": "not_is_expression",
-        "named": true
-      },
-      {
         "type": "option_propagation_expression",
         "named": true
       },
@@ -2564,14 +2556,6 @@
           "named": true
         },
         {
-          "type": "not_in_expression",
-          "named": true
-        },
-        {
-          "type": "not_is_expression",
-          "named": true
-        },
-        {
           "type": "option_propagation_expression",
           "named": true
         },
@@ -2697,62 +2681,6 @@
           "named": true
         }
       ]
-    }
-  },
-  {
-    "type": "not_in_expression",
-    "named": true,
-    "fields": {
-      "left": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "_expression",
-            "named": true
-          }
-        ]
-      },
-      "right": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "_expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "not_is_expression",
-    "named": true,
-    "fields": {
-      "left": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "_expression",
-            "named": true
-          },
-          {
-            "type": "mutability_modifiers",
-            "named": true
-          }
-        ]
-      },
-      "right": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "plain_type",
-            "named": true
-          }
-        ]
-      }
     }
   },
   {
@@ -3475,14 +3403,6 @@
         },
         {
           "type": "literal",
-          "named": true
-        },
-        {
-          "type": "not_in_expression",
-          "named": true
-        },
-        {
-          "type": "not_is_expression",
           "named": true
         },
         {

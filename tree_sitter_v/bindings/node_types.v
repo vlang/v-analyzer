@@ -111,8 +111,6 @@ pub enum NodeType {
 	mutability_modifiers
 	mutable_expression
 	mutable_identifier
-	not_in_expression
-	not_is_expression
 	option_propagation_expression
 	option_type
 	or_block
@@ -202,8 +200,6 @@ const supertype__expression_nodes = merge(supertype__expression_with_blocks_node
 	.index_expression,
 	.is_expression,
 	.literal,
-	.not_in_expression,
-	.not_is_expression,
 	.option_propagation_expression,
 	.or_block_expression,
 	.parenthesized_expression,
@@ -422,8 +418,6 @@ const node_type_name_to_enum = {
 	'mutability_modifiers':             NodeType.mutability_modifiers
 	'mutable_expression':               NodeType.mutable_expression
 	'mutable_identifier':               NodeType.mutable_identifier
-	'not_in_expression':                NodeType.not_in_expression
-	'not_is_expression':                NodeType.not_is_expression
 	'option_propagation_expression':    NodeType.option_propagation_expression
 	'option_type':                      NodeType.option_type
 	'or_block':                         NodeType.or_block
