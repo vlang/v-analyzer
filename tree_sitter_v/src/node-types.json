@@ -1396,6 +1396,10 @@
           "named": true
         },
         {
+          "type": "is_clause",
+          "named": true
+        },
+        {
           "type": "range_clause",
           "named": true
         }
@@ -2077,6 +2081,25 @@
         },
         {
           "type": "string_interpolation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "is_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "is_expression",
+          "named": true
+        },
+        {
+          "type": "mutability_modifiers",
           "named": true
         }
       ]

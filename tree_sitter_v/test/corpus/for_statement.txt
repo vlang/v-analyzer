@@ -55,6 +55,54 @@ for i in 0 .. 10 {
     (block)))
 
 ================================================================================
+Simple for is statement
+================================================================================
+for v is a {
+}
+for v !is Bar {
+}
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (is_clause
+      (is_expression
+        (reference_expression
+          (identifier))
+        (plain_type
+          (type_reference_expression
+            (identifier)))))
+    (block))
+  (for_statement
+    (is_clause
+      (is_expression
+        (reference_expression
+          (identifier))
+        (plain_type
+          (type_reference_expression
+            (identifier)))))
+    (block)))
+
+================================================================================
+Simple for mut is statement
+================================================================================
+for mut v is Foo {
+}
+--------------------------------------------------------------------------------
+
+(source_file
+  (for_statement
+    (is_clause
+      (mutability_modifiers)
+      (is_expression
+        (reference_expression
+          (identifier))
+        (plain_type
+          (type_reference_expression
+            (identifier)))))
+    (block)))
+
+================================================================================
 Simple C for statement
 ================================================================================
 for i := 0; i < 10; i++ {

@@ -87,6 +87,7 @@ pub enum NodeType {
 	interface_method_definition
 	interpolation_closing
 	interpreted_string_literal
+	is_clause
 	is_expression
 	key_value_attribute
 	keyed_element
@@ -394,6 +395,7 @@ const node_type_name_to_enum = {
 	'interface_method_definition':      NodeType.interface_method_definition
 	'interpolation_closing':            NodeType.interpolation_closing
 	'interpreted_string_literal':       NodeType.interpreted_string_literal
+	'is_clause':                        NodeType.is_clause
 	'is_expression':                    NodeType.is_expression
 	'key_value_attribute':              NodeType.key_value_attribute
 	'keyed_element':                    NodeType.keyed_element
