@@ -6,7 +6,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable-next-line spaced-comment */
 /// <reference types="tree-sitter-cli/dsl" />
-// @ts-check
 
 const PREC = {
 	attributes: 10,
@@ -282,7 +281,8 @@ module.exports = grammar({
 				),
 			),
 
-		parameter_list: ($) => prec(PREC.resolve, seq('(', comma_sep($.parameter_declaration), ')')),
+		parameter_list: ($) =>
+			prec(PREC.resolve, seq('(', optional(sep($.parameter_declaration)), ')')),
 
 		parameter_declaration: ($) =>
 			seq(
@@ -292,7 +292,7 @@ module.exports = grammar({
 				field('type', $.plain_type),
 			),
 
-		type_parameter_list: ($) => seq('(', comma_sep($.type_parameter_declaration), ')'),
+		type_parameter_list: ($) => seq('(', sep($.type_parameter_declaration), ')'),
 
 		type_parameter_declaration: ($) =>
 			prec(
@@ -311,7 +311,7 @@ module.exports = grammar({
 				PREC.resolve,
 				seq(
 					choice(token.immediate('['), token.immediate('<')),
-					comma_sep1($.generic_parameter),
+					sep($.generic_parameter),
 					optional(','),
 					choice(']', '>'),
 				),
@@ -469,7 +469,7 @@ module.exports = grammar({
 				seq(
 					choice($._expression, $.mutable_expression),
 					',',
-					comma_sep1(choice($._expression, $.mutable_expression)),
+					sep(choice($._expression, $.mutable_expression)),
 				),
 			),
 
@@ -514,14 +514,13 @@ module.exports = grammar({
 				),
 			),
 
-		type_parameters: ($) =>
-			prec.dynamic(2, seq(token.immediate('['), comma_sep1($.plain_type), ']')),
+		type_parameters: ($) => prec.dynamic(2, seq(token.immediate('['), sep($.plain_type), ']')),
 
 		argument_list: ($) =>
 			seq('(', choice(repeat(seq($.argument, optional(list_separator))), $.short_lambda), ')'),
 
 		short_lambda: ($) =>
-			seq('|', comma_sep($.reference_expression), '|', $._expression_without_blocks),
+			seq('|', optional(sep($.reference_expression)), '|', $._expression_without_blocks),
 
 		argument: ($) =>
 			choice($._expression, $.mutable_expression, $.keyed_element, $.spread_expression),
@@ -582,7 +581,7 @@ module.exports = grammar({
 				),
 			),
 
-		capture_list: ($) => seq('[', comma_sep($.capture), optional(','), ']'),
+		capture_list: ($) => seq('[', sep($.capture), optional(','), ']'),
 
 		capture: ($) => seq(optional($.mutability_modifiers), $.reference_expression),
 
@@ -625,7 +624,7 @@ module.exports = grammar({
 		as_type_cast_expression: ($) => seq($._expression, 'as', $.plain_type),
 
 		compile_time_selector_expression: ($) =>
-			comp_time(seq('(', choice($.reference_expression, $.selector_expression), ')')),
+			seq('$', seq('(', choice($.reference_expression, $.selector_expression), ')')),
 
 		or_block: ($) => seq('or', field('block', $.block)),
 
@@ -772,7 +771,7 @@ module.exports = grammar({
 		match_arm: ($) => seq(field('value', $.match_expression_list), field('block', $.block)),
 
 		match_expression_list: ($) =>
-			comma_sep1(
+			sep(
 				choice($._expression_without_blocks, $.match_arm_type, alias($._definite_range, $.range)),
 			),
 
@@ -875,91 +874,34 @@ module.exports = grammar({
 			),
 
 		_string_literal: ($) =>
-			choice($.c_string_literal, $.raw_string_literal, $.interpreted_string_literal),
-
-		c_string_literal: ($) =>
-			prec(
-				1,
-				choice(
-					seq(
-						$.__c_single_quote,
-						repeat(
-							choice(
-								token.immediate(prec.right(1, /[^'\\$]+/)),
-								$.escape_sequence,
-								$.string_interpolation,
-							),
-						),
-						$.__single_quote,
-					),
-					seq(
-						$.__c_double_quote,
-						repeat(
-							choice(
-								token.immediate(prec.right(1, /[^"\\$]+/)),
-								$.escape_sequence,
-								$.string_interpolation,
-							),
-						),
-						$.__double_quote,
-					),
-				),
-			),
-
-		raw_string_literal: ($) =>
-			prec(
-				1,
-				choice(
-					seq(
-						$.__r_single_quote,
-						repeat(token.immediate(prec.right(1, /[^']+/))),
-						$.__single_quote,
-					),
-					seq(
-						$.__r_double_quote,
-						repeat(token.immediate(prec.right(1, /[^"]+/))),
-						$.__double_quote,
-					),
-				),
-			),
+			choice($.interpreted_string_literal, $.c_string_literal, $.raw_string_literal),
 
 		interpreted_string_literal: ($) =>
-			prec(
-				1,
-				choice(
-					seq(
-						$.__single_quote,
-						repeat(
-							choice(
-								token.immediate(prec.right(1, /[^'\\$]+/)),
-								$.escape_sequence,
-								$.string_interpolation,
-							),
-						),
-						$.__single_quote,
-					),
-					seq(
-						$.__double_quote,
-						repeat(
-							choice(
-								token.immediate(prec.right(1, /[^"\\$]+/)),
-								$.escape_sequence,
-								$.string_interpolation,
-							),
-						),
-						$.__double_quote,
-					),
-				),
+			choice(
+				seq("'", repeat(stringBody(/[^'\\$]+/, $)), "'"),
+				seq('"', repeat(stringBody(/[^"\\$]+/, $)), '"'),
+			),
+
+		c_string_literal: ($) =>
+			choice(
+				seq("c'", repeat(stringBody(/[^'\\$]+/, $)), "'"),
+				seq('c"', repeat(stringBody(/[^"\\$]+/, $)), '"'),
+			),
+
+		raw_string_literal: (_) =>
+			choice(
+				seq("r'", repeat(token.immediate(prec.right(1, /[^']+/))), "'"),
+				seq('r"', repeat(token.immediate(prec.right(1, /[^"]+/))), '"'),
 			),
 
 		string_interpolation: ($) =>
 			seq(
-				alias($.__dolcbr, $.interpolation_opening),
+				alias('${', $.interpolation_opening),
 				choice(
 					repeat(alias($._expression, $.interpolation_expression)),
 					seq(alias($._expression, $.interpolation_expression), $.format_specifier),
 				),
-				alias($.__rcbr, $.interpolation_closing),
+				alias('}', $.interpolation_closing),
 			),
 
 		format_specifier: ($) =>
@@ -1003,13 +945,11 @@ module.exports = grammar({
 
 		mutable_expression: ($) => prec(PREC.resolve, seq($.mutability_modifiers, $._expression)),
 
-		identifier_list: ($) => prec(PREC.and, comma_sep1(choice($.mutable_identifier, $.identifier))),
+		identifier_list: ($) => prec(PREC.and, sep(choice($.mutable_identifier, $.identifier))),
 
-		expression_list: ($) =>
-			prec(PREC.resolve, comma_sep1(choice($._expression, $.mutable_expression))),
+		expression_list: ($) => prec(PREC.resolve, sep(choice($._expression, $.mutable_expression))),
 
-		expression_without_blocks_list: ($) =>
-			prec(PREC.resolve, comma_sep1($._expression_without_blocks)),
+		expression_without_blocks_list: ($) => prec(PREC.resolve, sep($._expression_without_blocks)),
 
 		// ==================== TYPES ====================
 
@@ -1042,7 +982,7 @@ module.exports = grammar({
 
 		anon_struct_type: ($) => seq('struct', $._struct_body),
 
-		multi_return_type: ($) => seq('(', comma_sep1($.plain_type), optional(','), ')'),
+		multi_return_type: ($) => seq('(', sep($.plain_type), optional(','), ')'),
 
 		result_type: ($) => prec.right(seq('!', optional($.plain_type))),
 
@@ -1149,7 +1089,7 @@ module.exports = grammar({
 				),
 			),
 
-		var_definition_list: ($) => comma_sep1($.var_definition),
+		var_definition_list: ($) => sep($.var_definition),
 
 		var_definition: ($) =>
 			prec(
@@ -1283,43 +1223,34 @@ module.exports = grammar({
 				PREC.attributes,
 				seq($.value_attribute, ':', field('value', choice($.literal, $.identifier))),
 			),
-
-		__dolcbr: (_) => token('${'),
-		__rcbr: (_) => token('}'),
-		__double_quote: (_) => token('"'),
-		__single_quote: (_) => token("'"),
-		__c_double_quote: (_) => token('c"'),
-		__c_single_quote: (_) => token("c'"),
-		__r_double_quote: (_) => token('r"'),
-		__r_single_quote: (_) => token("r'"),
 	},
 });
 
 /**
+ * Creates a comma separated rule sequence to match one or more of the passed rule.
+ *
  * @param {RuleOrLiteral} rule
  *
  * @return {SeqRule}
+ *
  */
-function comp_time(rule) {
-	return seq('$', rule);
+function sep(rule) {
+	return seq(rule, repeat(seq(',', rule)));
 }
 
 /**
- * @param {RuleOrLiteral} rules
+ *
+ * @param {RegExp} re
+ * @param {$} $
  *
  * @return {SeqRule}
- */
-function comma_sep1(rules) {
-	return seq(rules, repeat(seq(',', rules)));
-}
-
-/**
- * @param {RuleOrLiteral} rule
  *
- * @return {ChoiceRule}
  */
-function comma_sep(rule) {
-	return optional(comma_sep1(rule));
+function stringBody(re, $) {
+	return choice(
+		token.immediate(prec.right(1, re)),
+		choice($.escape_sequence, $.string_interpolation),
+	);
 }
 
 /**
