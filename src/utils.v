@@ -21,10 +21,6 @@ pub fn successln(msg string) {
 }
 
 pub fn download_install_vsh() ! {
-	if os.exists(analyzer_install_script_path) {
-		return
-	}
-
 	http.download_file(analyzer_install_script_download_path, analyzer_install_script_path) or {
 		return error('Failed to download script: ${err}')
 	}
