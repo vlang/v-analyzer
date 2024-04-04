@@ -25,7 +25,7 @@ fn errorln(msg string) {
 }
 
 fn (m ReleaseMode) compile_cmd() string {
-	base_build_cmd := '${@VEXE} ${@VMODROOT} -o ${bin_path} -no-parallel'
+	base_build_cmd := '"${@VEXE}" "${@VMODROOT}" -o "${bin_path}" -no-parallel'
 	cc := if v := os.getenv_opt('CC') {
 		'-cc ${v}'
 	} else {
