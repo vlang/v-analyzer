@@ -79,6 +79,7 @@ pub fn (mut wd WorkDone) end(message string) {
 		value: lsp.WorkDoneProgressPayload{
 			kind: 'end'
 			message: message
+			percentage: 100
 		}
 	)
 }
