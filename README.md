@@ -75,7 +75,7 @@ Currently, we provide binaries for Linux (x64), macOS (x64 and ARM), and Windows
 > C compiler message, about `lib.c not found`
 
 > [!TIP]
-> On Windows, use GCC for building, as TCC an run into some issues.
+> On Windows, use GCC for building, as TCC can run into some issues.
 
 Update V to the latest version:
 
