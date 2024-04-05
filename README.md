@@ -56,20 +56,26 @@ Currently, we provide binaries for Linux (x64), macOS (x64 and ARM), and Windows
 
 ## Building from source
 
-> **Note**
+> [!NOTE]
 > This repository uses Git submodules.
 > In practice, this means that you either have to:
-> `git clone --filter=blob:none --recursive --shallow-submodules https://github.com/vlang/v-analyzer`
-> ... or, if you used just `git clone https://github.com/vlang/v-analyzer`, you have to later do:
-> `git submodule init`
-> `git submodule update`
-> inside your local `v-analyzer` clone.
+>
+> ```sh
+> git clone --filter=blob:none --recursive --shallow-submodules https://github.com/vlang/v-analyzer
+> ```
+>
+> ... or, if you used just `git clone https://github.com/vlang/v-analyzer`, you can execute below
+> inside your local `v-analyzer` clone:
+>
+> ```sh
+> git submodule init && git submodule update
+> ```
+>
 > If you do not do either, the symptom is that when you try to build v-analyzer, you will get a
 > C compiler message, about `lib.c not found`
 
-> **Note**
-> If you're using Windows, then you need GCC for any build, as TCC doesn't work
-> due to some issues.
+> [!TIP]
+> On Windows, use GCC for building, as TCC an run into some issues.
 
 Update V to the latest version:
 
@@ -109,7 +115,7 @@ Or, you can specify the path to the binary in your VS Code settings:
 
 ```json
 {
-  "v-analyzer.serverPath": "/path/to/v-analyzer/bin/v-analyzer"
+	"v-analyzer.serverPath": "/path/to/v-analyzer/bin/v-analyzer"
 }
 ```
 
