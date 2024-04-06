@@ -58,6 +58,7 @@ pub fn (r &ReferenceImpl) resolve() ?PsiElement {
 }
 
 pub struct SubResolver {
+pub:
 	containing_file &PsiFile
 	element         ReferenceExpressionBase
 	for_types       bool

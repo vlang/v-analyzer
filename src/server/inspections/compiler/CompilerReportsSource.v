@@ -4,6 +4,7 @@ import lsp
 import server.inspections
 
 pub struct CompilerReportsSource {
+pub:
 	compiler_path string
 }
 

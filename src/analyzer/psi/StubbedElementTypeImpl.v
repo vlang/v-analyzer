@@ -600,6 +600,7 @@ pub fn (s &StubbedElementType) create_stub(psi PsiElement, parent_stub &StubBase
 
 @[params]
 struct StubParams {
+pub:
 	include_text bool
 	additional   string
 }
@@ -617,6 +618,7 @@ pub fn declaration_stub(psi PsiNamedElement, parent_stub &StubElement, stub_type
 
 @[params]
 struct TestStubParams {
+pub:
 	include_text bool = true
 }
 

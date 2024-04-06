@@ -46,13 +46,11 @@ fn run(cmd cli.Command) ! {
 	mut ls := server.LanguageServer.new(analyzer.IndexingManager.new())
 	mut jrpc_server := &jsonrpc.Server{
 		stream: stream
-		interceptors: [
-			&log.LogRecorder{
-				enabled: true
-			},
-		]
 		handler: ls
 	}
+	mut lr := log.LogRecorder{}
+	lr.enable()
+	jrpc_server.interceptors = [&lr]
 
 	defer {
 		mut out := loglib.get_output()
