@@ -1,10 +1,10 @@
 module testing
 
 pub struct BenchmarkRunner {
-pub mut:
-	last_fixture &Fixture
 mut:
 	benchmarks []&Benchmark
+pub mut:
+	last_fixture &Fixture
 }
 
 pub fn (mut b BenchmarkRunner) create_or_reuse_fixture() &Fixture {
