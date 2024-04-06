@@ -272,31 +272,31 @@ fn (mut ls LanguageServer) find_config() string {
 
 fn (mut ls LanguageServer) setup_toolchain() {
 	toolchain_candidates := project.get_toolchain_candidates()
-	if toolchain_candidates.len > 0 {
-		ls.client.log_message('Found toolchain candidates:', .info)
-		loglib.info('Found toolchain candidates:')
-		for toolchain_candidate in toolchain_candidates {
-			ls.client.log_message('  ${toolchain_candidate}', .info)
-			loglib.info('  ${toolchain_candidate}')
-		}
-
-		ls.client.log_message('Using "${toolchain_candidates.first()}" as toolchain',
-			.info)
-		loglib.info('Using "${toolchain_candidates.first()}" as toolchain')
-		ls.vroot = toolchain_candidates.first()
-
-		if toolchain_candidates.len > 1 {
-			ls.client.log_message('To set other toolchain, use `custom_vroot` in local or global config.
-Global config path: ${config.analyzer_configs_path}/${config.analyzer_config_name}',
-				.info)
-		}
-	} else {
+	if toolchain_candidates.len == 0 {
 		ls.client.log_message("No toolchain candidates found, some of the features won't work properly.
 Please, set `custom_vroot` in local or global config.
 Global config path: ${config.analyzer_configs_path}/${config.analyzer_config_name}",
 			.error)
 		loglib.error("No toolchain candidates found, some of the features won't work properly.
 Please, set `custom_vroot` in local or global config.")
+		return
+	}
+
+	ls.client.log_message('Found toolchain candidates:', .info)
+	loglib.info('Found toolchain candidates:')
+	for toolchain_candidate in toolchain_candidates {
+		ls.client.log_message('  ${toolchain_candidate}', .info)
+		loglib.info('  ${toolchain_candidate}')
+	}
+
+	ls.client.log_message('Using "${toolchain_candidates.first()}" as toolchain', .info)
+	loglib.info('Using "${toolchain_candidates.first()}" as toolchain')
+	ls.vroot = toolchain_candidates.first()
+
+	if toolchain_candidates.len > 1 {
+		ls.client.log_message('To set other toolchain, use `custom_vroot` in local or global config.
+Global config path: ${config.analyzer_configs_path}/${config.analyzer_config_name}',
+			.info)
 	}
 }
 
