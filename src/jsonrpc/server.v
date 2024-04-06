@@ -116,6 +116,7 @@ fn (mut s Server) internal_respond(mut base_rw ResponseWriter) ! {
 
 @[params]
 pub struct NewWriterConfig {
+pub:
 	own_buffer bool
 }
 

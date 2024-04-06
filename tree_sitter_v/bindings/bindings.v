@@ -31,6 +31,7 @@ pub fn (mut p Parser[T]) reset() {
 
 @[params]
 pub struct ParseConfig {
+pub:
 	source string  @[required]
 	tree   &TSTree = &TSTree(unsafe { nil })
 }

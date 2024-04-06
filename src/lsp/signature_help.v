@@ -1,6 +1,7 @@
 module lsp
 
 pub struct SignatureHelpOptions {
+pub:
 	trigger_characters   []string @[json: triggerCharacters]
 	retrigger_characters []string @[json: retriggerCharacters]
 }
@@ -47,6 +48,7 @@ pub mut:
 }
 
 pub struct ParameterInformation {
+pub:
 	label string
 }
 

@@ -2,7 +2,8 @@ module testing
 
 pub struct BenchmarkRunner {
 mut:
-	benchmarks   []&Benchmark
+	benchmarks []&Benchmark
+pub mut:
 	last_fixture &Fixture
 }
 

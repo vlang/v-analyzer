@@ -192,6 +192,7 @@ pub fn (e ResponseError) err() IError {
 
 @[params]
 pub struct ResponseErrorGeneratorParams {
+pub:
 	error IError @[required]
 	data  string
 }

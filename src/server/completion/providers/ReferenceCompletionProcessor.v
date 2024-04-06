@@ -7,6 +7,7 @@ import analyzer.lang
 import server.completion
 
 pub struct ReferenceCompletionProcessor {
+pub:
 	file       &psi.PsiFile
 	module_fqn string
 	root       string

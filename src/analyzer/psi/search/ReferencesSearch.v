@@ -9,6 +9,7 @@ import loglib
 
 @[params]
 pub struct SearchParams {
+pub:
 	// include_declaration indicates whether to include the declaration
 	// of the symbol in the search results
 	// This is useful when we want to find all usages of a symbol for
