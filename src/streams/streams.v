@@ -68,7 +68,7 @@ fn read_line(file &os.File, mut buf []u8) !int {
 	mut len := 0
 	mut temp := []u8{len: 256, cap: 256}
 	for {
-		read_cnt := file.read_bytes_into_newline(mut temp) or { return err }
+		read_cnt := file.read_bytes_with_newline(mut temp) or { return err }
 		len += read_cnt
 		buf << temp[0..read_cnt]
 		if read_cnt == 0 {
