@@ -29,7 +29,6 @@ pub fn (mut ls LanguageServer) initialize(params lsp.InitializeParams, mut wr Re
 
 	ls.print_info(params.process_id, params.client_info)
 	ls.setup()
-	ls.reporter.compiler_path = ls.compiler_path() or { 'v' }
 
 	ls.register_intention(intentions.AddFlagAttributeIntention{})
 	ls.register_intention(intentions.AddHeapAttributeIntention{})
@@ -101,19 +100,21 @@ pub fn (mut ls LanguageServer) initialized(mut wr ResponseWriter) {
 	need_index_stdlib := 'no-stdlib' !in ls.initialization_options
 
 	if need_index_stdlib {
-		if vmodules_root := ls.vmodules_root() {
-			ls.indexing_mng.indexer.add_indexing_root(vmodules_root, .modules, ls.cache_dir)
+		if ls.paths.vmodules_root != '' {
+			ls.indexing_mng.indexer.add_indexing_root(ls.paths.vmodules_root, .modules,
+				ls.paths.cache_dir)
 		}
-		if vlib_root := ls.vlib_root() {
-			ls.indexing_mng.indexer.add_indexing_root(vlib_root, .standard_library, ls.cache_dir)
+		if ls.paths.vlib_root != '' {
+			ls.indexing_mng.indexer.add_indexing_root(ls.paths.vlib_root, .standard_library,
+				ls.paths.cache_dir)
 		}
 	}
 
 	if stubs_root := ls.stubs_root() {
-		ls.indexing_mng.indexer.add_indexing_root(stubs_root, .stubs, ls.cache_dir)
+		ls.indexing_mng.indexer.add_indexing_root(stubs_root, .stubs, ls.paths.cache_dir)
 	}
 
-	ls.indexing_mng.indexer.add_indexing_root(ls.root_uri.path(), .workspace, ls.cache_dir)
+	ls.indexing_mng.indexer.add_indexing_root(ls.root_uri.path(), .workspace, ls.paths.cache_dir)
 
 	status := ls.indexing_mng.indexer.index(fn [mut work, mut ls] (root index.IndexingRoot, i int) {
 		percentage := (i * 70) / ls.indexing_mng.indexer.count_roots()
@@ -145,7 +146,7 @@ pub fn (mut ls LanguageServer) initialized(mut wr ResponseWriter) {
 
 	work.end('Indexing finished')
 
-	if _ := ls.vlib_root() {
+	if ls.paths.vlib_root != '' {
 		ls.client.send_server_status(health: 'ok', quiescent: true)
 	} else {
 		msg := 'Cannot find V standard library!
@@ -163,7 +164,7 @@ fn (mut ls LanguageServer) setup() {
 		ls.client.log_message('No config found', .warning)
 		loglib.warn('No config found')
 		ls.setup_toolchain()
-		ls.setup_vmodules()
+		ls.setup_vpaths() or { loglib.error(err.msg()) }
 		return
 	}
 
@@ -192,7 +193,7 @@ fn (mut ls LanguageServer) setup() {
 
 	ls.cfg = cfg
 	if cfg.custom_vroot != '' {
-		ls.vroot = os.expand_tilde_to_home(cfg.custom_vroot)
+		ls.paths.vroot = os.expand_tilde_to_home(cfg.custom_vroot)
 
 		ls.client.log_message("Find custom VROOT path in '${cfg.path()}' config", .info)
 		ls.client.log_message('Using "${cfg.custom_vroot}" as toolchain', .info)
@@ -202,10 +203,10 @@ fn (mut ls LanguageServer) setup() {
 	}
 
 	if cfg.custom_cache_dir != '' {
-		ls.cache_dir = os.abs_path(os.expand_tilde_to_home(cfg.custom_cache_dir))
+		ls.paths.cache_dir = os.abs_path(os.expand_tilde_to_home(cfg.custom_cache_dir))
 
-		if !os.exists(ls.cache_dir) {
-			os.mkdir_all(ls.cache_dir) or {
+		if !os.exists(ls.paths.cache_dir) {
+			os.mkdir_all(ls.paths.cache_dir) or {
 				ls.client.log_message('Failed to create custom analyzer caches directory: ${err}',
 					.error)
 
@@ -223,16 +224,16 @@ fn (mut ls LanguageServer) setup() {
 		loglib.info('Using "${cfg.custom_cache_dir}" as cache dir')
 	}
 
-	if ls.vroot == '' {
+	if ls.paths.vroot == '' {
 		// if custom vroot is not set, try to find it
 		ls.setup_toolchain()
 	}
 
-	if ls.cache_dir == '' {
+	if ls.paths.cache_dir == '' {
 		ls.setup_cache_dir()
 	}
 
-	ls.setup_vmodules()
+	ls.setup_vpaths() or { loglib.error(err.msg()) }
 }
 
 fn (mut ls LanguageServer) setup_cache_dir() {
@@ -249,10 +250,10 @@ fn (mut ls LanguageServer) setup_cache_dir() {
 	}
 
 	// if custom cache dir is not set, use default
-	ls.cache_dir = config.analyzer_caches_path
+	ls.paths.cache_dir = config.analyzer_caches_path
 
-	ls.client.log_message('Using "${ls.cache_dir}" as cache dir', .info)
-	loglib.info('Using "${ls.cache_dir}" as cache dir')
+	ls.client.log_message('Using "${ls.paths.cache_dir}" as cache dir', .info)
+	loglib.info('Using "${ls.paths.cache_dir}" as cache dir')
 }
 
 fn (mut ls LanguageServer) find_config() string {
@@ -291,7 +292,7 @@ Please, set `custom_vroot` in local or global config.")
 
 	ls.client.log_message('Using "${toolchain_candidates.first()}" as toolchain', .info)
 	loglib.info('Using "${toolchain_candidates.first()}" as toolchain')
-	ls.vroot = toolchain_candidates.first()
+	ls.paths.vroot = toolchain_candidates.first()
 
 	if toolchain_candidates.len > 1 {
 		ls.client.log_message('To set other toolchain, use `custom_vroot` in local or global config.
@@ -300,10 +301,21 @@ Global config path: ${config.analyzer_configs_path}/${config.analyzer_config_nam
 	}
 }
 
-fn (mut ls LanguageServer) setup_vmodules() {
-	ls.vmodules_root = os.vmodules_dir()
-	ls.client.log_message('Using "${ls.vmodules_root}" as vmodules root', .info)
-	loglib.info('Using "${ls.vmodules_root}" as vmodules root')
+fn (mut ls LanguageServer) setup_vpaths() ! {
+	vlib_path := os.join_path(ls.paths.vroot, 'vlib')
+	if !os.is_dir(vlib_path) {
+		return error('Failed to find standard library path')
+	}
+	ls.paths.vlib_root = vlib_path
+	vmodules_root := os.vmodules_dir()
+	if !os.is_dir(ls.paths.vmodules_root) {
+		return error('Failed to find vmodules path')
+	}
+	ls.paths.vmodules_root = vmodules_root
+	ls.client.log_message('Using "${ls.paths.vmodules_root}" as vmodules root', .info)
+	loglib.info('Using "${ls.paths.vmodules_root}" as vmodules root')
+	ls.paths.vexe = os.join_path(ls.paths.vroot, $if windows { 'v.exe' } $else { 'v' })
+	ls.reporter.compiler_path = ls.paths.vexe
 }
 
 fn (mut ls LanguageServer) setup_config_dir() {

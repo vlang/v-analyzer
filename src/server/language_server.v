@@ -38,12 +38,19 @@ pub mut:
 	// When the file is closed, the `did_close` method is called,
 	// which removes the file from `opened_files`.
 	opened_files map[lsp.DocumentUri]analyzer.OpenedFile
-	// vmodules_root is the path to the directory with vmodules.
-	vmodules_root string
-	// vroot is the path to the directory with the V compiler.
-	vroot string
-	// cache_dir is the path to the directory with the cache.
-	cache_dir string
+	paths        struct {
+	mut:
+		// vmodules_root is the path to the vmodules directory.
+		vmodules_root string
+		// vroot is the path to the directory of the V compiler.
+		vroot string
+		// vexe is the path to the V compiler.
+		vexe string
+		// vlib_root is the path to the directory of the V standard library.
+		vlib_root string
+		// cache_dir is the path to the directory with the cache.
+		cache_dir string
+	}
 	// stubs_version incremented on each change in stubs
 	//
 	// See also `LanguageServer.setup_stubs()`
@@ -79,33 +86,6 @@ pub fn LanguageServer.new(indexing analyzer.IndexingManager) &LanguageServer {
 		client: unsafe { nil } // will be initialized in `initialize`
 		progress: unsafe { nil } // will be initialized in `initialize`
 	}
-}
-
-pub fn (mut ls LanguageServer) compiler_path() ?string {
-	if ls.vroot == '' {
-		return none
-	}
-	compiler_exe_name := $if windows { 'v.exe' } $else { 'v' }
-	return os.join_path(ls.vroot, compiler_exe_name)
-}
-
-pub fn (mut ls LanguageServer) vlib_root() ?string {
-	if ls.vroot == '' {
-		return none
-	}
-
-	path := os.join_path(ls.vroot, 'vlib')
-	if !os.is_dir(path) {
-		return none
-	}
-	return path
-}
-
-pub fn (mut ls LanguageServer) vmodules_root() ?string {
-	if !os.is_dir(ls.vmodules_root) {
-		return none
-	}
-	return ls.vmodules_root
 }
 
 pub fn (mut _ LanguageServer) stubs_root() ?string {
@@ -372,8 +352,7 @@ pub fn (mut ls LanguageServer) register_compiler_quick_fix(quickfix intentions.C
 // p.wait()
 // ```
 pub fn (mut ls LanguageServer) launch_tool(args ...string) !&os.Process {
-	compiler_path := ls.compiler_path() or { return error('Cannot run tool without vroot') }
-	mut p := os.new_process(compiler_path)
+	mut p := os.new_process(ls.paths.vexe)
 	p.set_args(args)
 	p.set_redirect_stdio()
 	return p
