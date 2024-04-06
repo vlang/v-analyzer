@@ -1,13 +1,6 @@
 module project
 
 import project.flavors
-import os
-
-// get_modules_location returns the folder where V looks for and saves modules.
-// The default is `~/.vmodules`, however it can be overridden with the `VMODULES` environment variable
-pub fn get_modules_location() string {
-	return os.vmodules_dir()
-}
 
 // get_toolchain_candidates looks for possible places where the V compiler was installed.
 // The function returns an array of candidates, where the first element is the highest priority.

@@ -301,7 +301,7 @@ Please, set `custom_vroot` in local or global config.")
 }
 
 fn (mut ls LanguageServer) setup_vmodules() {
-	ls.vmodules_root = project.get_modules_location()
+	ls.vmodules_root = os.vmodules_dir()
 	ls.client.log_message('Using "${ls.vmodules_root}" as vmodules root', .info)
 	loglib.info('Using "${ls.vmodules_root}" as vmodules root')
 }
