@@ -16,8 +16,8 @@
 		"install": "node-gyp-build",
 		"prebuildify": "prebuildify --napi --strip",
 		"lint": "eslint \"**/*.js\"",
-		"format": "prettier --write \"**/*.js\"",
-		"format:check": "prettier --check \"**/*.js\""
+		"format": "prettier --write \"grammar.js\"",
+		"format:check": "prettier --check \"grammar.js\""
 	},
 	"dependencies": {
 		"node-addon-api": "^8.0.0",

@@ -3887,6 +3887,21 @@
     "fields": {}
   },
   {
+    "type": "sum_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "plain_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "thread_type",
     "named": true,
     "fields": {},
@@ -3926,28 +3941,16 @@
         ]
       },
       "types": {
-        "multiple": true,
+        "multiple": false,
         "required": true,
         "types": [
-          {
-            "type": "\n",
-            "named": false
-          },
-          {
-            "type": "\r",
-            "named": false
-          },
-          {
-            "type": "\r\n",
-            "named": false
-          },
           {
             "type": "plain_type",
             "named": true
           },
           {
-            "type": "|",
-            "named": false
+            "type": "sum_type",
+            "named": true
           }
         ]
       }

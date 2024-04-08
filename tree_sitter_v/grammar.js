@@ -83,7 +83,7 @@ const list_separator = choice(semi, ',');
 module.exports = grammar({
 	name: 'v',
 
-	extras: ($) => [/\s/, $.line_comment, $.block_comment],
+	extras: ($) => [/[ \t]+|(\r?\n)+/, $.line_comment, $.block_comment],
 
 	word: ($) => $.identifier,
 
@@ -104,7 +104,6 @@ module.exports = grammar({
 		[$.fixed_array_type, $.literal],
 		[$.reference_expression, $.type_reference_expression],
 		[$.is_expression],
-		[$._type_union_list],
 		[$._expression_without_blocks, $.element_list],
 	],
 
@@ -209,18 +208,17 @@ module.exports = grammar({
 		_global_var_value: ($) => seq('=', field('value', $._expression)),
 
 		type_declaration: ($) =>
-			seq(
-				optional($.visibility_modifiers),
-				'type',
-				field('name', $.identifier),
-				optional(field('generic_parameters', $.generic_parameters)),
-				'=',
-				field('types', $._type_union_list),
+			prec.right(
+				PREC.resolve,
+				seq(
+					optional($.visibility_modifiers),
+					'type',
+					field('name', $.identifier),
+					optional(field('generic_parameters', $.generic_parameters)),
+					'=',
+					field('types', choice($.sum_type, $.plain_type)),
+				),
 			),
-
-		// int | string | Foo
-		_type_union_list: ($) =>
-			seq($.plain_type, repeat(seq(optional(terminator), '|', $.plain_type))),
 
 		function_declaration: ($) =>
 			prec.right(
@@ -534,7 +532,7 @@ module.exports = grammar({
 			),
 
 		type_initializer: ($) =>
-			prec(
+			prec.right(
 				PREC.type_initializer,
 				seq(field('type', $.plain_type), field('body', $.type_initializer_body)),
 			),
@@ -957,6 +955,12 @@ module.exports = grammar({
 
 		// ==================== TYPES ====================
 
+		// int | string | Foo
+		sum_type: ($) =>
+			prec.right(
+				seq($.plain_type, repeat1(seq(optional(/\s+/), token.immediate('|'), $.plain_type))),
+			),
+
 		plain_type: ($) =>
 			prec.right(
 				PREC.primary,
@@ -1003,8 +1007,7 @@ module.exports = grammar({
 				field('element', $.plain_type),
 			),
 
-		array_type: ($) =>
-			prec(PREC.primary, prec.dynamic(2, seq('[', ']', field('element', $.plain_type)))),
+		array_type: ($) => prec.right(PREC.primary, seq('[', ']', field('element', $.plain_type))),
 
 		variadic_type: ($) => seq('...', $.plain_type),
 

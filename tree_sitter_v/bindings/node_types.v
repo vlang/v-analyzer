@@ -156,6 +156,7 @@ pub enum NodeType {
 	struct_declaration
 	struct_field_declaration
 	struct_field_scope
+	sum_type
 	thread_type
 	type_declaration
 	type_initializer
@@ -464,6 +465,7 @@ const node_type_name_to_enum = {
 	'struct_declaration':               NodeType.struct_declaration
 	'struct_field_declaration':         NodeType.struct_field_declaration
 	'struct_field_scope':               NodeType.struct_field_scope
+	'sum_type':                         NodeType.sum_type
 	'thread_type':                      NodeType.thread_type
 	'type_declaration':                 NodeType.type_declaration
 	'type_initializer':                 NodeType.type_initializer
