@@ -735,7 +735,7 @@
           },
           {
             "type": "FIELD",
-            "name": "types",
+            "name": "type",
             "content": {
               "type": "CHOICE",
               "members": [
@@ -8474,7 +8474,7 @@
   "extras": [
     {
       "type": "PATTERN",
-      "value": "[ \\t]+|(\\r?\\n)+"
+      "value": "\\s"
     },
     {
       "type": "SYMBOL",

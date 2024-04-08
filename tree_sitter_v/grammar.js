@@ -83,7 +83,7 @@ const list_separator = choice(semi, ',');
 module.exports = grammar({
 	name: 'v',
 
-	extras: ($) => [/[ \t]+|(\r?\n)+/, $.line_comment, $.block_comment],
+	extras: ($) => [/\s/, $.line_comment, $.block_comment],
 
 	word: ($) => $.identifier,
 

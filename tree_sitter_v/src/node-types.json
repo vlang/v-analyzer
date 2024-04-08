@@ -3940,7 +3940,7 @@
           }
         ]
       },
-      "types": {
+      "type": {
         "multiple": false,
         "required": true,
         "types": [
