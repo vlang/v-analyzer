@@ -216,7 +216,7 @@ module.exports = grammar({
 					field('name', $.identifier),
 					optional(field('generic_parameters', $.generic_parameters)),
 					'=',
-					field('types', choice($.sum_type, $.plain_type)),
+					field('type', choice($.sum_type, $.plain_type)),
 				),
 			),
 
