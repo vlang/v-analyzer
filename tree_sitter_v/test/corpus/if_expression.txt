@@ -168,3 +168,54 @@ $if some_define ? {}
         (reference_expression
           (identifier)))
       (block))))
+
+================================================================================
+Simple block
+================================================================================
+if true { f();g();h(); }
+if true { f()
+g()
+  h(); }
+--------------------------------------------------------------------------------
+
+(source_file
+  (simple_statement
+    (if_expression
+      (literal
+        (true))
+      (block
+        (simple_statement
+          (call_expression
+            (reference_expression
+              (identifier))
+            (argument_list)))
+        (simple_statement
+          (call_expression
+            (reference_expression
+              (identifier))
+            (argument_list)))
+        (simple_statement
+          (call_expression
+            (reference_expression
+              (identifier))
+            (argument_list))))))
+  (simple_statement
+    (if_expression
+      (literal
+        (true))
+      (block
+        (simple_statement
+          (call_expression
+            (reference_expression
+              (identifier))
+            (argument_list)))
+        (simple_statement
+          (call_expression
+            (reference_expression
+              (identifier))
+            (argument_list)))
+        (simple_statement
+          (call_expression
+            (reference_expression
+              (identifier))
+            (argument_list)))))))

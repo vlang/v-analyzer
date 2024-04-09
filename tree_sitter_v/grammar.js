@@ -1097,7 +1097,7 @@ module.exports = grammar({
 				field('right', $.expression_list),
 			),
 
-		block: ($) => seq('{', repeat($._statement), '}'),
+		block: ($) => seq('{', repeat(seq($._statement, optional(semi))), '}'),
 
 		defer_statement: ($) => seq('defer', $.block),
 
