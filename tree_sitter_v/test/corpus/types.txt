@@ -742,20 +742,21 @@ pub type Any = Null
   (type_declaration
     (visibility_modifiers)
     (identifier)
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (array_type
-        (plain_type
-          (type_reference_expression
-            (identifier)))))
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier)))))
+    (sum_type
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (array_type
+          (plain_type
+            (type_reference_expression
+              (identifier)))))
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier))))))

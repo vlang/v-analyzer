@@ -75,12 +75,13 @@ type Height = string | int
 (source_file
   (type_declaration
     (identifier)
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier)))))
+    (sum_type
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier))))))
 
 ================================================================================
 Sum type declaration with several types
@@ -91,15 +92,16 @@ type Height = string | int | float
 (source_file
   (type_declaration
     (identifier)
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier)))))
+    (sum_type
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier))))))
 
 ================================================================================
 Sum type declaration with same type
@@ -110,17 +112,18 @@ type Height = string | int | []Height
 (source_file
   (type_declaration
     (identifier)
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (array_type
-        (plain_type
-          (type_reference_expression
-            (identifier)))))))
+    (sum_type
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (array_type
+          (plain_type
+            (type_reference_expression
+              (identifier))))))))
 
 ================================================================================
 Sum type declaration with several types on each line
@@ -133,15 +136,16 @@ type Height = string |
 (source_file
   (type_declaration
     (identifier)
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier)))))
+    (sum_type
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier))))))
 
 ================================================================================
 Sum type declaration with several types on each line, first line is empty
@@ -155,15 +159,16 @@ type Height =
 (source_file
   (type_declaration
     (identifier)
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier)))))
+    (sum_type
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier))))))
 
 ================================================================================
 Sum type declaration with several types on each line and trailing pipe
@@ -171,22 +176,19 @@ Sum type declaration with several types on each line and trailing pipe
 type Height =
     string |
     int |
-    float |
+    float
 --------------------------------------------------------------------------------
 
 (source_file
   (type_declaration
     (identifier)
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier)))
-    (plain_type
-      (type_reference_expression
-        (identifier))))
-  (ERROR
-    (plain_type
-      (type_reference_expression
-        (MISSING identifier)))))
+    (sum_type
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier)))
+      (plain_type
+        (type_reference_expression
+          (identifier))))))
