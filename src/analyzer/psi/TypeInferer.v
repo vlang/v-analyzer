@@ -87,7 +87,7 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 	}
 
 	if element.node.type_name == .as_type_cast_expression {
-		return t.infer_type(element.last_child())
+		return t.convert_type(element.last_child(), mut visited)
 	}
 
 	if element.node.type_name in [.spawn_expression, .go_expression] {
