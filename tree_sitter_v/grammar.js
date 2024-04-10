@@ -1009,8 +1009,6 @@ module.exports = grammar({
 
 		array_type: ($) => prec.right(PREC.primary, seq('[', ']', field('element', $.plain_type))),
 
-		variadic_type: ($) => seq('...', $.plain_type),
-
 		pointer_type: ($) => prec(PREC.match_arm_type, seq('&', $.plain_type)),
 
 		// In languages like Go, pointers use an asterisk, not an ampersand,
@@ -1035,18 +1033,6 @@ module.exports = grammar({
 		// ==================== TYPES END ====================
 
 		// ==================== STATEMENTS ====================
-
-		_statement_list: ($) =>
-			choice(
-				seq(
-					$._statement,
-					repeat(seq(terminator, $._statement)),
-					optional(
-						seq(terminator, optional(alias($.empty_labeled_statement, $.labeled_statement))),
-					),
-				),
-				alias($.empty_labeled_statement, $.labeled_statement),
-			),
 
 		_statement: ($) =>
 			choice(
@@ -1111,7 +1097,7 @@ module.exports = grammar({
 				field('right', $.expression_list),
 			),
 
-		block: ($) => seq('{', optional($._statement_list), '}'),
+		block: ($) => seq('{', repeat(seq($._statement, optional(semi))), '}'),
 
 		defer_statement: ($) => seq('defer', $.block),
 
@@ -1128,9 +1114,7 @@ module.exports = grammar({
 
 		label_definition: ($) => seq($.identifier, ':'),
 
-		labeled_statement: ($) => seq($.label_definition, $._statement),
-
-		empty_labeled_statement: ($) => prec.left($.label_definition),
+		labeled_statement: ($) => prec.right(seq($.label_definition, optional($._statement))),
 
 		compile_time_for_statement: ($) => seq('$for', $.range_clause, field('body', $.block)),
 
