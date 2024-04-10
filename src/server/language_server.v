@@ -352,8 +352,12 @@ pub fn (mut ls LanguageServer) register_compiler_quick_fix(quickfix intentions.C
 // p.wait()
 // ```
 pub fn (mut ls LanguageServer) launch_tool(args ...string) !&os.Process {
-	mut p := os.new_process(ls.paths.vexe)
-	p.set_args(args)
-	p.set_redirect_stdio()
-	return p
+	if os.is_file(ls.paths.vexe) {
+		mut p := os.new_process(ls.paths.vexe)
+		p.set_args(args)
+		p.set_redirect_stdio()
+		return p
+	} else {
+		return error('No toolchain')
+	}
 }
