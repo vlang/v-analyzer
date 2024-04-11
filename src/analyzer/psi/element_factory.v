@@ -375,12 +375,6 @@ pub fn create_element(node AstNode, containing_file &PsiFile) PsiElement {
 		}
 	}
 
-	if node.type_name == .slice_expression {
-		return SliceExpression{
-			PsiElementImpl: base_node
-		}
-	}
-
 	if node.type_name == .embedded_definition {
 		return EmbeddedDefinition{
 			PsiElementImpl: base_node
