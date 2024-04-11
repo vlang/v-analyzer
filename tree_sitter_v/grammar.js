@@ -697,15 +697,15 @@ module.exports = grammar({
 			),
 
 		index_expression: ($) =>
-				prec.right(
-					PREC.primary,
-					seq(
-						field('operand', $._expression),
-						choice('[', token.immediate('['), token('#[')),
-						field('index', choice($.range, $._expression)),
-						']',
-					),
+			prec.right(
+				PREC.primary,
+				seq(
+					field('operand', $._expression),
+					choice('[', token.immediate('['), token('#[')),
+					field('index', choice($.range, $._expression)),
+					']',
 				),
+			),
 
 		if_expression: ($) =>
 			seq(
