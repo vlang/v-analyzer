@@ -144,7 +144,6 @@ pub enum NodeType {
 	short_lambda
 	signature
 	simple_statement
-	slice_expression
 	source_file
 	spawn_expression
 	special_argument_list
@@ -210,7 +209,6 @@ const supertype__expression_nodes = merge(supertype__expression_with_blocks_node
 	.reference_expression,
 	.result_propagation_expression,
 	.selector_expression,
-	.slice_expression,
 	.spawn_expression,
 	.unary_expression,
 ])
@@ -453,7 +451,6 @@ const node_type_name_to_enum = {
 	'short_lambda':                     NodeType.short_lambda
 	'signature':                        NodeType.signature
 	'simple_statement':                 NodeType.simple_statement
-	'slice_expression':                 NodeType.slice_expression
 	'source_file':                      NodeType.source_file
 	'spawn_expression':                 NodeType.spawn_expression
 	'special_argument_list':            NodeType.special_argument_list
