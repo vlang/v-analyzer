@@ -8,7 +8,7 @@ fn bench() testing.BenchmarkRunner {
 	}
 
 	b.bench('inlay hints', fn (mut b testing.Benchmark, mut fixture testing.Fixture) ! {
-		fixture.configure_by_file('benchmarks/checker.v')!
+		fixture.configure_by_file('benchmarks/inlay_hints.vv')!
 
 		b.start()
 
@@ -20,7 +20,7 @@ fn bench() testing.BenchmarkRunner {
 	})
 
 	b.bench('semantic tokens', fn (mut b testing.Benchmark, mut fixture testing.Fixture) ! {
-		fixture.configure_by_file('benchmarks/checker.v')!
+		fixture.configure_by_file('benchmarks/checker.vv')!
 
 		b.start()
 
