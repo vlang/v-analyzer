@@ -12,10 +12,10 @@ const default_vmodules_root = os.vmodules_dir()
 fn test_setup_default_vpaths() {
 	mut ls := LanguageServer{}
 	ls.setup()
-	assert ls.paths.vexe == default_vexe
-	assert ls.paths.vroot == default_vroot
-	assert ls.paths.vlib_root == default_vlib_root
-	assert ls.paths.vmodules_root == default_vmodules_root
+	assert ls.paths.vexe == server.default_vexe
+	assert ls.paths.vroot == server.default_vroot
+	assert ls.paths.vlib_root == server.default_vlib_root
+	assert ls.paths.vmodules_root == server.default_vmodules_root
 }
 
 fn test_setup_custom_vpaths() {
@@ -50,7 +50,7 @@ fn test_setup_custom_vpaths() {
 	assert log_out.contains('Failed to find standard library path')
 
 	// Test custom_vroot with existing toolchain =================================
-	cfg_toml = 'custom_vroot = "${default_vroot}"'
+	cfg_toml = 'custom_vroot = "${server.default_vroot}"'
 	os.write_file(os.join_path(custom_root, '.v-analyzer', 'config.toml'), cfg_toml)!
 	os.write_file(log_file_path, '')!
 	log_file = os.open_append(os.join_path(custom_root, 'log'))!
@@ -63,6 +63,6 @@ fn test_setup_custom_vpaths() {
 	log_file.close()
 	log_out = os.read_file(log_file_path)!
 	assert log_out.contains('Find custom VROOT path')
-	assert log_out.contains('Using "${default_vroot}" as toolchain')
+	assert log_out.contains('Using "${server.default_vroot}" as toolchain')
 	assert !log_out.contains('Failed to find standard library path')
 }
