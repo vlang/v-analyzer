@@ -96,10 +96,6 @@
         "named": true
       },
       {
-        "type": "slice_expression",
-        "named": true
-      },
-      {
         "type": "spawn_expression",
         "named": true
       },
@@ -1944,6 +1940,10 @@
           {
             "type": "_expression",
             "named": true
+          },
+          {
+            "type": "range",
+            "named": true
           }
         ]
       },
@@ -2608,10 +2608,6 @@
         },
         {
           "type": "selector_expression",
-          "named": true
-        },
-        {
-          "type": "slice_expression",
           "named": true
         },
         {
@@ -3457,10 +3453,6 @@
           "named": true
         },
         {
-          "type": "slice_expression",
-          "named": true
-        },
-        {
           "type": "spawn_expression",
           "named": true
         },
@@ -3523,32 +3515,6 @@
         },
         {
           "type": "var_declaration",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "slice_expression",
-    "named": true,
-    "fields": {
-      "operand": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "_expression",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "range",
           "named": true
         }
       ]

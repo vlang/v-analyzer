@@ -125,17 +125,11 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 	if element is IndexExpression {
 		expr := element.expression() or { return types.unknown_type }
 		expr_type := t.infer_type(expr)
-		return t.infer_index_type(expr_type)
-	}
-
-	if element is SliceExpression {
-		expr := element.expression() or { return types.unknown_type }
-		expr_type := t.infer_type(expr)
 		if expr_type is types.FixedArrayType {
 			// [3]int -> []int
 			return types.new_array_type(expr_type.inner)
 		}
-		return expr_type
+		return t.infer_index_type(expr_type)
 	}
 
 	if element is Range {

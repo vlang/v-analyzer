@@ -436,7 +436,6 @@ module.exports = grammar({
 				$.is_expression,
 				$.in_expression,
 				$.index_expression,
-				$.slice_expression,
 				$.as_type_cast_expression,
 				$.selector_expression,
 				$.enum_fetch,
@@ -698,26 +697,12 @@ module.exports = grammar({
 			),
 
 		index_expression: ($) =>
-			prec.dynamic(
-				-1,
-				prec.right(
-					PREC.primary,
-					seq(
-						field('operand', $._expression),
-						choice('[', token.immediate('['), token('#[')),
-						field('index', $._expression),
-						']',
-					),
-				),
-			),
-
-		slice_expression: ($) =>
-			prec(
+			prec.right(
 				PREC.primary,
 				seq(
 					field('operand', $._expression),
 					choice('[', token.immediate('['), token('#[')),
-					$.range,
+					field('index', choice($.range, $._expression)),
 					']',
 				),
 			),
