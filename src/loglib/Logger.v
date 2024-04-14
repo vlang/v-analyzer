@@ -15,7 +15,7 @@ pub const support_colors = term.can_show_color_on_stderr() && term.can_show_colo
 
 @[heap]
 pub struct Logger {
-mut:
+pub mut:
 	disabled   bool
 	color_mode ColorMode
 
