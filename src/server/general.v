@@ -308,7 +308,7 @@ fn (mut ls LanguageServer) setup_vpaths() ! {
 	}
 	ls.paths.vlib_root = vlib_path
 	vmodules_root := os.vmodules_dir()
-	if !os.is_dir(ls.paths.vmodules_root) {
+	if !os.is_dir(vmodules_root) {
 		return error('Failed to find vmodules path')
 	}
 	ls.paths.vmodules_root = vmodules_root
