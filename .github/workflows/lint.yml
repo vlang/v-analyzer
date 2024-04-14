@@ -1,0 +1,40 @@
+name: Lint
+
+on:
+  push:
+    paths:
+      - '**.v'
+      - '**/lint.yml'
+  pull_request:
+    paths:
+      - '**.v'
+      - '**/lint.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  fmt:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Install V
+        id: install-v
+        uses: vlang/setup-v@v1.4
+        with:
+          check-latest: true
+
+      - name: Checkout v-analyzer
+        uses: actions/checkout@v4
+
+      - name: Verify formatting
+        run: |
+          set +e
+          v fmt -c .
+          exit_code=$?
+          # Don't fail on internal errors.
+          if [[ $exit_code -ne 0 && $exit_code -ne 5 ]]; then
+            v fmt -diff .
+            exit 1
+          fi
