@@ -19,19 +19,19 @@ fn test_setup_default_vpaths() {
 }
 
 fn test_setup_custom_vpaths() {
-	mut ls := LanguageServer{}
-
 	custom_root := os.join_path(os.vtmp_dir(), 'v-analyzer-setup-test')
 	custom_root_uri := lsp.document_uri_from_path(custom_root)
 	cfg_dir_path := os.join_path(custom_root, '.v-analyzer')
+	cfg_path := os.join_path(cfg_dir_path, 'config.toml')
 	os.mkdir_all(cfg_dir_path)!
 	defer {
 		os.rmdir_all(cfg_dir_path) or {}
 	}
 
 	// Test custom_vroot with missing toolchain ==================================
-	mut cfg_toml := 'custom_vroot = "${custom_root}"'
-	os.write_file(os.join_path(custom_root, '.v-analyzer', 'config.toml'), cfg_toml)!
+	// Use single quotes for literal strings so that paths keep working on Windows.
+	mut cfg_toml := "custom_vroot = '${custom_root}'"
+	os.write_file(cfg_path, cfg_toml)!
 
 	// Set output(io.Writer) for global loglib logger.
 	log_file_path := os.join_path(custom_root, 'log')
@@ -40,6 +40,7 @@ fn test_setup_custom_vpaths() {
 	logger.out = log_file
 
 	// Run setup
+	mut ls := LanguageServer{}
 	ls.root_uri = custom_root_uri
 	ls.setup()
 
@@ -52,14 +53,14 @@ fn test_setup_custom_vpaths() {
 	assert log_out.contains('Failed to find standard library path')
 
 	// Test custom_vroot with existing toolchain =================================
-	cfg_toml = 'custom_vroot = "${server.default_vroot}"'
-	os.write_file(os.join_path(custom_root, '.v-analyzer', 'config.toml'), cfg_toml)!
+	cfg_toml = "custom_vroot = '${server.default_vroot}'"
+	os.write_file(cfg_path, cfg_toml)!
 	os.write_file(log_file_path, '')!
 	log_file = os.open_append(os.join_path(custom_root, 'log'))!
 	logger.out = log_file
+
 	ls = LanguageServer{}
 	ls.root_uri = custom_root_uri
-
 	ls.setup()
 
 	log_file.close()
