@@ -45,6 +45,8 @@ fn test_setup_custom_vpaths() {
 
 	log_file.close()
 	mut log_out := os.read_file(log_file_path)!
+	println('Testlog custom_vroot missing toolchain:')
+	println(log_out.trim_space())
 	assert log_out.contains('Find custom VROOT path')
 	assert log_out.contains('Using "${custom_root}" as toolchain')
 	assert log_out.contains('Failed to find standard library path')
@@ -62,6 +64,8 @@ fn test_setup_custom_vpaths() {
 
 	log_file.close()
 	log_out = os.read_file(log_file_path)!
+	println('Testlog custom_vroot existing toolchain:')
+	println(log_out.trim_space())
 	assert log_out.contains('Find custom VROOT path')
 	assert log_out.contains('Using "${server.default_vroot}" as toolchain')
 	assert !log_out.contains('Failed to find standard library path')
