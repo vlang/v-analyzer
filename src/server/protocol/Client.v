@@ -25,6 +25,11 @@ pub fn (mut c Client) progress(params lsp.ProgressParams) {
 
 // log_message sends a window/logMessage notification to the client
 pub fn (mut c Client) log_message(message string, typ lsp.MessageType) {
+	$if test {
+		if c == unsafe { nil } {
+			return
+		}
+	}
 	c.wr.write_notify('window/logMessage', lsp.LogMessageParams{
 		@type: typ
 		message: message
