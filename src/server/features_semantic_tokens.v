@@ -29,7 +29,7 @@ pub fn (mut ls LanguageServer) semantic_tokens(text_document lsp.TextDocumentIde
 		dumb_aware_visitor := semantic.new_dumb_aware_semantic_visitor(range, file.psi_file)
 		tokens := dumb_aware_visitor.accept(file.psi_file.root)
 		return lsp.SemanticTokens{
-			result_id: time.now().unix_time().str()
+			result_id: time.now().unix().str()
 			data: semantic.encode(tokens)
 		}
 	}
@@ -42,7 +42,7 @@ pub fn (mut ls LanguageServer) semantic_tokens(text_document lsp.TextDocumentIde
 	result << resolve_tokens
 
 	return lsp.SemanticTokens{
-		result_id: time.now().unix_time().str()
+		result_id: time.now().unix().str()
 		data: semantic.encode(result)
 	}
 }
