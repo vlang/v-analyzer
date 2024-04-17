@@ -94,6 +94,7 @@ pub fn (mut ls LanguageServer) initialized(mut wr ResponseWriter) {
 	loglib.info('-------- New session -------- ')
 	if ls.paths.vexe == '' || ls.paths.vlib_root == '' {
 		ls.client.send_server_status(health: 'error', quiescent: true)
+		return
 	} else {
 		ls.client.send_server_status(health: 'ok')
 	}
