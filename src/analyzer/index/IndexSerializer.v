@@ -10,7 +10,7 @@ mut:
 
 pub fn (mut s IndexSerializer) serialize_index(index Index) {
 	s.s.write_string(index.version)
-	s.s.write_i64(index.updated_at.unix)
+	s.s.write_i64(index.updated_at.unix())
 	s.serialize_file_indexes(index.per_file.data)
 }
 

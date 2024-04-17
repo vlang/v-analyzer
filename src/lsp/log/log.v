@@ -54,7 +54,7 @@ pub struct LogItem {
 
 // json is a JSON string representation of the log item.
 pub fn (li LogItem) encode_json(mut wr io.Writer) ! {
-	wr.write('{"kind":"${li.kind}","timestamp":${li.timestamp.unix},"payload":'.bytes())!
+	wr.write('{"kind":"${li.kind}","timestamp":${li.timestamp.unix()},"payload":'.bytes())!
 	wr.write(li.payload)!
 	wr.write('}\n'.bytes())!
 }
