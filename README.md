@@ -1,5 +1,5 @@
-<img width="200px" src="./docs/cover-light.png#gh-light-mode-only">
-<img width="200px" src="./docs/cover-dark.png#gh-dark-mode-only">
+<img width="200px" src="https://github.com/vlang/v-analyzer/blob/2d5d12e4b82ce8d695576957145ff27a33a988c2/docs/cover-light.png#gh-light-mode-only">
+<img width="200px" src="https://github.com/vlang/v-analyzer/blob/2d5d12e4b82ce8d695576957145ff27a33a988c2/docs/cover-dark.png#gh-dark-mode-only">
 
 # v-analyzer
 
@@ -11,7 +11,7 @@
 
 Bring IDE features for the V programming language to VS Code, Vim, and other editors.
 
-v-analyzer provides the following features:
+The features provided by v-analyzer include:
 
 - code completion/IntelliSense
 - go to definition, type definition
@@ -32,9 +32,8 @@ v -e "$(curl -fsSL https://raw.githubusercontent.com/vlang/v-analyzer/main/insta
 
 ### Windows
 
-The install.vsh file is downloaded to the current directory and stored there temporarily.
-So make sure that there is no file with this name or that it is safe when it is
-overwritten or deleted.
+The `install.vsh` file is downloaded to the current directory and stored there temporarily.
+If there is another file with this name, make sure it is safe when it is overwritten/deleted.
 
 #### Powershell
 
@@ -50,8 +49,7 @@ curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/inst
 
 ## Pre-built binaries
 
-You can download pre-built binaries from the
-[release page](https://github.com/vlang/v-analyzer/releases).
+You can download pre-built binaries from the [release page](https://github.com/vlang/v-analyzer/releases).
 Currently, we provide binaries for Linux (x64), macOS (x64 and ARM), and Windows (x64).
 
 ## Building from source
@@ -83,35 +81,25 @@ Update V to the latest version:
 v up
 ```
 
-Install dependencies:
-
-```bash
-v install
-```
-
-You can build debug or release version of the binary.
-Debug version will be slower, but faster to compile.
-
-Debug build:
+You can build a debug or release version of the binary.
+The debug version will be slower, but faster to compile.
 
 ```bash
 v build.vsh debug
 ```
 
-Release build:
-
 ```bash
 v build.vsh release
 ```
 
-Binary will be placed in `bin/` folder.
+The compiled binary will be located in the `bin/` folder.
 
 ## Setup
 
-Add `bin/` folder to your `$PATH` environment variable to use `v-analyzer`
-command inside VS Code and other editors (**preferred**).
+Add the `bin/` folder to your `$PATH` environment variable to make the `v-analyzer` command easily
+accessible.
 
-Or, you can specify the path to the binary in your VS Code settings:
+You can also specify the path to the binary in your VS Code settings:
 
 ```json
 {
@@ -154,10 +142,8 @@ v-analyzer up --nightly
 
 ## VS Code extension
 
-This repository also contains the source code for the VS Code extension in the
-[`editors/code`](https://github.com/vlang/v-analyzer/tree/main/editors/code)
-folder.
-It is also available via the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=VOSCA.vscode-v-analyzer).
+The VS Code extension is available via the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=VOSCA.vscode-v-analyzer).
+The source code for extension is contained in the [`editors/code`](https://github.com/vlang/v-analyzer/tree/main/editors/code) folder of this repository.
 
 ## NVIM LSP / Mason
 
@@ -175,18 +161,13 @@ It is part of the mason registry and can be installated with:
 
 - [VLS](https://github.com/vlang/vls) authors for the initial Language Server implementation!
 - [vscode-vlang](https://github.com/vlang/vscode-vlang) authors for the first VS Code extension!
-- [rust-analyzer](https://github.com/rust-lang/rust-analyzer)
-  and
-  [gopls](https://github.com/golang/tools/tree/master/gopls)
-  for the inspiration!
+- [rust-analyzer](https://github.com/rust-lang/rust-analyzer) and [gopls](https://github.com/golang/tools/tree/master/gopls) for the inspiration!
 - [Tree-sitter](https://github.com/tree-sitter/tree-sitter) authors for the cool parsing library!
 
 ## License
 
 This project is under the **MIT License**.
-See the
-[LICENSE](https://github.com/vlang/v-analyzer/blob/main/LICENSE)
-file for the full license text.
+The full license text can be found in the [LICENSE](https://github.com/vlang/v-analyzer/blob/main/LICENSE) file.
 
 [badge__vscode_ext]: https://img.shields.io/badge/VS_Code-extension-1da2e2?logo=visualstudiocode&logoWidth=11&logoColor=959da5&labelColor=333
 [badge__build_ci]: https://img.shields.io/github/actions/workflow/status/vlang/v-analyzer/build_ci.yml?style=flat-rounded&branch=main&logo=github&&logoColor=959da5&labelColor=333&label=Build
