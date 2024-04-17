@@ -22,134 +22,17 @@ The features provided by v-analyzer include:
 - formatting
 - signature help
 
-## Installation
+## Usage
 
-### Linux and macOS
-
-```sh
-v -e "$(curl -fsSL https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh)"
-```
-
-### Windows
-
-The `install.vsh` file is downloaded to the current directory and stored there temporarily.
-If there is another file with this name, make sure it is safe when it is overwritten/deleted.
-
-#### Powershell
-
-```sh
-curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
-```
-
-#### Command shell
-
-```sh
-curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh && v run install.vsh && del install.vsh
-```
-
-## Pre-built binaries
-
-You can download pre-built binaries from the [release page](https://github.com/vlang/v-analyzer/releases).
-Currently, we provide binaries for Linux (x64), macOS (x64 and ARM), and Windows (x64).
-
-## Building from source
-
-> [!NOTE]
-> This repository uses Git submodules.
-> In practice, this means that you either have to:
->
-> ```sh
-> git clone --filter=blob:none --recursive --shallow-submodules https://github.com/vlang/v-analyzer
-> ```
->
-> ... or, if you used just `git clone https://github.com/vlang/v-analyzer`, you can execute below
-> inside your local `v-analyzer` clone:
->
-> ```sh
-> git submodule init && git submodule update
-> ```
->
-> If you do not do either, the symptom is that when you try to build v-analyzer, you will get a
-> C compiler message, about `lib.c not found`
-
-> [!TIP]
-> On Windows, use GCC for building, as TCC can run into some issues.
-
-Update V to the latest version:
-
-```bash
-v up
-```
-
-You can build a debug or release version of the binary.
-The debug version will be slower, but faster to compile.
-
-```bash
-v build.vsh debug
-```
-
-```bash
-v build.vsh release
-```
-
-The compiled binary will be located in the `bin/` folder.
-
-## Setup
-
-Add the `bin/` folder to your `$PATH` environment variable to make the `v-analyzer` command easily
-accessible.
-
-You can also specify the path to the binary in your VS Code settings:
-
-```json
-{
-	"v-analyzer.serverPath": "/path/to/v-analyzer/bin/v-analyzer"
-}
-```
-
-> **Note**
-> Restart VS Code after changing the settings or PATH.
-
-### Config
-
-v-analyzer is configured using global or local config.
-The global config is located in `~/.config/v-analyzer/config.toml`, changing it will affect all
-projects.
-
-A local config can be created with the `v-analyzer init` command at the root of the project.
-Once created, it will be in `./.v-analyzer/config.toml`.
-Each setting in the config has a detailed description.
-
-Pay attention to the `custom_vroot` setting, if v-analyzer cannot find where V was installed, then
-you will need to specify the path to it manually in this field.
-
-## Updating
-
-To update `v-analyzer` to the latest version, run:
-
-```bash
-v-analyzer up
-```
-
-You can also update to a nightly version:
-
-```bash
-v-analyzer up --nightly
-```
-
-> **Note**
-> In the nightly version you will get the latest changes, but they may not be stable!
-
-## VS Code extension
-
-The VS Code extension is available via the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=VOSCA.vscode-v-analyzer).
-The source code for extension is contained in the [`editors/code`](https://github.com/vlang/v-analyzer/tree/main/editors/code) folder of this repository.
-
-## NVIM LSP / Mason
-
-For Neovim users, v-analyzer is available via [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#v_analyzer).
-It is part of the mason registry and can be installated with:
-`:LspInstall v_analyzer` for nvim-lspconfig, or `:MasonInstall v_analyzer` for Mason.
+- [Installation](https://github.com/vlang/v-analyzer/wiki/Installation)
+  - [Linux and macOS](https://github.com/vlang/v-analyzer/wiki/Installation#linux-and-macos)
+  - [Windows](https://github.com/vlang/v-analyzer/wiki/Installation#windows)
+- [Updating](https://github.com/vlang/v-analyzer/wiki/Installation#updating)
+- [Editor Setup](https://github.com/vlang/v-analyzer/wiki/Installation#editor-setup)
+  - [VS Code](https://github.com/v-analyzer/v-analyzer/wiki/editor-plugins#vscode)
+  - [Neovim](https://github.com/vlang/v-analyzer/wiki/Installation#neovim)
+- [Configuration](https://github.com/vlang/v-analyzer/wiki/Config)
+- [Building and Development](https://github.com/vlang/v-analyzer/wiki/Development)
 
 ## Authors
 
