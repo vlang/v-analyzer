@@ -92,7 +92,11 @@ pub fn (mut ls LanguageServer) initialize(params lsp.InitializeParams, mut wr Re
 
 pub fn (mut ls LanguageServer) initialized(mut wr ResponseWriter) {
 	loglib.info('-------- New session -------- ')
-	ls.client.send_server_status(health: 'ok')
+	if ls.paths.vexe == '' || ls.paths.vlib_root == '' {
+		ls.client.send_server_status(health: 'error', quiescent: true)
+	} else {
+		ls.client.send_server_status(health: 'ok')
+	}
 
 	mut work := ls.progress.start('Indexing:', 'roots...', '')
 
@@ -100,14 +104,9 @@ pub fn (mut ls LanguageServer) initialized(mut wr ResponseWriter) {
 	need_index_stdlib := 'no-stdlib' !in ls.initialization_options
 
 	if need_index_stdlib {
-		if ls.paths.vmodules_root != '' {
-			ls.indexing_mng.indexer.add_indexing_root(ls.paths.vmodules_root, .modules,
-				ls.paths.cache_dir)
-		}
-		if ls.paths.vlib_root != '' {
-			ls.indexing_mng.indexer.add_indexing_root(ls.paths.vlib_root, .standard_library,
-				ls.paths.cache_dir)
-		}
+		ls.indexing_mng.indexer.add_indexing_root(ls.paths.vmodules_root, .modules, ls.paths.cache_dir)
+		ls.indexing_mng.indexer.add_indexing_root(ls.paths.vlib_root, .standard_library,
+			ls.paths.cache_dir)
 	}
 
 	if stubs_root := ls.stubs_root() {
@@ -146,13 +145,7 @@ pub fn (mut ls LanguageServer) initialized(mut wr ResponseWriter) {
 
 	work.end('Indexing finished')
 
-	if ls.paths.vlib_root != '' {
-		ls.client.send_server_status(health: 'ok', quiescent: true)
-	} else {
-		msg := 'Cannot find V standard library!
-Please, set `custom_vroot` in local or global config.'
-		ls.client.send_server_status(health: 'error', message: msg, quiescent: true)
-	}
+	ls.client.send_server_status(health: 'ok', quiescent: true)
 }
 
 fn (mut ls LanguageServer) setup() {
@@ -164,7 +157,7 @@ fn (mut ls LanguageServer) setup() {
 		ls.client.log_message('No config found', .warning)
 		loglib.warn('No config found')
 		ls.setup_toolchain()
-		ls.setup_vpaths() or { loglib.error(err.msg()) }
+		ls.setup_vpaths()
 		return
 	}
 
@@ -233,7 +226,7 @@ fn (mut ls LanguageServer) setup() {
 		ls.setup_cache_dir()
 	}
 
-	ls.setup_vpaths() or { loglib.error(err.msg()) }
+	ls.setup_vpaths()
 }
 
 fn (mut ls LanguageServer) setup_cache_dir() {
@@ -301,21 +294,38 @@ Global config path: ${config.analyzer_configs_path}/${config.analyzer_config_nam
 	}
 }
 
-fn (mut ls LanguageServer) setup_vpaths() ! {
+fn (mut ls LanguageServer) setup_vpaths() {
+	// Prior call of `ls.setup_toolchain()` ensures `ls.paths.vroot` is set.
+	vexe_path := os.join_path(ls.paths.vroot, $if windows { 'v.exe' } $else { 'v' })
+	if !os.is_file(vexe_path) {
+		msg := 'Failed to find V compiler!'
+		ls.client.log_message(msg, .error)
+		loglib.error(msg)
+	} else {
+		ls.paths.vexe = vexe_path
+		ls.reporter.compiler_path = vexe_path
+	}
+
 	vlib_path := os.join_path(ls.paths.vroot, 'vlib')
 	if !os.is_dir(vlib_path) {
-		return error('Failed to find standard library path')
+		msg := 'Failed to find V standard library.'
+		ls.client.log_message(msg, .error)
+		loglib.error(msg)
+	} else {
+		ls.paths.vlib_root = vlib_path
 	}
-	ls.paths.vlib_root = vlib_path
+
 	vmodules_root := os.vmodules_dir()
 	if !os.is_dir(vmodules_root) {
-		return error('Failed to find vmodules path')
+		msg := 'Failed to find vmodules path.'
+		ls.client.log_message(msg, .error)
+		loglib.error(msg)
+	} else {
+		ls.paths.vmodules_root = vmodules_root
+		msg := 'Using "${vmodules_root}" as vmodules root.'
+		ls.client.log_message(msg, .info)
+		loglib.info(msg)
 	}
-	ls.paths.vmodules_root = vmodules_root
-	ls.client.log_message('Using "${ls.paths.vmodules_root}" as vmodules root', .info)
-	loglib.info('Using "${ls.paths.vmodules_root}" as vmodules root')
-	ls.paths.vexe = os.join_path(ls.paths.vroot, $if windows { 'v.exe' } $else { 'v' })
-	ls.reporter.compiler_path = ls.paths.vexe
 }
 
 fn (mut ls LanguageServer) setup_config_dir() {
