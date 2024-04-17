@@ -50,7 +50,7 @@ fn test_setup_custom_vpaths() {
 	println(log_out.trim_space())
 	assert log_out.contains('Find custom VROOT path')
 	assert log_out.contains('Using "${custom_root}" as toolchain')
-	assert log_out.contains('Failed to find standard library path')
+	assert log_out.contains('Failed to find V standard library')
 
 	// Test custom_vroot with existing toolchain =================================
 	cfg_toml = "custom_vroot = '${server.default_vroot}'"
