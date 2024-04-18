@@ -29,7 +29,7 @@ The features provided by v-analyzer include:
   - [Windows](https://github.com/vlang/v-analyzer/wiki/Installation#windows)
 - [Updating](https://github.com/vlang/v-analyzer/wiki/Installation#updating)
 - [Editor Setup](https://github.com/vlang/v-analyzer/wiki/Installation#editor-setup)
-  - [VS Code](https://github.com/v-analyzer/v-analyzer/wiki/editor-plugins#vscode)
+  - [VS Code](https://github.com/vlang/v-analyzer/wiki/Installation#vs-code)
   - [Neovim](https://github.com/vlang/v-analyzer/wiki/Installation#neovim)
 - [Configuration](https://github.com/vlang/v-analyzer/wiki/Config)
 - [Building and Development](https://github.com/vlang/v-analyzer/wiki/Development)
