@@ -129,7 +129,7 @@ fn (mut p Provider) import_spec_documentation(element psi.ImportSpec) ? {
 	p.write_separator()
 
 	p.sb.write_string('---\n')
-	p.sb.write_string('${dir}\n')
+	p.sb.write_string('```${dir}```\n')
 }
 
 fn (mut p Provider) module_documentation(element psi.ModuleClause) ? {
