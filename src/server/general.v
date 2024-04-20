@@ -106,6 +106,12 @@ pub fn (mut ls LanguageServer) initialized(mut wr ResponseWriter) {
 
 	if need_index_stdlib {
 		ls.indexing_mng.indexer.add_indexing_root(ls.paths.vmodules_root, .modules, ls.paths.cache_dir)
+		for path in os.vmodules_paths()[1..] {
+			if path.is_blank() {
+				continue
+			}
+			ls.indexing_mng.indexer.add_indexing_root(path, .modules, ls.paths.cache_dir)
+		}
 		ls.indexing_mng.indexer.add_indexing_root(ls.paths.vlib_root, .standard_library,
 			ls.paths.cache_dir)
 	}
