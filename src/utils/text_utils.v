@@ -1,16 +1,16 @@
 module utils
 
 pub fn pascal_case_to_snake_case(s string) string {
-	mut res := ''
-	for index, c in s {
-		if c.ascii_str().is_upper() {
-			if index > 0 {
-				res += '_'
-			}
-			res += c.ascii_str().to_lower()
-		} else {
-			res += c.ascii_str()
+	if s == '' {
+		return ''
+	}
+	mut res := s[0].ascii_str().to_lower()
+	for i in 1 .. s.len {
+		c := s[i]
+		if (c != `_` && s[i - 1] != `_`) && (c.ascii_str().is_upper() || c.is_digit()) {
+			res += '_'
 		}
+		res += c.ascii_str().to_lower()
 	}
 	return res
 }
