@@ -340,10 +340,8 @@ fn clone_repository() ! {
 fn build_from_sources() ! {
 	println('Building ${term.bold('v-analyzer')}...')
 
-	compiler_flag := $if windows { '-cc gcc' } $else { '' }
-
 	chdir(analyzer_sources_dir_path)!
-	install_deps_cmd := os.execute('v ${compiler_flag} install')
+	install_deps_cmd := os.execute('v install')
 	if install_deps_cmd.exit_code != 0 {
 		errorln('Failed to install dependencies for ${term.bold('v-analyzer')}')
 		eprintln(install_deps_cmd.output)
@@ -353,7 +351,7 @@ fn build_from_sources() ! {
 	println('${term.green('✓')} Dependencies for ${term.bold('v-analyzer')} installed successfully')
 
 	chdir(analyzer_sources_dir_path)!
-	exit_code := run_command('v ${compiler_flag} build.vsh 1>/dev/null') or {
+	exit_code := run_command('v build.vsh 1>/dev/null') or {
 		errorln('Failed to build ${term.bold('v-analyzer')}: ${err}')
 		return
 	}
@@ -369,7 +367,7 @@ fn build_from_sources() ! {
 		return
 	}
 
-	os.cp_all('${analyzer_sources_dir_path}/bin/v-analyzer', analyzer_bin_dir_path, true) or {
+	os.cp_all('${analyzer_sources_dir_path}/bin/v-analyzer' + $if windows { '.exe' } $else { '' }, analyzer_bin_dir_path, true) or {
 		println('Failed to copy ${term.bold('v-analyzer')} binary to ${analyzer_bin_dir_path}: ${err}')
 		return
 	}
