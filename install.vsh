@@ -367,7 +367,8 @@ fn build_from_sources() ! {
 		return
 	}
 
-	os.cp_all('${analyzer_sources_dir_path}/bin/v-analyzer' + $if windows { '.exe' } $else { '' }, analyzer_bin_dir_path, true) or {
+	os.cp_all('${analyzer_sources_dir_path}/bin/v-analyzer' + $if windows { '.exe' } $else { '' },
+		analyzer_bin_dir_path, true) or {
 		println('Failed to copy ${term.bold('v-analyzer')} binary to ${analyzer_bin_dir_path}: ${err}')
 		return
 	}
