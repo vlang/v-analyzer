@@ -5,7 +5,8 @@ import math
 
 struct GenericTypeInferer {}
 
-fn (g &GenericTypeInferer) infer_generic_call(arg_owner GenericArgumentsOwner, params_owner GenericParametersOwner, result_type types.Type) types.Type {
+fn (g &GenericTypeInferer) infer_generic_call(arg_owner GenericArgumentsOwner, params_owner GenericParametersOwner,
+	result_type types.Type) types.Type {
 	generic_ts_map := g.infer_generic_ts_map(arg_owner, params_owner)
 	return result_type.substitute_generics(generic_ts_map)
 }
@@ -43,7 +44,8 @@ fn (g &GenericTypeInferer) infer_generic_ts_map(arg_owner GenericArgumentsOwner,
 	return g.infer_simple_generic_ts_map(arg_owner, params_owner, map[string]types.Type{})
 }
 
-fn (g &GenericTypeInferer) infer_simple_generic_ts_map(arg_owner GenericArgumentsOwner, params_owner GenericParametersOwner, additional map[string]types.Type) map[string]types.Type {
+fn (g &GenericTypeInferer) infer_simple_generic_ts_map(arg_owner GenericArgumentsOwner, params_owner GenericParametersOwner,
+	additional map[string]types.Type) map[string]types.Type {
 	generic_parameters := g.generics_parameter_names(params_owner)
 
 	// No data for inference, call is not generic.

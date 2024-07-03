@@ -4,7 +4,8 @@ import analyzer.psi
 import analyzer.psi.types
 
 // is_implemented checks if the given symbol (methods and fields) implements the given interface (methods and fields).
-fn is_implemented(iface_methods []psi.PsiElement, iface_fields []psi.PsiElement, symbol_methods []psi.PsiElement, symbol_fields []psi.PsiElement) bool {
+fn is_implemented(iface_methods []psi.PsiElement, iface_fields []psi.PsiElement, symbol_methods []psi.PsiElement,
+	symbol_fields []psi.PsiElement) bool {
 	mut symbol_methods_set := map[string]psi.FunctionOrMethodDeclaration{}
 	for symbol_method in symbol_methods {
 		if symbol_method is psi.FunctionOrMethodDeclaration {
