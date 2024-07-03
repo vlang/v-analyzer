@@ -44,7 +44,7 @@ pub interface Intention {
 	// unique id of the intention.
 	// This id is equivalent to the id of the command that is
 	// invoked when user selects this intention.
-	id string
+	id   string
 	name string // name to be shown in the list of available actions, if this action is available.
 	// is_available checks whether this intention is available at a caret offset in the file.
 	// If this method returns true, a light bulb for this intention is shown.

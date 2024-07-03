@@ -509,7 +509,8 @@ fn (mut c Checker) alias_type_decl(node ast.AliasTypeDecl) {
 	}
 }
 
-fn (mut c Checker) check_alias_vs_element_type_of_parent(node ast.AliasTypeDecl, element_type_of_parent ast.Type, label string) {
+fn (mut c Checker) check_alias_vs_element_type_of_parent(node ast.AliasTypeDecl, element_type_of_parent ast.Type,
+	label string) {
 	if node.typ.idx() != element_type_of_parent.idx() {
 		return
 	}
@@ -3961,12 +3962,14 @@ fn (mut c Checker) prefix_expr(mut node ast.PrefixExpr) ast.Type {
 	return right_type
 }
 
-fn (mut c Checker) type_error_for_operator(op_label string, types_label string, found_type_label string, pos token.Pos) {
+fn (mut c Checker) type_error_for_operator(op_label string, types_label string, found_type_label string,
+	pos token.Pos) {
 	c.error('operator `${op_label}` can only be used with ${types_label} types, but the value after `${op_label}` is of type `${found_type_label}` instead',
 		pos)
 }
 
-fn (mut c Checker) check_index(typ_sym &ast.TypeSymbol, index ast.Expr, index_type ast.Type, pos token.Pos, range_index bool, is_gated bool) {
+fn (mut c Checker) check_index(typ_sym &ast.TypeSymbol, index ast.Expr, index_type ast.Type, pos token.Pos,
+	range_index bool, is_gated bool) {
 	index_type_sym := c.table.sym(index_type)
 	if typ_sym.kind in [.array, .array_fixed, .string] {
 		if !(index_type.is_int() || index_type_sym.kind == .enum_
@@ -4711,7 +4714,8 @@ fn semicolonize(main string, details string) string {
 	return '${main}; ${details}'
 }
 
-fn (mut c Checker) deprecate_old_isreftype_and_sizeof_of_a_guessed_type(is_guessed_type bool, typ ast.Type, pos token.Pos, label string) {
+fn (mut c Checker) deprecate_old_isreftype_and_sizeof_of_a_guessed_type(is_guessed_type bool, typ ast.Type,
+	pos token.Pos, label string) {
 	if is_guessed_type {
 		styp := c.table.type_to_str(typ)
 		c.note('`${label}(${styp})` is deprecated. Use `v fmt -w .` to convert it to `${label}[${styp}]()` instead.',

@@ -182,8 +182,8 @@ pub mut:
 
 @[json_as_number]
 pub enum TextDocumentSyncKind {
-	none_ = 0
-	full = 1
+	none_       = 0
+	full        = 1
 	incremental = 2
 }
 

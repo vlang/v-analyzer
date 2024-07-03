@@ -31,7 +31,7 @@ pub struct DocumentHighlight {
 
 @[json_as_number]
 pub enum DocumentHighlightKind {
-	text = 1
-	read = 2
+	text  = 1
+	read  = 2
 	write = 3
 }

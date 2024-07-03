@@ -28,9 +28,9 @@ pub struct SignatureHelpOptions {
 
 @[json_as_number]
 pub enum SignatureHelpTriggerKind {
-	invoked = 1
+	invoked           = 1
 	trigger_character = 2
-	content_change = 3
+	content_change    = 3
 }
 
 // method: ‘textDocument/signatureHelp’

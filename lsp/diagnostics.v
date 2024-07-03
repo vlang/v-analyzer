@@ -65,7 +65,7 @@ pub mut:
 
 @[json_as_number]
 pub enum DiagnosticSeverity {
-	error = 1
+	error       = 1
 	warning
 	information
 	hint

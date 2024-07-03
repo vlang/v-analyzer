@@ -31,10 +31,10 @@ pub struct ShowMessageParams {
 
 @[json_as_number]
 pub enum MessageType {
-	error = 1
+	error   = 1
 	warning = 2
-	info = 3
-	log = 4
+	info    = 3
+	log     = 4
 }
 
 // method: ‘window/showMessageRequest’

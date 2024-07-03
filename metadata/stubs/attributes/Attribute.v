@@ -38,8 +38,8 @@ enum Target {
 // Attribute is base interface that describes the
 // information and behavior of any attribute.
 interface Attribute {
-	name string // name of the attribute
-	with_arg bool // whether the attribute has an argument
+	name            string // name of the attribute
+	with_arg        bool // whether the attribute has an argument
 	arg_is_optional bool // if with_arg is true, this field is used to indicate whether the argument is optional
-	target []Target // places where the attribute is allowed
+	target          []Target // places where the attribute is allowed
 }

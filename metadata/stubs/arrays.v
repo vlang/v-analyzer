@@ -92,7 +92,6 @@ pub:
 	// assert arr[2] == 0
 	// ```
 	len int
-
 	// cap field represent amount of memory space which has been reserved for elements,
 	// but not initialized or counted as elements
 	//
@@ -107,7 +106,6 @@ pub:
 	// arr_with_cap << 100 // no reallocation
 	// ```
 	cap int
-
 	// init field represent default initializer for each element.
 	//
 	// In `init` field, you can use special `index` variable to refer to the current index.

@@ -535,7 +535,8 @@ pub fn (t &TypeInferer) infer_call_expr_type(element CallExpression) types.Type 
 	return types.unknown_type
 }
 
-pub fn (t &TypeInferer) process_map_array_method_call(element FunctionOrMethodDeclaration, element_type types.FunctionType, expr CallExpression) ?types.Type {
+pub fn (t &TypeInferer) process_map_array_method_call(element FunctionOrMethodDeclaration, element_type types.FunctionType,
+	expr CallExpression) ?types.Type {
 	receiver_type := types.unwrap_pointer_type(element.receiver_type())
 
 	if types.is_builtin_array_type(receiver_type) {
@@ -553,7 +554,8 @@ pub fn (t &TypeInferer) process_map_array_method_call(element FunctionOrMethodDe
 	return none
 }
 
-pub fn (_ &TypeInferer) process_array_method_call(element FunctionOrMethodDeclaration, element_type types.FunctionType, expr CallExpression) ?types.Type {
+pub fn (_ &TypeInferer) process_array_method_call(element FunctionOrMethodDeclaration, element_type types.FunctionType,
+	expr CallExpression) ?types.Type {
 	return_type := element_type.result
 
 	if return_type is types.VoidPtrType {

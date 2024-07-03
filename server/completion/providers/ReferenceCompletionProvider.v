@@ -67,7 +67,8 @@ fn (mut r ReferenceCompletionProvider) add_completion(ctx &completion.Completion
 	}
 }
 
-fn (mut r ReferenceCompletionProvider) process_fields(ctx &completion.CompletionContext, element psi.PsiElement, already_assigned []string) {
+fn (mut r ReferenceCompletionProvider) process_fields(ctx &completion.CompletionContext, element psi.PsiElement,
+	already_assigned []string) {
 	grand := element.parent() or { return }
 	if grand.node.type_name != .element_list {
 		return
