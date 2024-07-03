@@ -29,7 +29,8 @@ pub mut:
 	id        StubId
 }
 
-pub fn new_stub_base(parent &StubElement, stub_type StubType, name string, identifier_text_range TextRange, text_range TextRange, data StubData) &StubBase {
+pub fn new_stub_base(parent &StubElement, stub_type StubType, name string, identifier_text_range TextRange,
+	text_range TextRange, data StubData) &StubBase {
 	mut stub_list := if parent is StubBase {
 		if !isnil(parent.stub_list) { parent.stub_list } else { &StubList{} }
 	} else {
