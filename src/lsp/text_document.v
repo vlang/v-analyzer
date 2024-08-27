@@ -35,7 +35,7 @@ pub struct TextDocumentEdit {
 pub struct TextDocumentItem {
 pub:
 	uri         DocumentUri
-	language_id string      @[json: languageId]
+	language_id string @[json: languageId]
 	version     int
 	text        string
 }

@@ -62,8 +62,8 @@ pub fn (li LogItem) encode_json(mut wr io.Writer) ! {
 pub fn new() &LogRecorder {
 	return &LogRecorder{
 		file_opened: false
-		enabled: true
-		buffer: strings.new_builder(4096)
+		enabled:     true
+		buffer:      strings.new_builder(4096)
 	}
 }
 

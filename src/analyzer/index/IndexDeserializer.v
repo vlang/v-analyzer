@@ -27,9 +27,9 @@ pub fn (mut d IndexDeserializer) deserialize_index(expected_version string) !Ind
 	file_indexes := d.deserialize_file_indexes()
 
 	return Index{
-		version: version
+		version:    version
 		updated_at: time.unix(updated_at_unix)
-		per_file: PerFileIndex{
+		per_file:   PerFileIndex{
 			data: file_indexes
 		}
 	}
@@ -53,10 +53,10 @@ pub fn (mut d IndexDeserializer) deserialize_file_index() FileIndex {
 	stub_index_sink := d.deserialize_stub_index_sink(stub_list, kind)
 
 	return FileIndex{
-		kind: kind
+		kind:               kind
 		file_last_modified: file_last_modified
-		stub_list: stub_list
-		sink: stub_index_sink
+		stub_list:          stub_list
+		sink:               stub_index_sink
 	}
 }
 
@@ -64,7 +64,7 @@ pub fn (mut d IndexDeserializer) deserialize_stub_index_sink(stub_list &psi.Stub
 	len := d.d.read_int()
 	mut sink := &psi.StubIndexSink{
 		stub_list: stub_list
-		kind: unsafe { psi.StubIndexLocationKind(u8(kind)) }
+		kind:      unsafe { psi.StubIndexLocationKind(u8(kind)) }
 	}
 	for _ in 0 .. len {
 		key := d.d.read_int()
@@ -156,26 +156,26 @@ pub fn (mut d IndexDeserializer) deserialize_stub() &psi.StubBase {
 	id := d.d.read_int()
 
 	return &psi.StubBase{
-		text: text
-		comment: comment
-		receiver: receiver
-		additional: additional
-		name: name
+		text:                  text
+		comment:               comment
+		receiver:              receiver
+		additional:            additional
+		name:                  name
 		identifier_text_range: psi.TextRange{
-			line: identifier_line
-			column: identifier_column
-			end_line: identifier_end_line
+			line:       identifier_line
+			column:     identifier_column
+			end_line:   identifier_end_line
 			end_column: identifier_end_column
 		}
 		text_range: psi.TextRange{
-			line: line
-			column: column
-			end_line: end_line
+			line:       line
+			column:     column
+			end_line:   end_line
 			end_column: end_column
 		}
 		parent_id: parent_id
 		stub_list: unsafe { nil } // will be set later
 		stub_type: stub_type
-		id: id
+		id:        id
 	}
 }

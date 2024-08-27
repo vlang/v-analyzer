@@ -6,7 +6,7 @@ pub struct EnumType {
 
 pub fn new_enum_type(name string, module_name string) &EnumType {
 	return &EnumType{
-		name: name
+		name:        name
 		module_name: module_name
 	}
 }

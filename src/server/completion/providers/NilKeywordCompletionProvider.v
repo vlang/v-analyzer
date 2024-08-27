@@ -19,8 +19,8 @@ fn (mut k NilKeywordCompletionProvider) add_completion(ctx &completion.Completio
 	}
 
 	result.add_element(lsp.CompletionItem{
-		label: 'nil'
-		kind: .keyword
+		label:       'nil'
+		kind:        .keyword
 		insert_text: insert_text
 	})
 }

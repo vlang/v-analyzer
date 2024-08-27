@@ -28,11 +28,11 @@ fn (mut m ModulesImportProvider) add_completion(ctx &completion.CompletionContex
 		name_without_prefix := module_.trim_string_left(before_path)
 
 		result.add_element(lsp.CompletionItem{
-			label: name_without_prefix
-			kind: .module_
-			detail: ''
-			documentation: ''
-			insert_text: name_without_prefix
+			label:              name_without_prefix
+			kind:               .module_
+			detail:             ''
+			documentation:      ''
+			insert_text:        name_without_prefix
 			insert_text_format: .plain_text
 		})
 	}

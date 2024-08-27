@@ -13,7 +13,7 @@ import analyzer.parser
 
 // BuiltIndexStatus describes the status of the built index.
 pub enum BuiltIndexStatus {
-	from_cache // index was loaded from cache
+	from_cache   // index was loaded from cache
 	from_scratch // index was built from scratch
 }
 
@@ -41,7 +41,7 @@ pub fn (k IndexingRootKind) readable_name() string {
 @[noinit]
 pub struct IndexingRoot {
 pub:
-	root string // root that is indexed
+	root string           // root that is indexed
 	kind IndexingRootKind // type of root that is indexed
 pub mut:
 	cache_dir  string    // path to the directory where the index is stored
@@ -56,9 +56,9 @@ pub mut:
 pub fn new_indexing_root(root string, kind IndexingRootKind, cache_dir string) &IndexingRoot {
 	cache_file := 'v_analyzer_index_${md5.hexhash(root)}'
 	return &IndexingRoot{
-		root: root
-		kind: kind
-		cache_dir: cache_dir
+		root:       root
+		kind:       kind
+		cache_dir:  cache_dir
 		cache_file: cache_file
 	}
 }
@@ -185,10 +185,10 @@ pub fn (mut i IndexingRoot) index_file(path string, content string) !FileIndex {
 	module_fqn := psi.module_qualified_name(psi_file, i.root)
 
 	mut cache := FileIndex{
-		kind: i.kind
+		kind:               i.kind
 		file_last_modified: last_modified
-		sink: &psi.StubIndexSink{
-			kind: unsafe { psi.StubIndexLocationKind(u8(i.kind)) }
+		sink:               &psi.StubIndexSink{
+			kind:      unsafe { psi.StubIndexLocationKind(u8(i.kind)) }
 			stub_list: unsafe { nil }
 		}
 		stub_list: unsafe { nil }

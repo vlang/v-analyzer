@@ -98,7 +98,7 @@ pub fn build_stub_tree_iterative(file &psi.PsiFile, mut nodes []NodeInfo) &StubT
 
 	nodes = nodes[..0].clone()
 	nodes << NodeInfo{
-		node: root
+		node:   root
 		parent: stub_root
 	}
 
@@ -122,7 +122,7 @@ pub fn build_stub_tree_iterative(file &psi.PsiFile, mut nodes []NodeInfo) &StubT
 
 		for child in node.node.children() {
 			nodes << NodeInfo{
-				node: child
+				node:   child
 				parent: parent_stub
 			}
 		}

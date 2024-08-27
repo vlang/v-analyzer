@@ -32,11 +32,11 @@ fn (mut _ ReturnCompletionProvider) add_completion(ctx &completion.CompletionCon
 			if result_type.name == 'bool' {
 				result.add_element(lsp.CompletionItem{
 					label: 'return true'
-					kind: .text
+					kind:  .text
 				})
 				result.add_element(lsp.CompletionItem{
 					label: 'return false'
-					kind: .text
+					kind:  .text
 				})
 			}
 		}
@@ -45,7 +45,7 @@ fn (mut _ ReturnCompletionProvider) add_completion(ctx &completion.CompletionCon
 			zero_value := lang.get_zero_value_for(result_type)
 			result.add_element(lsp.CompletionItem{
 				label: 'return ${zero_value}'
-				kind: .text
+				kind:  .text
 			})
 		}
 
@@ -57,7 +57,7 @@ fn (mut _ ReturnCompletionProvider) add_completion(ctx &completion.CompletionCon
 
 		result.add_element(lsp.CompletionItem{
 			label: label
-			kind: .text
+			kind:  .text
 		})
 	}
 }

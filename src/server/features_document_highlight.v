@@ -30,7 +30,7 @@ pub fn (mut ls LanguageServer) document_highlight(params lsp.TextDocumentPositio
 		}
 		highlights << lsp.DocumentHighlight{
 			range: tform.text_range_to_lsp_range(range)
-			kind: read_write_kind(reference)
+			kind:  read_write_kind(reference)
 		}
 	}
 

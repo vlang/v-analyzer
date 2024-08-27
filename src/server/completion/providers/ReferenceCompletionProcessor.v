@@ -45,44 +45,44 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 
 	if element is psi.VarDefinition {
 		c.add_item(
-			label: name
-			kind: .variable
-			detail: element.get_type().readable_name()
+			label:         name
+			kind:          .variable
+			detail:        element.get_type().readable_name()
 			label_details: lsp.CompletionItemLabelDetails{
 				description: element.get_type().readable_name()
 			}
-			documentation: ''
-			insert_text: name
+			documentation:      ''
+			insert_text:        name
 			insert_text_format: .plain_text
-			sort_text: '0${name}' // variables should go first
+			sort_text:          '0${name}' // variables should go first
 		)
 	}
 
 	if element is psi.ParameterDeclaration {
 		c.add_item(
-			label: name
-			kind: .variable
-			detail: element.get_type().readable_name()
+			label:         name
+			kind:          .variable
+			detail:        element.get_type().readable_name()
 			label_details: lsp.CompletionItemLabelDetails{
 				description: element.get_type().readable_name()
 			}
-			documentation: ''
-			insert_text: name
+			documentation:      ''
+			insert_text:        name
 			insert_text_format: .plain_text
-			sort_text: '0${name}' // parameters should go first
+			sort_text:          '0${name}' // parameters should go first
 		)
 	}
 
 	if element is psi.Receiver {
 		c.add_item(
-			label: element.name()
-			kind: .variable
-			detail: element.get_type().readable_name()
+			label:         element.name()
+			kind:          .variable
+			detail:        element.get_type().readable_name()
 			label_details: lsp.CompletionItemLabelDetails{
 				description: element.get_type().readable_name()
 			}
-			documentation: ''
-			insert_text: element.name()
+			documentation:      ''
+			insert_text:        element.name()
 			insert_text_format: .plain_text
 		)
 	}
@@ -110,7 +110,7 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 
 		text_ranga := c.ctx.element.text_range()
 		symbol := c.ctx.element.containing_file.symbol_at(psi.TextRange{
-			line: text_ranga.line
+			line:   text_ranga.line
 			column: text_ranga.end_column + 1
 		})
 		paren_after_cursor := symbol == `(`
@@ -134,16 +134,16 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 		insert_text_builder.write_string('$0')
 
 		c.add_item(
-			label: '${name}'
-			kind: if receiver_text == '' { .function } else { .method }
+			label:         '${name}'
+			kind:          if receiver_text == '' { .function } else { .method }
 			label_details: lsp.CompletionItemLabelDetails{
 				detail: signature.get_text()
 			}
-			detail: 'fn ${receiver_text}${element.name()}${generic_parameters_text}${signature.get_text()}'
-			documentation: element.doc_comment()
-			insert_text: insert_text_builder.str()
+			detail:             'fn ${receiver_text}${element.name()}${generic_parameters_text}${signature.get_text()}'
+			documentation:      element.doc_comment()
+			insert_text:        insert_text_builder.str()
 			insert_text_format: .snippet
-			sort_text: '1${name}' // functions should go second
+			sort_text:          '1${name}' // functions should go second
 		)
 	}
 
@@ -170,7 +170,7 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 
 		text_ranga := c.ctx.element.text_range()
 		symbol := c.ctx.element.containing_file.symbol_at(psi.TextRange{
-			line: text_ranga.line
+			line:   text_ranga.line
 			column: text_ranga.end_column + 1
 		})
 		paren_after_cursor := symbol == `(`
@@ -194,16 +194,16 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 		insert_text_builder.write_string('$0')
 
 		c.add_item(
-			label: '${name}'
-			kind: .method
+			label:         '${name}'
+			kind:          .method
 			label_details: lsp.CompletionItemLabelDetails{
 				detail: signature.get_text()
 			}
-			detail: 'fn ${receiver_text}${element.name()}${generic_parameters_text}${signature.get_text()}'
-			documentation: element.doc_comment()
-			insert_text: insert_text_builder.str()
+			detail:             'fn ${receiver_text}${element.name()}${generic_parameters_text}${signature.get_text()}'
+			documentation:      element.doc_comment()
+			insert_text:        insert_text_builder.str()
 			insert_text_format: .snippet
-			sort_text: '1${name}' // functions should go second
+			sort_text:          '1${name}' // functions should go second
 		)
 	}
 
@@ -215,7 +215,7 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 
 		text_ranga := c.ctx.element.text_range()
 		symbol := c.ctx.element.containing_file.symbol_at(psi.TextRange{
-			line: text_ranga.line
+			line:   text_ranga.line
 			column: text_ranga.end_column + 1
 		})
 		paren_after_cursor := symbol == `{`
@@ -227,25 +227,25 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 		}
 
 		c.add_item(
-			label: name
-			kind: .struct_
-			detail: ''
-			documentation: element.doc_comment()
-			insert_text: insert_text
+			label:              name
+			kind:               .struct_
+			detail:             ''
+			documentation:      element.doc_comment()
+			insert_text:        insert_text
 			insert_text_format: .snippet
 		)
 	}
 
 	if element is psi.ConstantDefinition {
 		c.add_item(
-			label: element.name()
-			kind: .constant
-			detail: element.get_type().readable_name()
+			label:         element.name()
+			kind:          .constant
+			detail:        element.get_type().readable_name()
 			label_details: lsp.CompletionItemLabelDetails{
 				description: element.get_type().readable_name()
 			}
-			documentation: element.doc_comment()
-			insert_text: element.name()
+			documentation:      element.doc_comment()
+			insert_text:        element.name()
 			insert_text_format: .plain_text
 		)
 	}
@@ -260,14 +260,14 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 		}
 
 		c.add_item(
-			label: element.name()
-			kind: .field
-			detail: element.get_type().readable_name()
+			label:         element.name()
+			kind:          .field
+			detail:        element.get_type().readable_name()
 			label_details: lsp.CompletionItemLabelDetails{
 				description: element.get_type().readable_name()
 			}
-			documentation: element.doc_comment()
-			insert_text: insert_text
+			documentation:      element.doc_comment()
+			insert_text:        insert_text
 			insert_text_format: .snippet
 		)
 	}
@@ -290,37 +290,37 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 			''
 		}
 		c.add_item(
-			label: element.name()
-			kind: .method
-			detail: 'fn ${element.name()}${signature.get_text()}'
+			label:         element.name()
+			kind:          .method
+			detail:        'fn ${element.name()}${signature.get_text()}'
 			label_details: lsp.CompletionItemLabelDetails{
-				detail: signature.get_text()
+				detail:      signature.get_text()
 				description: owner_name
 			}
-			documentation: element.doc_comment()
-			insert_text: insert_text_builder.str()
+			documentation:      element.doc_comment()
+			insert_text:        insert_text_builder.str()
 			insert_text_format: .snippet
 		)
 	}
 
 	if element is psi.EnumDeclaration {
 		c.add_item(
-			label: element.name()
-			kind: .enum_
-			detail: ''
-			documentation: element.doc_comment()
-			insert_text: element.name()
+			label:              element.name()
+			kind:               .enum_
+			detail:             ''
+			documentation:      element.doc_comment()
+			insert_text:        element.name()
 			insert_text_format: .plain_text
 		)
 	}
 
 	if element is psi.EnumFieldDeclaration {
 		c.add_item(
-			label: element.name()
-			kind: .enum_member
-			detail: ''
-			documentation: element.doc_comment()
-			insert_text: element.name()
+			label:              element.name()
+			kind:               .enum_member
+			detail:             ''
+			documentation:      element.doc_comment()
+			insert_text:        element.name()
 			insert_text_format: .plain_text
 		)
 	}
@@ -328,18 +328,18 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 	if element is psi.GenericParameter {
 		c.add_item(
 			label: element.name()
-			kind: .type_parameter
+			kind:  .type_parameter
 		)
 	}
 
 	if element is psi.GlobalVarDefinition {
 		module_name := element.containing_file.module_fqn()
 		c.add_item(
-			label: element.name()
+			label:         element.name()
 			label_details: lsp.CompletionItemLabelDetails{
 				detail: ' (global defined in ${module_name})'
 			}
-			kind: .variable
+			kind:        .variable
 			insert_text: element.name()
 		)
 	}

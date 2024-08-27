@@ -14,8 +14,8 @@ pub fn (mut ls LanguageServer) did_open(params lsp.DidOpenTextDocumentParams) {
 	psi_file := psi.new_psi_file(uri.path(), res.tree, res.source_text)
 
 	ls.opened_files[uri] = analyzer.OpenedFile{
-		uri: uri
-		version: 0
+		uri:      uri
+		version:  0
 		psi_file: psi_file
 	}
 

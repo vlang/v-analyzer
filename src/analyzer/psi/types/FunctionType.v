@@ -12,9 +12,9 @@ pub:
 
 pub fn new_function_type(module_name string, params []Type, result Type, no_result bool) &FunctionType {
 	return &FunctionType{
-		params: params
-		result: result
-		no_result: no_result
+		params:      params
+		result:      result
+		no_result:   no_result
 		module_name: module_name
 	}
 }

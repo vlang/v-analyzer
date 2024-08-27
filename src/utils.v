@@ -35,7 +35,7 @@ pub fn call_install_vsh(cmd string) !int {
 	}
 
 	mut command := os.Command{
-		path: 'v ${analyzer_install_script_path} ${cmd}'
+		path:            'v ${analyzer_install_script_path} ${cmd}'
 		redirect_stdout: true
 	}
 

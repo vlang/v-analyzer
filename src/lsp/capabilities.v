@@ -2,13 +2,13 @@ module lsp
 
 pub struct WorkspaceClientCapabilities {
 pub mut:
-	apply_edit               bool                        @[json: applyEdit]
-	workspace_edit           WorkspaceEdit               @[json: workspaceEdit]
-	did_change_configuration DidChange                   @[json: didChangeConfiguration]
-	did_change_watched_files DidChange                   @[json: didChangeWatchedFiles]
+	apply_edit               bool          @[json: applyEdit]
+	workspace_edit           WorkspaceEdit @[json: workspaceEdit]
+	did_change_configuration DidChange     @[json: didChangeConfiguration]
+	did_change_watched_files DidChange     @[json: didChangeWatchedFiles]
 	symbol                   WorkspaceSymbolCapabilities
-	execute_command          DidChange                   @[json: executeCommand]
-	workspace_folders        bool                        @[json: workspaceFolders]
+	execute_command          DidChange @[json: executeCommand]
+	workspace_folders        bool      @[json: workspaceFolders]
 	configuration            bool
 }
 
@@ -30,15 +30,15 @@ pub mut:
 
 pub struct TextDocumentClientCapabilities {
 pub mut:
-	code_lens           Capability                  @[json: codeLens]
-	color_provider      Capability                  @[json: colorProvider]
+	code_lens           Capability @[json: codeLens]
+	color_provider      Capability @[json: colorProvider]
 	completion          CompletionCapability
 	declaration         LinkCapability
 	definition          LinkCapability
-	document_highlight  Capability                  @[json: documentHighlight]
-	document_link       Capability                  @[json: documentLink]
-	document_symbol     DocumentSymbolCapability    @[json: documentSymbol]
-	folding_range       FoldingRangeCapabilities    @[json: foldingRange]
+	document_highlight  Capability               @[json: documentHighlight]
+	document_link       Capability               @[json: documentLink]
+	document_symbol     DocumentSymbolCapability @[json: documentSymbol]
+	folding_range       FoldingRangeCapabilities @[json: foldingRange]
 	formatting          Capability
 	hover               HoverCapability
 	implementation      LinkCapability
@@ -47,10 +47,10 @@ pub mut:
 	range_formatting    Capability                  @[json: rangeFormatting]
 	references          Capability
 	rename              RenameCapability
-	selection_range     Capability                  @[json: selectionRange]
+	selection_range     Capability @[json: selectionRange]
 	signature_help      SignatureHelpCapability
 	synchronization     TextDocumentSyncCapability
-	type_definition     LinkCapability              @[json: typeDefinition]
+	type_definition     LinkCapability @[json: typeDefinition]
 }
 
 pub struct DocumentLinkSupport {
@@ -82,7 +82,7 @@ pub mut:
 
 pub struct SignatureHelpCapability {
 pub mut:
-	dynamic_registration  bool                           @[json: dynamicRegistration]
+	dynamic_registration  bool @[json: dynamicRegistration]
 	signature_information SignatureInformationCapability @[json: signatureInformation]
 }
 
@@ -151,7 +151,7 @@ pub mut:
 	workspace     WorkspaceClientCapabilities    @[skip]
 	text_document TextDocumentClientCapabilities @[json: 'textDocument']
 	window        WindowCapability
-	experimental  string                         @[raw]
+	experimental  string @[raw]
 }
 
 pub struct WindowCapability {
@@ -186,11 +186,11 @@ pub mut:
 	document_on_type_formatting_provider DocumentOnTypeFormattingOptions @[json: documentOnTypeFormattingProvider]
 	rename_provider                      RenameOptions                   @[json: renameProvider]
 	document_link_provider               DocumentLinkOptions             @[json: documentLinkProvider]
-	color_provider                       bool                            @[json: colorProvider]
-	declaration_provider                 bool                            @[json: declarationProvider]
-	execute_command_provider             ExecuteCommandOptions           @[json: executeCommandProvider]
-	folding_range_provider               bool                            @[json: foldingRangeProvider]
-	semantic_tokens_provider             SemanticTokensOptions           @[json: semanticTokensProvider; omitempty]
+	color_provider                       bool                  @[json: colorProvider]
+	declaration_provider                 bool                  @[json: declarationProvider]
+	execute_command_provider             ExecuteCommandOptions @[json: executeCommandProvider]
+	folding_range_provider               bool                  @[json: foldingRangeProvider]
+	semantic_tokens_provider             SemanticTokensOptions @[json: semanticTokensProvider; omitempty]
 	experimental                         map[string]bool
 }
 

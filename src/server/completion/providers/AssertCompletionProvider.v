@@ -14,16 +14,16 @@ fn (_ &AssertCompletionProvider) is_available(ctx &completion.CompletionContext)
 
 fn (mut _ AssertCompletionProvider) add_completion(ctx &completion.CompletionContext, mut result completion.CompletionResultSet) {
 	result.add_element(lsp.CompletionItem{
-		label: 'assert expr'
-		kind: .keyword
+		label:              'assert expr'
+		kind:               .keyword
 		insert_text_format: .snippet
-		insert_text: 'assert \${1:expr}'
+		insert_text:        'assert \${1:expr}'
 	})
 
 	result.add_element(lsp.CompletionItem{
-		label: 'assert expr, message'
-		kind: .keyword
+		label:              'assert expr, message'
+		kind:               .keyword
 		insert_text_format: .snippet
-		insert_text: "assert \${1:expr}, '\${2:message}'$0"
+		insert_text:        "assert \${1:expr}, '\${2:message}'$0"
 	})
 }

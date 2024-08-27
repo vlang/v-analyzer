@@ -28,8 +28,8 @@ fn (mut r ReferenceCompletionProvider) add_completion(ctx &completion.Completion
 	if parent is psi.ReferenceExpressionBase {
 		sub := psi.SubResolver{
 			containing_file: containing_file
-			element: parent
-			for_types: parent is psi.TypeReferenceExpression
+			element:         parent
+			for_types:       parent is psi.TypeReferenceExpression
 		}
 
 		variants := StructLiteralCompletion{}.allowed_variants(ctx, parent)

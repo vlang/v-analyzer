@@ -22,10 +22,10 @@ pub fn new_entry(logger &Logger) &Entry {
 
 pub fn (entry &Entry) clone() &Entry {
 	return &Entry{
-		logger: entry.logger
-		fields: entry.fields.clone()
-		time: entry.time
-		level: entry.level
+		logger:  entry.logger
+		fields:  entry.fields.clone()
+		time:    entry.time
+		level:   entry.level
 		message: entry.message
 	}
 }
@@ -37,10 +37,10 @@ pub fn (entry &Entry) with_fields(fields Fields) &Entry {
 	}
 
 	return &Entry{
-		logger: entry.logger
-		fields: own_fields
-		time: entry.time
-		level: entry.level
+		logger:  entry.logger
+		fields:  own_fields
+		time:    entry.time
+		level:   entry.level
 		message: entry.message
 	}
 }

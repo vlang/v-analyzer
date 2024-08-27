@@ -11,7 +11,7 @@ pub struct RenameParams {
 pub:
 	text_document TextDocumentIdentifier @[json: textDocument]
 	position      Position
-	new_name      string                 @[json: newName]
+	new_name      string @[json: newName]
 }
 
 pub struct RenameRegistrationOptions {

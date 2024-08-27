@@ -29,7 +29,7 @@ pub:
 pub fn references(element psi.PsiElement, params SearchParams) []psi.PsiElement {
 	containing_file := element.containing_file
 	return ReferencesSearch{
-		params: params
+		params:          params
 		containing_file: containing_file
 	}.search(element)
 }

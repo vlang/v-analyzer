@@ -20,15 +20,15 @@ fn (mut p ModuleNameCompletionProvider) add_completion(ctx &completion.Completio
 	dir_name := p.transform_module_name(os.file_name(dir))
 
 	result.add_element(lsp.CompletionItem{
-		label: 'module ${dir_name}'
-		kind: .keyword
+		label:              'module ${dir_name}'
+		kind:               .keyword
 		insert_text_format: .snippet
-		insert_text: 'module ${dir_name}'
+		insert_text:        'module ${dir_name}'
 	})
 
 	result.add_element(lsp.CompletionItem{
-		label: 'module main'
-		kind: .keyword
+		label:       'module main'
+		kind:        .keyword
 		insert_text: 'module main'
 	})
 }

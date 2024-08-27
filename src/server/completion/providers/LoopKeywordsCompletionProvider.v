@@ -11,13 +11,13 @@ fn (k &LoopKeywordsCompletionProvider) is_available(ctx &completion.CompletionCo
 
 fn (mut k LoopKeywordsCompletionProvider) add_completion(ctx &completion.CompletionContext, mut result completion.CompletionResultSet) {
 	result.add_element(lsp.CompletionItem{
-		label: 'break'
-		kind: .keyword
+		label:       'break'
+		kind:        .keyword
 		insert_text: 'break'
 	})
 	result.add_element(lsp.CompletionItem{
-		label: 'continue'
-		kind: .keyword
+		label:       'continue'
+		kind:        .keyword
 		insert_text: 'continue'
 	})
 }

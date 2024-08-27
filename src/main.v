@@ -45,7 +45,7 @@ fn run(cmd cli.Command) ! {
 
 	mut ls := server.LanguageServer.new(analyzer.IndexingManager.new())
 	mut jrpc_server := &jsonrpc.Server{
-		stream: stream
+		stream:  stream
 		handler: ls
 	}
 	mut lr := log.LogRecorder{}
@@ -84,70 +84,70 @@ fn setup_logger(to_file bool) {
 
 fn main() {
 	mut cmd := cli.Command{
-		name: metadata.manifest.name
-		version: metadata.full_version
+		name:        metadata.manifest.name
+		version:     metadata.full_version
 		description: metadata.manifest.description
-		execute: run
-		posix_mode: true
+		execute:     run
+		posix_mode:  true
 	}
 
 	cmd.add_command(cli.Command{
-		name: 'init'
+		name:        'init'
 		description: 'Initialize a configuration file inside the current directory.'
-		execute: init_cmd
+		execute:     init_cmd
 	})
 
 	cmd.add_command(cli.Command{
-		name: 'clear-cache'
+		name:        'clear-cache'
 		description: 'Clears the analyzer cache.'
-		execute: clear_cache_cmd
+		execute:     clear_cache_cmd
 	})
 
 	cmd.add_command(cli.Command{
-		name: 'up'
+		name:        'up'
 		description: 'Updates the analyzer to the latest version.'
-		execute: up_cmd
-		posix_mode: true
-		flags: [
+		execute:     up_cmd
+		posix_mode:  true
+		flags:       [
 			cli.Flag{
-				flag: .bool
-				name: 'nightly'
+				flag:        .bool
+				name:        'nightly'
 				description: 'Install the latest nightly build'
 			},
 		]
 	})
 
 	cmd.add_command(cli.Command{
-		name: 'check-updates'
+		name:        'check-updates'
 		description: 'Checks for v-analyzer updates.'
-		execute: check_updates_cmd
-		posix_mode: true
-		version: metadata.full_version
+		execute:     check_updates_cmd
+		posix_mode:  true
+		version:     metadata.full_version
 	})
 
 	cmd.add_flags([
 		cli.Flag{
-			flag: .bool
-			name: 'stdio'
-			description: 'Use stdio for communication.'
+			flag:          .bool
+			name:          'stdio'
+			description:   'Use stdio for communication.'
 			default_value: [
 				'true',
 			]
 		},
 		cli.Flag{
-			flag: .bool
-			name: 'socket'
+			flag:        .bool
+			name:        'socket'
 			description: 'Use TCP connection for communication.'
 		},
 		cli.Flag{
-			flag: .bool
-			name: 'log-to-stdout'
+			flag:        .bool
+			name:        'log-to-stdout'
 			description: 'Use stdout for logs, can be used only with --socket flag (Only for debug purposes).'
 		},
 		cli.Flag{
-			flag: .int
-			name: 'port'
-			description: 'Port to use for socket communication. (Default: 5007)'
+			flag:          .int
+			name:          'port'
+			description:   'Port to use for socket communication. (Default: 5007)'
 			default_value: [
 				'${default_tcp_port}',
 			]

@@ -17,7 +17,7 @@ pub fn new_tracker(mut client protocol.Client) &Tracker {
 
 pub fn (mut t Tracker) start(title string, message string, token lsp.ProgressToken) &WorkDone {
 	mut wd := &WorkDone{
-		token: token
+		token:  token
 		client: t.client
 	}
 
@@ -35,10 +35,10 @@ pub fn (mut t Tracker) start(title string, message string, token lsp.ProgressTok
 	t.client.progress(
 		token: wd.token
 		value: lsp.WorkDoneProgressPayload{
-			kind: 'begin'
-			title: title
-			message: message
-			percentage: 0
+			kind:        'begin'
+			title:       title
+			message:     message
+			percentage:  0
 			cancellable: false
 		}
 	)
@@ -61,8 +61,8 @@ pub fn (mut wd WorkDone) progress(message string, percentage u32) {
 	wd.client.progress(
 		token: wd.token
 		value: lsp.WorkDoneProgressPayload{
-			kind: 'report'
-			message: message.trim_string_right('\n')
+			kind:       'report'
+			message:    message.trim_string_right('\n')
 			percentage: percentage
 		}
 	)
@@ -77,8 +77,8 @@ pub fn (mut wd WorkDone) end(message string) {
 	wd.client.progress(
 		token: wd.token
 		value: lsp.WorkDoneProgressPayload{
-			kind: 'end'
-			message: message
+			kind:       'end'
+			message:    message
 			percentage: 100
 		}
 	)

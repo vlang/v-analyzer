@@ -10,9 +10,9 @@ import datatypes
 pub fn new_test_client(handler jsonrpc.Handler, interceptors ...jsonrpc.Interceptor) &TestClient {
 	mut stream := &TestStream{}
 	mut server := &jsonrpc.Server{
-		handler: handler
+		handler:      handler
 		interceptors: interceptors
-		stream: stream
+		stream:       stream
 	}
 
 	return &TestClient{
@@ -43,7 +43,7 @@ pub mut:
 pub fn (mut tc TestClient) send[T, U](method string, params T) !U {
 	params_json := json.encode(params)
 	req := jsonrpc.Request{
-		id: '${tc.id}'
+		id:     '${tc.id}'
 		method: method
 		params: params_json
 	}
@@ -64,7 +64,7 @@ pub fn (mut tc TestClient) send[T, U](method string, params T) !U {
 pub fn (mut tc TestClient) notify[T](method string, params T) ! {
 	params_json := json.encode(params)
 	req := jsonrpc.Request{
-		id: ''
+		id:     ''
 		method: method
 		params: params_json
 	}

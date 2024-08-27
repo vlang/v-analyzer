@@ -21,10 +21,10 @@ mut:
 
 pub fn new_visitor(cfg config.CodeLensConfig, uri lsp.DocumentUri, containing_file &psi.PsiFile) CodeLensVisitor {
 	return CodeLensVisitor{
-		cfg: cfg
-		uri: uri
+		cfg:             cfg
+		uri:             uri
 		containing_file: containing_file
-		is_test_file: containing_file.is_test_file()
+		is_test_file:    containing_file.is_test_file()
 	}
 }
 
@@ -67,8 +67,8 @@ pub fn (mut v CodeLensVisitor) add_run_test_lens(node psi.AstNode) {
 	}
 
 	v.add_lens(node, lsp.Command{
-		title: '▶ Run test'
-		command: 'v-analyzer.runTests'
+		title:     '▶ Run test'
+		command:   'v-analyzer.runTests'
 		arguments: [
 			v.uri.path(),
 			name,
@@ -77,8 +77,8 @@ pub fn (mut v CodeLensVisitor) add_run_test_lens(node psi.AstNode) {
 
 	if !v.first_test_seen {
 		v.add_lens(node, lsp.Command{
-			title: 'all file tests'
-			command: 'v-analyzer.runTests'
+			title:     'all file tests'
+			command:   'v-analyzer.runTests'
 			arguments: [
 				v.uri.path(),
 			]
@@ -102,15 +102,15 @@ pub fn (mut v CodeLensVisitor) add_run_lens(node psi.AstNode) {
 	}
 
 	v.add_lens(node, lsp.Command{
-		title: '▶ Run workspace'
-		command: 'v-analyzer.runWorkspace'
+		title:     '▶ Run workspace'
+		command:   'v-analyzer.runWorkspace'
 		arguments: [
 			v.uri.path(),
 		]
 	})
 	v.add_lens(node, lsp.Command{
-		title: 'single file'
-		command: 'v-analyzer.runFile'
+		title:     'single file'
+		command:   'v-analyzer.runFile'
 		arguments: [
 			v.uri.path(),
 		]
@@ -137,12 +137,12 @@ pub fn (mut v CodeLensVisitor) add_interface_implementations_lens(node psi.AstNo
 			if implementations.len == 1 { ' implementation' } else { ' implementations' }
 
 		v.add_lens(node, lsp.Command{
-			title: lens_title
-			command: 'v-analyzer.showReferences'
+			title:     lens_title
+			command:   'v-analyzer.showReferences'
 			arguments: [
 				v.uri.path(),
 				json.encode(lsp.Position{
-					line: identifier_text_range.line
+					line:      identifier_text_range.line
 					character: identifier_text_range.column
 				}),
 				json.encode(locations),
@@ -170,12 +170,12 @@ pub fn (mut v CodeLensVisitor) add_super_interfaces_lens(node psi.AstNode) {
 			if supers.len == 1 { ' interface' } else { ' interfaces' }
 
 		v.add_lens(node, lsp.Command{
-			title: lens_title
-			command: 'v-analyzer.showReferences'
+			title:     lens_title
+			command:   'v-analyzer.showReferences'
 			arguments: [
 				v.uri.path(),
 				json.encode(lsp.Position{
-					line: identifier_text_range.line
+					line:      identifier_text_range.line
 					character: identifier_text_range.column
 				}),
 				json.encode(locations),
@@ -188,13 +188,13 @@ pub fn (mut v CodeLensVisitor) add_super_interfaces_lens(node psi.AstNode) {
 pub fn (mut v CodeLensVisitor) add_lens(node psi.AstNode, cmd lsp.Command) {
 	start_point := node.start_point()
 	start := lsp.Position{
-		line: int(start_point.row)
+		line:      int(start_point.row)
 		character: int(start_point.column)
 	}
 	v.result << lsp.CodeLens{
 		range: lsp.Range{
 			start: start
-			end: start
+			end:   start
 		}
 		command: cmd
 	}

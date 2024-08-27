@@ -269,7 +269,7 @@ pub fn create_element(node AstNode, containing_file &PsiFile) PsiElement {
 	if node.type_name == .fixed_array_creation {
 		return ArrayCreation{
 			PsiElementImpl: base_node
-			is_fixed: true
+			is_fixed:       true
 		}
 	}
 

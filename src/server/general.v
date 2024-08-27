@@ -41,50 +41,50 @@ pub fn (mut ls LanguageServer) initialize(params lsp.InitializeParams, mut wr Re
 		capabilities: lsp.ServerCapabilities{
 			text_document_sync: lsp.TextDocumentSyncOptions{
 				open_close: true
-				change: .full
-				will_save: true
-				save: lsp.SaveOptions{}
+				change:     .full
+				will_save:  true
+				save:       lsp.SaveOptions{}
 			}
-			hover_provider: true
-			definition_provider: true
-			type_definition_provider: true
-			references_provider: lsp.ReferencesOptions{}
+			hover_provider:               true
+			definition_provider:          true
+			type_definition_provider:     true
+			references_provider:          lsp.ReferencesOptions{}
 			document_formatting_provider: true
-			completion_provider: lsp.CompletionOptions{
-				resolve_provider: false
+			completion_provider:          lsp.CompletionOptions{
+				resolve_provider:   false
 				trigger_characters: ['.', ':', '(', '@']
 			}
 			signature_help_provider: lsp.SignatureHelpOptions{
-				trigger_characters: ['(', ',']
+				trigger_characters:   ['(', ',']
 				retrigger_characters: [',', ' ']
 			}
-			code_lens_provider: lsp.CodeLensOptions{}
-			inlay_hint_provider: lsp.InlayHintOptions{}
+			code_lens_provider:       lsp.CodeLensOptions{}
+			inlay_hint_provider:      lsp.InlayHintOptions{}
 			semantic_tokens_provider: lsp.SemanticTokensOptions{
 				legend: lsp.SemanticTokensLegend{
-					token_types: semantic.semantic_types
+					token_types:     semantic.semantic_types
 					token_modifiers: semantic.semantic_modifiers
 				}
 				range: true
-				full: true
+				full:  true
 			}
 			rename_provider: lsp.RenameOptions{
 				prepare_provider: false
 			}
-			document_symbol_provider: true
-			workspace_symbol_provider: true
-			implementation_provider: true
+			document_symbol_provider:    true
+			workspace_symbol_provider:   true
+			implementation_provider:     true
 			document_highlight_provider: true
-			code_action_provider: lsp.CodeActionOptions{
+			code_action_provider:        lsp.CodeActionOptions{
 				code_action_kinds: [lsp.quick_fix]
 			}
-			folding_range_provider: true
+			folding_range_provider:   true
 			execute_command_provider: lsp.ExecuteCommandOptions{
 				commands: arrays.concat(ls.intentions.values().map(it.id), ...ls.compiler_quick_fixes.values().map(it.id))
 			}
 		}
 		server_info: lsp.ServerInfo{
-			name: metadata.manifest.name
+			name:    metadata.manifest.name
 			version: metadata.manifest.version
 		}
 	}

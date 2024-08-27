@@ -18,8 +18,8 @@ pub struct RenameFileOptions {
 
 pub struct RenameFile {
 	kind    string = 'rename'
-	old_uri DocumentUri       @[json: oldUri]
-	new_uri DocumentUri       @[json: newUri]
+	old_uri DocumentUri @[json: oldUri]
+	new_uri DocumentUri @[json: newUri]
 	options RenameFileOptions
 }
 

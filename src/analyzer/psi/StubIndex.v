@@ -31,19 +31,19 @@ pub mut:
 	file_to_module map[string]string
 	// data defines the index data that allows you to get the description of the element
 	// in 2 accesses to the array elements and one lookup by key.
-	data [count_stub_index_location_keys][count_index_keys]map[string]StubResult
+	data [psi.count_stub_index_location_keys][psi.count_index_keys]map[string]StubResult
 	// all_elements_by_modules contains all top-level elements in the module.
-	all_elements_by_modules [count_stub_index_location_keys]map[string][]PsiElement
+	all_elements_by_modules [psi.count_stub_index_location_keys]map[string][]PsiElement
 	// types_by_modules contains all top-level types in the module.
-	types_by_modules [count_stub_index_location_keys]map[string][]PsiElement
+	types_by_modules [psi.count_stub_index_location_keys]map[string][]PsiElement
 }
 
 pub fn new_stubs_index(sinks []StubIndexSink) &StubIndex {
 	mut index := &StubIndex{
-		sinks: sinks
-		module_to_files: map[string][]StubIndexSink{}
+		sinks:                   sinks
+		module_to_files:         map[string][]StubIndexSink{}
 		all_elements_by_modules: unsafe { [psi.count_stub_index_location_keys]map[string][]PsiElement{} }
-		types_by_modules: unsafe { [psi.count_stub_index_location_keys]map[string][]PsiElement{} }
+		types_by_modules:        unsafe { [psi.count_stub_index_location_keys]map[string][]PsiElement{} }
 	}
 
 	for i in 0 .. psi.count_stub_index_location_keys {

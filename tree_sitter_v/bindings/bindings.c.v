@@ -103,8 +103,8 @@ fn byte_array_input_read(pl voidptr, byte_index u32, position C.TSPoint, bytes_r
 
 fn (mut p C.TSParser) parse_bytes_with_old_tree(content []u8, old_tree &TSTree) &TSTree {
 	return p.parse(old_tree,
-		payload: &content
-		read: byte_array_input_read
+		payload:  &content
+		read:     byte_array_input_read
 		encoding: int(TSVInputEncoding.utf8)
 	)
 }
@@ -157,9 +157,9 @@ fn (tree &TSTree) get_changed_ranges(new_tree &TSTree) []C.TSRange {
 	return unsafe {
 		array{
 			element_size: element_size
-			len: int(len)
-			cap: int(len)
-			data: buf
+			len:          int(len)
+			cap:          int(len)
+			data:         buf
 		}
 	}
 }
@@ -275,9 +275,9 @@ fn (node C.TSNode) end_byte() u32 {
 fn (node C.TSNode) range() C.TSRange {
 	return C.TSRange{
 		start_point: node.start_point()
-		end_point: node.end_point()
-		start_byte: node.start_byte()
-		end_byte: node.end_byte()
+		end_point:   node.end_point()
+		start_byte:  node.start_byte()
+		end_byte:    node.end_byte()
 	}
 }
 

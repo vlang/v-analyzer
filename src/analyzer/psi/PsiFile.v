@@ -20,11 +20,11 @@ pub mut:
 
 pub fn new_psi_file(path string, tree &bindings.Tree[bindings.NodeType], source_text string) &PsiFile {
 	mut file := &PsiFile{
-		path: path
-		tree: unsafe { tree }
+		path:        path
+		tree:        unsafe { tree }
 		source_text: source_text
-		stub_list: unsafe { nil }
-		root: unsafe { nil }
+		stub_list:   unsafe { nil }
+		root:        unsafe { nil }
 	}
 	file.root = create_element(AstNode(tree.root_node()), file)
 	return file
@@ -32,11 +32,11 @@ pub fn new_psi_file(path string, tree &bindings.Tree[bindings.NodeType], source_
 
 pub fn new_stub_psi_file(path string, stub_list &StubList) &PsiFile {
 	return &PsiFile{
-		path: path
-		tree: unsafe { nil }
+		path:        path
+		tree:        unsafe { nil }
 		source_text: ''
-		stub_list: stub_list
-		root: unsafe { nil }
+		stub_list:   stub_list
+		root:        unsafe { nil }
 	}
 }
 

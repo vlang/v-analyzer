@@ -30,27 +30,27 @@ fn (mut k TopLevelCompletionProvider) add_completion(ctx &completion.CompletionC
 fn (mut k TopLevelCompletionProvider) pub_keyword(mut result completion.CompletionResultSet) {
 	for label, variant in providers.top_level_map {
 		result.add_element(lsp.CompletionItem{
-			label: label
-			kind: .keyword
-			filter_text: variant.search_text
-			insert_text: variant.insert_text
+			label:              label
+			kind:               .keyword
+			filter_text:        variant.search_text
+			insert_text:        variant.insert_text
 			insert_text_format: .snippet
 		})
 	}
 
 	for label, variant in providers.top_level_map {
 		result.add_element(lsp.CompletionItem{
-			label: 'pub ${label}'
-			kind: .keyword
-			filter_text: 'pub ${variant.search_text}'
-			insert_text: 'pub ${variant.insert_text}'
+			label:              'pub ${label}'
+			kind:               .keyword
+			filter_text:        'pub ${variant.search_text}'
+			insert_text:        'pub ${variant.insert_text}'
 			insert_text_format: .snippet
 		})
 	}
 
 	result.add_element(lsp.CompletionItem{
-		label: 'import'
-		kind: .keyword
+		label:       'import'
+		kind:        .keyword
 		insert_text: 'import '
 	})
 }

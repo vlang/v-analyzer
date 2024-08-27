@@ -82,9 +82,9 @@ pub mut:
 pub fn LanguageServer.new(indexing analyzer.IndexingManager) &LanguageServer {
 	return &LanguageServer{
 		indexing_mng: indexing
-		writer: unsafe { nil } // will be initialized in `initialize`
-		client: unsafe { nil } // will be initialized in `initialize`
-		progress: unsafe { nil } // will be initialized in `initialize`
+		writer:       unsafe { nil } // will be initialized in `initialize`
+		client:       unsafe { nil } // will be initialized in `initialize`
+		progress:     unsafe { nil } // will be initialized in `initialize`
 	}
 }
 

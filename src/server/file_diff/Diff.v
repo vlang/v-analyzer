@@ -28,7 +28,7 @@ pub fn (mut diff Diff) append_to(line int, col int, text string) {
 	diff.edits << Edit{
 		range: lsp.Range{
 			start: pos
-			end: pos
+			end:   pos
 		}
 		new_text: text
 	}
@@ -39,7 +39,7 @@ pub fn (mut diff Diff) append_as_prev_line(line int, text string) {
 	diff.edits << Edit{
 		range: lsp.Range{
 			start: pos
-			end: pos
+			end:   pos
 		}
 		new_text: '${text}\n'
 	}
@@ -50,7 +50,7 @@ pub fn (mut diff Diff) append_as_next_line(line int, text string) {
 	diff.edits << Edit{
 		range: lsp.Range{
 			start: pos
-			end: pos
+			end:   pos
 		}
 		new_text: '\n${text}'
 	}
@@ -60,7 +60,7 @@ pub fn (mut diff Diff) to_workspace_edit() lsp.WorkspaceEdit {
 	return lsp.WorkspaceEdit{
 		changes: {
 			diff.uri: diff.edits.map(lsp.TextEdit{
-				range: it.range
+				range:    it.range
 				new_text: it.new_text
 			})
 		}
@@ -69,14 +69,14 @@ pub fn (mut diff Diff) to_workspace_edit() lsp.WorkspaceEdit {
 
 fn Diff.line_begin_pos(line int) lsp.Position {
 	return lsp.Position{
-		line: line
+		line:      line
 		character: 0
 	}
 }
 
 fn Diff.line_pos(line int, col int) lsp.Position {
 	return lsp.Position{
-		line: line
+		line:      line
 		character: col
 	}
 }

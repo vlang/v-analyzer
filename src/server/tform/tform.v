@@ -12,7 +12,7 @@ pub fn elements_to_locations(elements []psi.PsiElement) []lsp.Location {
 			element.text_range()
 		}
 		return lsp.Location{
-			uri: element.containing_file.uri()
+			uri:   element.containing_file.uri()
 			range: text_range_to_lsp_range(range)
 		}
 	})
@@ -22,11 +22,11 @@ pub fn elements_to_locations(elements []psi.PsiElement) []lsp.Location {
 pub fn text_range_to_lsp_range(pos psi.TextRange) lsp.Range {
 	return lsp.Range{
 		start: lsp.Position{
-			line: pos.line
+			line:      pos.line
 			character: pos.column
 		}
 		end: lsp.Position{
-			line: pos.end_line
+			line:      pos.end_line
 			character: pos.end_column
 		}
 	}
@@ -45,7 +45,7 @@ pub fn elements_to_text_edits(elements []psi.PsiElement, new_name string) []lsp.
 			element.text_range()
 		}
 		result << lsp.TextEdit{
-			range: text_range_to_lsp_range(range)
+			range:    text_range_to_lsp_range(range)
 			new_text: new_name
 		}
 	}
@@ -55,14 +55,14 @@ pub fn elements_to_text_edits(elements []psi.PsiElement, new_name string) []lsp.
 
 pub fn position_to_lsp_position(pos psi.Position) lsp.Position {
 	return lsp.Position{
-		line: pos.line
+		line:      pos.line
 		character: pos.character
 	}
 }
 
 pub fn lsp_position_to_position(pos lsp.Position) psi.Position {
 	return psi.Position{
-		line: pos.line
+		line:      pos.line
 		character: pos.character
 	}
 }

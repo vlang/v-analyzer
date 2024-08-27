@@ -28,11 +28,11 @@ pub fn (mut ls LanguageServer) folding_range(params lsp.FoldingRangeParams) ?[]l
 			}
 
 			result << lsp.FoldingRange{
-				start_line: first_range.line
+				start_line:      first_range.line
 				start_character: first_range.column
-				end_line: range.end_line - 2
-				end_character: range.end_column
-				kind: lsp.folding_range_kind_imports
+				end_line:        range.end_line - 2
+				end_character:   range.end_column
+				kind:            lsp.folding_range_kind_imports
 			}
 		}
 	}

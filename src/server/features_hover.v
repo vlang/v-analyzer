@@ -27,7 +27,7 @@ pub fn (mut ls LanguageServer) hover(params lsp.HoverParams) ?lsp.Hover {
 		if content := provider.documentation(element) {
 			return lsp.Hover{
 				contents: lsp.hover_markdown_string(content)
-				range: tform.text_range_to_lsp_range(element.text_range())
+				range:    tform.text_range_to_lsp_range(element.text_range())
 			}
 		}
 	}
@@ -37,7 +37,7 @@ pub fn (mut ls LanguageServer) hover(params lsp.HoverParams) ?lsp.Hover {
 	if content := provider.documentation(doc_element) {
 		return lsp.Hover{
 			contents: lsp.hover_markdown_string(content)
-			range: tform.text_range_to_lsp_range(element.text_range())
+			range:    tform.text_range_to_lsp_range(element.text_range())
 		}
 	}
 

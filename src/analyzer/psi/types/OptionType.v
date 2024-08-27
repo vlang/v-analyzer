@@ -8,7 +8,7 @@ pub:
 
 pub fn new_option_type(inner Type, no_inner bool) &OptionType {
 	return &OptionType{
-		inner: inner
+		inner:    inner
 		no_inner: no_inner
 	}
 }

@@ -428,8 +428,8 @@ pub fn (s &StubbedElementType) create_stub(psi PsiElement, parent_stub &StubBase
 
 		return new_stub_base(parent_stub, stub_type, psi.name(), identifier_text_range,
 			text_range,
-			comment: comment
-			receiver: receiver_type
+			comment:    comment
+			receiver:   receiver_type
 			additional: fingerprint
 		)
 	}
@@ -448,7 +448,7 @@ pub fn (s &StubbedElementType) create_stub(psi PsiElement, parent_stub &StubBase
 
 		return new_stub_base(parent_stub, .static_method_declaration, psi.name(), identifier_text_range,
 			text_range,
-			comment: comment
+			comment:  comment
 			receiver: receiver_type
 		)
 	}
@@ -610,8 +610,8 @@ pub fn declaration_stub(psi PsiNamedElement, parent_stub &StubElement, stub_type
 	text_range := (psi as PsiElement).text_range()
 	identifier_text_range := psi.identifier_text_range()
 	return new_stub_base(parent_stub, stub_type, psi.name(), identifier_text_range, text_range,
-		comment: if psi is PsiDocCommentOwner { psi.doc_comment() } else { '' }
-		text: if params.include_text { (psi as PsiElement).get_text() } else { '' }
+		comment:    if psi is PsiDocCommentOwner { psi.doc_comment() } else { '' }
+		text:       if params.include_text { (psi as PsiElement).get_text() } else { '' }
 		additional: params.additional
 	)
 }

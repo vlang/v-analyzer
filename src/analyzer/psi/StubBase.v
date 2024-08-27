@@ -38,16 +38,16 @@ pub fn new_stub_base(parent &StubElement, stub_type StubType, name string, ident
 	}
 	parent_id := if !isnil(parent) { parent.id() } else { psi.non_stubbed_element }
 	mut stub := &StubBase{
-		name: name
-		text: data.text
-		comment: data.comment
-		receiver: data.receiver
-		additional: data.additional
+		name:                  name
+		text:                  data.text
+		comment:               data.comment
+		receiver:              data.receiver
+		additional:            data.additional
 		identifier_text_range: identifier_text_range
-		text_range: text_range
-		stub_list: stub_list
-		parent_id: parent_id
-		stub_type: stub_type
+		text_range:            text_range
+		stub_list:             stub_list
+		parent_id:             parent_id
+		stub_type:             stub_type
 	}
 	stub_list.add_stub(mut stub, parent)
 	return stub
@@ -58,7 +58,7 @@ pub fn new_root_stub(path string) &StubBase {
 		path: path
 	}
 	mut stub := &StubBase{
-		name: '<root>'
+		name:      '<root>'
 		stub_list: stub_list
 		parent_id: -1
 		stub_type: .root

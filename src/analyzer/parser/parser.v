@@ -100,7 +100,7 @@ pub fn parse_code_with_tree(code string, old_tree &bindings.Tree[bindings.NodeTy
 	raw_tree := if isnil(old_tree) { unsafe { nil } } else { old_tree.raw_tree }
 	tree := parser.parse_string(source: code, tree: raw_tree)
 	return ParseResult{
-		tree: tree
+		tree:        tree
 		source_text: code
 	}
 }

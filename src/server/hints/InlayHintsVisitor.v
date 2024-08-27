@@ -33,21 +33,21 @@ pub fn (mut v InlayHintsVisitor) process_node(node psi.AstNode, containing_file 
 		if need_left {
 			v.result << lsp.InlayHint{
 				position: lsp.Position{
-					line: int(start_point.row)
+					line:      int(start_point.row)
 					character: int(start_point.column)
 				}
 				label: '≤'
-				kind: .type_
+				kind:  .type_
 			}
 		}
 		if need_right {
 			v.result << lsp.InlayHint{
 				position: lsp.Position{
-					line: int(end_point.row)
+					line:      int(end_point.row)
 					character: int(end_point.column)
 				}
 				label: '<'
-				kind: .type_
+				kind:  .type_
 			}
 		}
 		return
@@ -64,11 +64,11 @@ pub fn (mut v InlayHintsVisitor) process_node(node psi.AstNode, containing_file 
 
 			v.result << lsp.InlayHint{
 				position: lsp.Position{
-					line: range.line
+					line:      range.line
 					character: range.end_column
 				}
 				label: ': ' + element.get_type().readable_name()
-				kind: .type_
+				kind:  .type_
 			}
 		}
 	}
@@ -81,11 +81,11 @@ pub fn (mut v InlayHintsVisitor) process_node(node psi.AstNode, containing_file 
 
 			v.result << lsp.InlayHint{
 				position: lsp.Position{
-					line: range.line
+					line:      range.line
 					character: range.end_column
 				}
 				label: ': ' + typ.readable_name()
-				kind: .type_
+				kind:  .type_
 			}
 		}
 	}
@@ -130,11 +130,11 @@ pub fn (mut v InlayHintsVisitor) handle_enum_field(enum_field psi.AstNode, conta
 		text_range := element.text_range()
 		v.result << lsp.InlayHint{
 			position: lsp.Position{
-				line: int(text_range.line)
+				line:      int(text_range.line)
 				character: int(text_range.end_column)
 			}
 			label: ' = ${value_presentation}'
-			kind: .type_
+			kind:  .type_
 		}
 	}
 }
@@ -176,11 +176,11 @@ pub fn (mut v InlayHintsVisitor) handle_call_expression(call psi.AstNode, contai
 				arg_range := arg.text_range()
 				v.result << lsp.InlayHint{
 					position: lsp.Position{
-						line: arg_range.line
+						line:      arg_range.line
 						character: arg_range.column
 					}
 					label: '${name}: '
-					kind: .parameter
+					kind:  .parameter
 				}
 			}
 		}
@@ -215,10 +215,10 @@ pub fn (mut v InlayHintsVisitor) handle_implicit_error_variable(block psi.AstNod
 
 	v.result << lsp.InlayHint{
 		position: lsp.Position{
-			line: int(start_point.row)
+			line:      int(start_point.row)
 			character: int(start_point.column + 1)
 		}
 		label: ' err →'
-		kind: .parameter
+		kind:  .parameter
 	}
 }

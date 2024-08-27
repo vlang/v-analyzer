@@ -13,7 +13,7 @@ pub fn (mut tw PsiTreeWalker) next() ?PsiElement {
 
 pub fn new_psi_tree_walker(root_node PsiElement) PsiTreeWalker {
 	return PsiTreeWalker{
-		tree_walker: new_tree_walker(root_node.node)
+		tree_walker:     new_tree_walker(root_node.node)
 		containing_file: root_node.containing_file
 	}
 }
