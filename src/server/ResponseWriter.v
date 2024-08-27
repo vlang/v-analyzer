@@ -16,7 +16,7 @@ fn (mut wr ResponseWriter) wrap_error(err IError) IError {
 // log_message sends a window/logMessage notification to the client
 pub fn (mut wr ResponseWriter) log_message(message string, typ lsp.MessageType) {
 	wr.write_notify('window/logMessage', lsp.LogMessageParams{
-		@type: typ
+		@type:   typ
 		message: message
 	})
 }

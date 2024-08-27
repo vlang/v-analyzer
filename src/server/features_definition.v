@@ -42,9 +42,9 @@ pub fn new_resolve_result(containing_file &psi.PsiFile, element psi.PsiElement) 
 	if element is psi.PsiNamedElement {
 		text_range := element.identifier_text_range()
 		return ResolveResult{
-			range: text_range
+			range:    text_range
 			filepath: containing_file.path()
-			name: element.name()
+			name:     element.name()
 		}
 	}
 
@@ -54,9 +54,9 @@ pub fn new_resolve_result(containing_file &psi.PsiFile, element psi.PsiElement) 
 fn (r &ResolveResult) to_location_link(origin_selection_range psi.TextRange) lsp.LocationLink {
 	range := tform.text_range_to_lsp_range(r.range)
 	return lsp.LocationLink{
-		target_uri: lsp.document_uri_from_path(r.filepath)
+		target_uri:             lsp.document_uri_from_path(r.filepath)
 		origin_selection_range: tform.text_range_to_lsp_range(origin_selection_range)
-		target_range: range
+		target_range:           range
 		target_selection_range: range
 	}
 }

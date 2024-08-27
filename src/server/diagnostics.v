@@ -45,7 +45,7 @@ fn (mut d DiagnosticReporter) clear(uri lsp.DocumentUri) {
 fn (mut d DiagnosticReporter) publish(mut wr ResponseWriter, uri lsp.DocumentUri) {
 	reports := d.reports[uri] or { return }
 	wr.publish_diagnostics(lsp.PublishDiagnosticsParams{
-		uri: uri
+		uri:         uri
 		diagnostics: reports.map(d.convert_report(it))
 	})
 }
@@ -62,15 +62,15 @@ fn (_ &DiagnosticReporter) convert_report(report inspections.Report) lsp.Diagnos
 	}
 
 	return lsp.Diagnostic{
-		range: tform.text_range_to_lsp_range(report.range)
+		range:    tform.text_range_to_lsp_range(report.range)
 		severity: match report.kind {
 			.error { lsp.DiagnosticSeverity.error }
 			.warning { lsp.DiagnosticSeverity.warning }
 			.notice { lsp.DiagnosticSeverity.information }
 		}
-		source: 'compiler'
+		source:  'compiler'
 		message: report.message
-		tags: tags
+		tags:    tags
 	}
 }
 

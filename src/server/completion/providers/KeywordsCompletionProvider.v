@@ -21,8 +21,8 @@ fn (mut k KeywordsCompletionProvider) add_completion(ctx &completion.CompletionC
 fn (mut k KeywordsCompletionProvider) no_space_keywords(keywords []string, mut result completion.CompletionResultSet) {
 	for keyword in keywords {
 		result.add_element(lsp.CompletionItem{
-			label: keyword
-			kind: .keyword
+			label:       keyword
+			kind:        .keyword
 			insert_text: keyword
 		})
 	}

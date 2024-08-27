@@ -93,7 +93,7 @@ fn (mut s Server) internal_respond(mut base_rw ResponseWriter) ! {
 	mut rw := ResponseWriter{
 		server: s
 		writer: base_rw.writer
-		sb: base_rw.sb
+		sb:     base_rw.sb
 		req_id: req.id
 	}
 
@@ -134,7 +134,7 @@ pub fn (s &Server) writer(cfg NewWriterConfig) &ResponseWriter {
 				// passthrough between processes and does not need a
 				// "repackaging" of the outgoing data
 				Writer{
-					clen_sb: if cfg.own_buffer { s.conlen_buf.clone() } else { s.conlen_buf }
+					clen_sb:     if cfg.own_buffer { s.conlen_buf.clone() } else { s.conlen_buf }
 					read_writer: s.stream
 				},
 			]
@@ -197,7 +197,7 @@ pub fn (mut rw ResponseWriter) write[T](payload T) {
 	}
 
 	final_resp := Response[T]{
-		id: rw.req_id
+		id:     rw.req_id
 		result: payload
 	}
 	encode_response[T](final_resp, mut rw.sb)
@@ -246,7 +246,7 @@ pub fn (mut rw ResponseWriter) write_error(err &ResponseError) {
 	}
 
 	final_resp := Response[string]{
-		id: rw.req_id
+		id:    rw.req_id
 		error: err
 	}
 	encode_response[string](final_resp, mut rw.sb)

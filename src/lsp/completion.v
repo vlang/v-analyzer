@@ -40,7 +40,7 @@ pub:
 
 pub struct CompletionList {
 pub:
-	is_incomplete bool             @[json: isIncomplete]
+	is_incomplete bool @[json: isIncomplete]
 	items         []CompletionItem
 }
 

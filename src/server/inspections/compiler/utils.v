@@ -52,13 +52,13 @@ fn parse_compiler_diagnostic(msg string) ?inspections.Report {
 
 	return inspections.Report{
 		range: psi.TextRange{
-			line: line_nr
-			column: col_nr
-			end_line: line_nr
+			line:       line_nr
+			column:     col_nr
+			end_line:   line_nr
 			end_column: col_nr + underline_width
 		}
-		kind: diag_kind
-		message: msg_content
+		kind:     diag_kind
+		message:  msg_content
 		filepath: filepath
 	}
 }

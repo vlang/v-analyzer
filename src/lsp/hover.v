@@ -31,13 +31,13 @@ pub struct MarkedString {
 pub fn hover_v_marked_string(text string) HoverResponseContent {
 	return HoverResponseContent(MarkedString{
 		language: 'v'
-		value: text
+		value:    text
 	})
 }
 
 pub fn hover_markdown_string(text string) HoverResponseContent {
 	return HoverResponseContent(MarkupContent{
-		kind: markup_kind_markdown
+		kind:  markup_kind_markdown
 		value: text
 	})
 }

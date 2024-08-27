@@ -8,7 +8,7 @@ pub:
 
 pub fn new_generic_instantiation_type(inner Type, specialization []Type) &GenericInstantiationType {
 	return &GenericInstantiationType{
-		inner: inner
+		inner:          inner
 		specialization: specialization
 	}
 }

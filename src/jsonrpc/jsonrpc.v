@@ -201,8 +201,8 @@ pub:
 @[inline]
 pub fn response_error(params ResponseErrorGeneratorParams) ResponseError {
 	return ResponseError{
-		code: params.error.code()
+		code:    params.error.code()
 		message: params.error.msg()
-		data: params.data
+		data:    params.data
 	}
 }

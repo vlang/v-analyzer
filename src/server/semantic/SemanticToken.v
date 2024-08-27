@@ -41,10 +41,10 @@ pub struct SemanticToken {
 fn element_to_semantic(element psi.AstNode, typ SemanticTypes, modifiers ...string) SemanticToken {
 	start_point := element.start_point()
 	return SemanticToken{
-		line: start_point.row
+		line:  start_point.row
 		start: start_point.column
-		len: element.text_length()
-		typ: typ
-		mods: modifiers
+		len:   element.text_length()
+		typ:   typ
+		mods:  modifiers
 	}
 }

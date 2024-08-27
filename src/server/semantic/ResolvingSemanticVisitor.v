@@ -16,8 +16,8 @@ pub fn new_resolve_semantic_visitor(range lsp.Range, containing_file &psi.PsiFil
 
 	return ResolveSemanticVisitor{
 		with_range: !range.is_empty()
-		start: u32(start)
-		end: u32(end)
+		start:      u32(start)
+		end:        u32(end)
 	}
 }
 

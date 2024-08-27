@@ -14,7 +14,7 @@ mut:
 pub fn new_parser[T](type_factory NodeTypeFactory[T]) &Parser[T] {
 	mut parser := new_ts_parser()
 	return &Parser[T]{
-		raw_parser: parser
+		raw_parser:   parser
 		type_factory: type_factory
 	}
 }
@@ -32,14 +32,14 @@ pub fn (mut p Parser[T]) reset() {
 @[params]
 pub struct ParseConfig {
 pub:
-	source string  @[required]
+	source string @[required]
 	tree   &TSTree = &TSTree(unsafe { nil })
 }
 
 pub fn (mut p Parser[T]) parse_string(cfg ParseConfig) &Tree[T] {
 	tree := p.raw_parser.parse_string_with_old_tree(cfg.source, cfg.tree)
 	return &Tree[T]{
-		raw_tree: tree
+		raw_tree:     tree
 		type_factory: p.type_factory
 	}
 }
@@ -65,9 +65,9 @@ pub fn (tree Tree[T]) root_node() Node[T] {
 
 pub fn new_tsnode[T](factory NodeTypeFactory[T], node TSNode) Node[T] {
 	return Node[T]{
-		raw_node: node
+		raw_node:     node
 		type_factory: factory
-		type_name: factory.get_type(node.type_name())
+		type_name:    factory.get_type(node.type_name())
 	}
 }
 
@@ -337,7 +337,7 @@ pub fn (node Node[T]) equal(other_node Node[T]) bool {
 pub fn (node Node[T]) tree_cursor() TreeCursor[T] {
 	return TreeCursor[T]{
 		type_factory: node.type_factory
-		raw_cursor: node.raw_node.tree_cursor()
+		raw_cursor:   node.raw_node.tree_cursor()
 	}
 }
 

@@ -13,7 +13,7 @@ pub struct DocumentLinkParams {
 pub struct DocumentLink {
 	range  Range
 	target DocumentUri
-	data   string      @[raw]
+	data   string @[raw]
 }
 
 pub struct DocumentLinkRegistrationOptions {

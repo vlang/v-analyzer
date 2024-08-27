@@ -8,7 +8,7 @@ pub:
 
 pub fn new_result_type(inner Type, no_inner bool) &ResultType {
 	return &ResultType{
-		inner: inner
+		inner:    inner
 		no_inner: no_inner
 	}
 }

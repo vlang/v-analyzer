@@ -12,16 +12,16 @@ pub struct ReferenceImpl {
 
 pub fn new_reference(file &PsiFile, element ReferenceExpressionBase, for_types bool) &ReferenceImpl {
 	return &ReferenceImpl{
-		element: element
-		file: file
+		element:   element
+		file:      file
 		for_types: for_types
 	}
 }
 
 pub fn new_attribute_reference(file &PsiFile, element ReferenceExpressionBase) &ReferenceImpl {
 	return &ReferenceImpl{
-		element: element
-		file: file
+		element:        element
+		file:           file
 		for_attributes: true
 	}
 }
@@ -33,14 +33,14 @@ fn (r &ReferenceImpl) element() PsiElement {
 pub fn (r &ReferenceImpl) resolve() ?PsiElement {
 	sub := SubResolver{
 		containing_file: r.file
-		element: r.element
-		for_types: r.for_types
-		for_attributes: r.for_attributes
+		element:         r.element
+		for_types:       r.for_types
+		for_attributes:  r.for_attributes
 	}
 	mut processor := ResolveProcessor{
 		containing_file: r.file
-		ref: r.element
-		ref_name: r.element.name()
+		ref:             r.element
+		ref_name:        r.element.name()
 	}
 
 	if from_cache := resolve_cache.get(r.element()) {

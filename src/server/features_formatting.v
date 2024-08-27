@@ -33,7 +33,7 @@ pub fn (mut ls LanguageServer) formatting(params lsp.DocumentFormattingParams) !
 
 	return [
 		lsp.TextEdit{
-			range: tform.text_range_to_lsp_range(file.psi_file.root().text_range())
+			range:    tform.text_range_to_lsp_range(file.psi_file.root().text_range())
 			new_text: output
 		},
 	]

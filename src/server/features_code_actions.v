@@ -18,11 +18,11 @@ pub fn (mut ls LanguageServer) code_actions(params lsp.CodeActionParams) ?[]lsp.
 		}
 
 		actions << lsp.CodeAction{
-			title: intention.name
-			kind: lsp.refactor
+			title:   intention.name
+			kind:    lsp.refactor
 			command: lsp.Command{
-				title: intention.name
-				command: intention.id
+				title:     intention.name
+				command:   intention.id
 				arguments: [
 					json.encode(IntentionData{
 						file_uri: uri
@@ -43,11 +43,11 @@ pub fn (mut ls LanguageServer) code_actions(params lsp.CodeActionParams) ?[]lsp.
 		}
 
 		actions << lsp.CodeAction{
-			title: intention.name
-			kind: lsp.quick_fix
+			title:   intention.name
+			kind:    lsp.quick_fix
 			command: lsp.Command{
-				title: intention.name
-				command: intention.id
+				title:     intention.name
+				command:   intention.id
 				arguments: [
 					json.encode(IntentionData{
 						file_uri: uri

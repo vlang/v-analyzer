@@ -31,7 +31,7 @@ pub fn (mut c Client) log_message(message string, typ lsp.MessageType) {
 		}
 	}
 	c.wr.write_notify('window/logMessage', lsp.LogMessageParams{
-		@type: typ
+		@type:   typ
 		message: message
 	})
 }
@@ -39,14 +39,14 @@ pub fn (mut c Client) log_message(message string, typ lsp.MessageType) {
 // show_message sends a window/showMessage notification to the client
 pub fn (mut c Client) show_message(message string, typ lsp.MessageType) {
 	c.wr.write_notify('window/showMessage', lsp.ShowMessageParams{
-		@type: typ
+		@type:   typ
 		message: message
 	})
 }
 
 pub fn (mut c Client) show_message_request(message string, actions []lsp.MessageActionItem, typ lsp.MessageType) {
 	c.wr.write_notify('window/showMessageRequest', lsp.ShowMessageRequestParams{
-		@type: typ
+		@type:   typ
 		message: message
 		actions: actions
 	})

@@ -48,7 +48,7 @@ fn write_const_enum_array(mut wr strings.Builder, var_name string, enum_type_nam
 }
 
 struct TSNodeType {
-	name     string       @[json: 'type']
+	name     string @[json: 'type']
 	named    bool
 	subtypes []TSNodeType
 }

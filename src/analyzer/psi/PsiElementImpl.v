@@ -13,18 +13,18 @@ pub:
 
 pub fn new_psi_node(containing_file &PsiFile, node AstNode) PsiElementImpl {
 	return PsiElementImpl{
-		node: node
+		node:            node
 		containing_file: containing_file
-		stubs_list: unsafe { nil }
+		stubs_list:      unsafe { nil }
 	}
 }
 
 fn new_psi_node_from_stub(id StubId, stubs_list &StubList) PsiElementImpl {
 	return PsiElementImpl{
-		node: AstNode{}
+		node:            AstNode{}
 		containing_file: new_stub_psi_file(stubs_list.path, stubs_list)
-		stub_id: id
-		stubs_list: stubs_list
+		stub_id:         id
+		stubs_list:      stubs_list
 	}
 }
 
@@ -422,9 +422,9 @@ pub fn (n &PsiElementImpl) text_range() TextRange {
 	}
 
 	return TextRange{
-		line: int(n.node.start_point().row)
-		column: int(n.node.start_point().column)
-		end_line: int(n.node.end_point().row)
+		line:       int(n.node.start_point().row)
+		column:     int(n.node.start_point().column)
+		end_line:   int(n.node.end_point().row)
 		end_column: int(n.node.end_point().column)
 	}
 }

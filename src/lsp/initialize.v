@@ -4,14 +4,14 @@ module lsp
 // response: InitializeResult
 pub struct InitializeParams {
 pub mut:
-	process_id             int = -2                @[json: processId]
-	client_info            ClientInfo         @[json: clientInfo]
-	root_uri               DocumentUri        @[json: rootUri]
-	root_path              DocumentUri        @[json: rootPath]
-	initialization_options string             @[json: initializationOptions]
+	process_id             int = -2         @[json: processId]
+	client_info            ClientInfo  @[json: clientInfo]
+	root_uri               DocumentUri @[json: rootUri]
+	root_path              DocumentUri @[json: rootPath]
+	initialization_options string      @[json: initializationOptions]
 	capabilities           ClientCapabilities
 	trace                  string
-	workspace_folders      []WorkspaceFolder  @[skip]
+	workspace_folders      []WorkspaceFolder @[skip]
 }
 
 pub struct ClientInfo {
@@ -29,7 +29,7 @@ pub mut:
 pub struct InitializeResult {
 pub:
 	capabilities ServerCapabilities
-	server_info  ServerInfo         @[json: 'serverInfo'; omitempty]
+	server_info  ServerInfo @[json: 'serverInfo'; omitempty]
 }
 
 // method: ‘initialized’

@@ -45,9 +45,9 @@ pub fn (mut ls LanguageServer) completion(params lsp.CompletionParams) ![]lsp.Co
 	// We use CompletionContext in order not to calculate the current partial context
 	// in each provider, but to calculate it once and pass it to all providers.
 	mut ctx := &completion.CompletionContext{
-		element: element
-		position: params.position
-		offset: offset
+		element:      element
+		position:     params.position
+		offset:       offset
 		trigger_kind: params.context.trigger_kind
 	}
 	ctx.compute()
@@ -55,10 +55,10 @@ pub fn (mut ls LanguageServer) completion(params lsp.CompletionParams) ![]lsp.Co
 	mut result_set := &completion.CompletionResultSet{}
 
 	mut processor := &providers.ReferenceCompletionProcessor{
-		file: file.psi_file
+		file:       file.psi_file
 		module_fqn: file.psi_file.module_fqn()
-		root: ls.root_uri.path()
-		ctx: ctx
+		root:       ls.root_uri.path()
+		ctx:        ctx
 	}
 
 	mut completion_providers := []completion.CompletionProvider{}

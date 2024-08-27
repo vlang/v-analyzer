@@ -27,18 +27,18 @@ fn test_serialize_deserialize_several_strings() {
 fn test_serialize_deserialize_stub_element() {
 	mut s := Serializer{}
 	data := StubBase{
-		name: 'test'
+		name:       'test'
 		text_range: TextRange{
-			line: 1
-			column: 2
-			end_line: 3
+			line:       1
+			column:     2
+			end_line:   3
 			end_column: 4
 		}
 		stub_type: .function_declaration
-		id: 123456
-		text: 'some text with spaces'
-		comment: '// comment data'
-		receiver: 'Foo'
+		id:        123456
+		text:      'some text with spaces'
+		comment:   '// comment data'
+		receiver:  'Foo'
 	}
 
 	serialize_stub_element(mut s, data)
@@ -78,9 +78,9 @@ fn serialize_stub_element(mut s Serializer, stub StubBase) {
 fn deserialize_stub_element(mut s Deserializer) StubBase {
 	name := s.read_string()
 	text_range := TextRange{
-		line: s.read_int()
-		column: s.read_int()
-		end_line: s.read_int()
+		line:       s.read_int()
+		column:     s.read_int()
+		end_line:   s.read_int()
 		end_column: s.read_int()
 	}
 	stub_type := unsafe { StubType(s.read_u8()) }
@@ -90,13 +90,13 @@ fn deserialize_stub_element(mut s Deserializer) StubBase {
 	receiver := s.read_string()
 
 	return StubBase{
-		name: name
+		name:       name
 		text_range: text_range
-		stub_type: stub_type
-		id: id
-		text: text
-		comment: comment
-		receiver: receiver
+		stub_type:  stub_type
+		id:         id
+		text:       text
+		comment:    comment
+		receiver:   receiver
 	}
 }
 

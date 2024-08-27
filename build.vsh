@@ -93,11 +93,11 @@ os.setenv('BUILD_DATETIME', build_datetime, true)
 os.setenv('BUILD_COMMIT', build_commit, true)
 
 mut cmd := cli.Command{
-	name: 'v-analyzer-builder'
-	version: metadata.manifest.version
+	name:        'v-analyzer-builder'
+	version:     metadata.manifest.version
 	description: 'Builds the v-analyzer binary.'
-	posix_mode: true
-	execute: fn (_ cli.Command) ! {
+	posix_mode:  true
+	execute:     fn (_ cli.Command) ! {
 		build(.debug, false)
 	}
 }
@@ -107,9 +107,9 @@ mut cmd := cli.Command{
 // Thanks to -d use_libbacktrace, the binary will print beautiful stack traces,
 // which is very useful for debugging.
 cmd.add_command(cli.Command{
-	name: 'debug'
+	name:        'debug'
 	description: 'Builds the v-analyzer binary in debug mode.'
-	execute: fn (_ cli.Command) ! {
+	execute:     fn (_ cli.Command) ! {
 		build(.debug, true)
 	}
 })
@@ -117,9 +117,9 @@ cmd.add_command(cli.Command{
 // dev builds the v-analyzer binary in development mode.
 // In this mode, additional development features are enabled.
 cmd.add_command(cli.Command{
-	name: 'dev'
+	name:        'dev'
 	description: 'Builds the v-analyzer binary in development mode.'
-	execute: fn (_ cli.Command) ! {
+	execute:     fn (_ cli.Command) ! {
 		build(.dev, false)
 	}
 })
@@ -128,9 +128,9 @@ cmd.add_command(cli.Command{
 // This is the recommended mode for production use.
 // It is about 30-40% faster than debug mode.
 cmd.add_command(cli.Command{
-	name: 'release'
+	name:        'release'
 	description: 'Builds the v-analyzer binary in release mode.'
-	execute: fn (_ cli.Command) ! {
+	execute:     fn (_ cli.Command) ! {
 		build(.release, false)
 	}
 })

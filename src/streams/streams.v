@@ -115,10 +115,10 @@ pub fn new_socket_stream_server(port int, log bool) !io.ReaderWriter {
 
 	mut stream := &SocketStream{
 		log_label: server_label
-		log: log
-		port: port
-		conn: conn
-		reader: reader
+		log:       log
+		port:      port
+		conn:      conn
+		reader:    reader
 	}
 
 	return stream
@@ -132,10 +132,10 @@ fn new_socket_stream_client(port int) !io.ReaderWriter {
 
 	mut stream := &SocketStream{
 		log_label: 'v-analyzer-client'
-		log: false
-		port: port
-		conn: conn
-		reader: reader
+		log:       false
+		port:      port
+		conn:      conn
+		reader:    reader
 	}
 	return stream
 }

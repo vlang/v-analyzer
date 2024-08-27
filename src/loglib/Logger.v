@@ -8,7 +8,7 @@ import time
 
 __global logger = Logger{
 	formatter: TextFormatter{}
-	out: os.stderr()
+	out:       os.stderr()
 }
 
 pub const support_colors = term.can_show_color_on_stderr() && term.can_show_color_on_stdout()

@@ -18,8 +18,8 @@ pub fn (mut ls LanguageServer) did_change(params lsp.DidChangeTextDocumentParams
 	new_content := params.content_changes[0].text
 	file.psi_file.reparse(new_content)
 	ls.opened_files[uri] = analyzer.OpenedFile{
-		uri: uri
-		version: file.version++
+		uri:      uri
+		version:  file.version++
 		psi_file: file.psi_file
 	}
 

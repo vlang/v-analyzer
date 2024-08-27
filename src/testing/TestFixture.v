@@ -37,7 +37,7 @@ pub fn new_fixture() &Fixture {
 
 	mut stream := &client.TestStream{}
 	mut jsonprc_server := &jsonrpc.Server{
-		stream: stream
+		stream:  stream
 		handler: ls
 	}
 
@@ -47,9 +47,9 @@ pub fn new_fixture() &Fixture {
 	}
 
 	return &Fixture{
-		ls: ls
-		stream: stream
-		server: jsonprc_server
+		ls:          ls
+		stream:      stream
+		server:      jsonprc_server
 		test_client: test_client
 	}
 }
@@ -64,17 +64,17 @@ pub fn (mut t Fixture) initialize(with_stdlib bool) !lsp.InitializeResult {
 
 	result := t.test_client.send[lsp.InitializeParams, lsp.InitializeResult]('initialize',
 		lsp.InitializeParams{
-		process_id: 75556
+		process_id:  75556
 		client_info: lsp.ClientInfo{
-			name: 'Testing'
+			name:    'Testing'
 			version: '0.0.1'
 		}
-		root_uri: lsp.document_uri_from_path(testing.temp_path)
-		root_path: testing.temp_path
+		root_uri:               lsp.document_uri_from_path(testing.temp_path)
+		root_path:              testing.temp_path
 		initialization_options: options.join(' ')
-		capabilities: lsp.ClientCapabilities{}
-		trace: ''
-		workspace_folders: []
+		capabilities:           lsp.ClientCapabilities{}
+		trace:                  ''
+		workspace_folders:      []
 	})!
 
 	return result
@@ -99,9 +99,9 @@ pub fn (mut t Fixture) configure_by_file(path string) ! {
 	}
 
 	t.current_file = TestFile{
-		path: abs_path
+		path:    abs_path
 		content: prepared_content.split_into_lines()
-		caret: t.caret_pos(prepared_text)
+		caret:   t.caret_pos(prepared_text)
 	}
 
 	t.send_open_current_file_request()!
@@ -120,9 +120,9 @@ pub fn (mut t Fixture) configure_by_text(filename string, text string) ! {
 	}
 
 	t.current_file = TestFile{
-		path: abs_path
+		path:    abs_path
 		content: content.split_into_lines()
-		caret: t.caret_pos(prepared_text)
+		caret:   t.caret_pos(prepared_text)
 	}
 
 	t.send_open_current_file_request()!
@@ -132,17 +132,17 @@ fn (mut t Fixture) send_open_current_file_request() ! {
 	t.test_client.send[lsp.DidOpenTextDocumentParams, jsonrpc.Null]('textDocument/didOpen',
 		lsp.DidOpenTextDocumentParams{
 		text_document: lsp.TextDocumentItem{
-			uri: lsp.document_uri_from_path(t.current_file.path)
+			uri:         lsp.document_uri_from_path(t.current_file.path)
 			language_id: 'v'
-			version: 1
-			text: t.current_file.content.join('\n')
+			version:     1
+			text:        t.current_file.content.join('\n')
 		}
 	}) or {}
 
 	t.test_client.send[lsp.DidChangeTextDocumentParams, jsonrpc.Null]('textDocument/didChange',
 		lsp.DidChangeTextDocumentParams{
 		text_document: lsp.VersionedTextDocumentIdentifier{
-			uri: lsp.document_uri_from_path(t.current_file.path)
+			uri:     lsp.document_uri_from_path(t.current_file.path)
 			version: 1
 		}
 		content_changes: [
@@ -190,7 +190,7 @@ pub fn (mut t Fixture) complete(pos lsp.Position) []lsp.CompletionItem {
 			uri: lsp.document_uri_from_path(t.current_file.path)
 		}
 		position: pos
-		context: lsp.CompletionContext{
+		context:  lsp.CompletionContext{
 			trigger_kind: .invoked
 		}
 	}) or { []lsp.CompletionItem{} }
@@ -300,14 +300,14 @@ pub fn (mut t Fixture) caret_pos(file string) lsp.Position {
 	for index, line in file.split_into_lines() {
 		if line.contains('/*caret*/') {
 			return lsp.Position{
-				line: index
+				line:      index
 				character: line.index('/*caret*/') or { 0 }
 			}
 		}
 	}
 
 	return lsp.Position{
-		line: 0
+		line:      0
 		character: 0
 	}
 }

@@ -46,7 +46,7 @@ fn test_server() {
 	mut stream := &TestStream{}
 	mut server := &jsonrpc.Server{
 		handler: &TestHandler{}
-		stream: stream
+		stream:  stream
 	}
 
 	mut client := TestClient{
@@ -98,9 +98,9 @@ fn test_interceptor() {
 	mut stream := &TestStream{}
 
 	mut server := &jsonrpc.Server{
-		handler: &TestHandler{}
+		handler:      &TestHandler{}
 		interceptors: [test_inter]
-		stream: stream
+		stream:       stream
 	}
 
 	mut client := TestClient{

@@ -9,7 +9,7 @@ pub:
 pub fn new_fixed_array_type(inner Type, size int) &FixedArrayType {
 	return &FixedArrayType{
 		inner: inner
-		size: size
+		size:  size
 	}
 }
 

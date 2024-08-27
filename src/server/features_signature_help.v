@@ -53,9 +53,9 @@ pub fn (mut ls LanguageServer) signature_help(params lsp.SignatureHelpParams) ?l
 
 			return lsp.SignatureHelp{
 				active_parameter: active_parameter
-				signatures: [
+				signatures:       [
 					lsp.SignatureInformation{
-						label: 'fn ${resolved.name()}${signature.get_text()}'
+						label:      'fn ${resolved.name()}${signature.get_text()}'
 						parameters: param_infos
 					},
 				]

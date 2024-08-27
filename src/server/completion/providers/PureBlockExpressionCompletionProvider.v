@@ -27,10 +27,10 @@ fn (mut k PureBlockExpressionCompletionProvider) add_completion(ctx &completion.
 	}
 
 	result.add_element(lsp.CompletionItem{
-		label: 'unsafe { ... }'
-		kind: .keyword
-		insert_text: insert_text
+		label:              'unsafe { ... }'
+		kind:               .keyword
+		insert_text:        insert_text
 		insert_text_format: .snippet
-		insert_text_mode: .adjust_indentation
+		insert_text_mode:   .adjust_indentation
 	})
 }

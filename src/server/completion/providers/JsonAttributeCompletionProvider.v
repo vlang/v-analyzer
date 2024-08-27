@@ -26,9 +26,9 @@ fn (mut p JsonAttributeCompletionProvider) add_completion(ctx &completion.Comple
 	json_name := p.json_name(name)
 
 	result.add_element(lsp.CompletionItem{
-		label: "json: '${json_name}'"
-		kind: .keyword
-		insert_text: "json: '\${1:${json_name}}'$0"
+		label:              "json: '${json_name}'"
+		kind:               .keyword
+		insert_text:        "json: '\${1:${json_name}}'$0"
 		insert_text_format: .snippet
 	})
 }

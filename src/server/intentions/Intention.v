@@ -13,7 +13,7 @@ pub struct IntentionContext {
 pub fn IntentionContext.from(containing_file &psi.PsiFile, position lsp.Position) IntentionContext {
 	return IntentionContext{
 		containing_file: containing_file
-		position: position
+		position:        position
 	}
 }
 

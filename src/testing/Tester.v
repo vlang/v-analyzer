@@ -22,9 +22,9 @@ pub fn (s TesterStats) print() {
 
 pub fn (s TesterStats) merge(other TesterStats) TesterStats {
 	return TesterStats{
-		passed: s.passed + other.passed
-		failed: s.failed + other.failed
-		skipped: s.skipped + other.skipped
+		passed:   s.passed + other.passed
+		failed:   s.failed + other.failed
+		skipped:  s.skipped + other.skipped
 		duration: s.duration + other.duration
 	}
 }
@@ -117,9 +117,9 @@ pub fn (t Tester) stats() TesterStats {
 	}
 
 	return TesterStats{
-		passed: passed
-		failed: failed
-		skipped: skipped
+		passed:   passed
+		failed:   failed
+		skipped:  skipped
 		duration: duration
 	}
 }
@@ -134,8 +134,8 @@ pub fn (mut t Tester) test(name string, test_func TestFunc) {
 
 pub fn (mut t Tester) slow_test(name string, test_func TestFunc) {
 	mut test := &Test{
-		name: name
-		func: test_func
+		name:        name
+		func:        test_func
 		with_stdlib: true
 	}
 	t.tests << test

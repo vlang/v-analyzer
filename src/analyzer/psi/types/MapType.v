@@ -9,8 +9,8 @@ pub:
 
 pub fn new_map_type(module_name string, key Type, value Type) &MapType {
 	return &MapType{
-		key: key
-		value: value
+		key:         key
+		value:       value
 		module_name: module_name
 	}
 }

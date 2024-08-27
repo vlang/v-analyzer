@@ -23,10 +23,10 @@ pub fn (mut ls LanguageServer) workspace_symbol(_ lsp.WorkspaceSymbolParams) ?[]
 
 			text_range := elem.identifier_text_range()
 			workspace_symbols << lsp.WorkspaceSymbol{
-				name: fqn
-				kind: symbol_kind(elem as psi.PsiElement) or { continue }
+				name:     fqn
+				kind:     symbol_kind(elem as psi.PsiElement) or { continue }
 				location: lsp.Location{
-					uri: uri
+					uri:   uri
 					range: tform.text_range_to_lsp_range(text_range)
 				}
 			}
