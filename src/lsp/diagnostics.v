@@ -15,7 +15,7 @@ pub enum DiagnosticTag {
 
 pub struct CodeDescription {
 pub mut:
-	href string = "https://github.com/vlang/v/blob/master/doc/docs.md"
+	href string = 'https://github.com/vlang/v/blob/master/doc/docs.md'
 }
 
 pub struct Diagnostic {
