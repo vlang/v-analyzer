@@ -13,6 +13,10 @@ pub enum DiagnosticTag {
 	deprecated
 }
 
+pub struct CodeDescription {
+	href string = "https://github.com/vlang/v/blob/master/doc/docs.md"
+}
+
 pub struct Diagnostic {
 pub mut:
 	// The range at which the message applies.
@@ -23,7 +27,7 @@ pub mut:
 	// The diagnostic's code, which might appear in the user interface.
 	code string
 	// An optional property to describe the error code.
-	code_description string @[json: 'codeDescription']
+	code_description CodeDescription @[json: 'codeDescription']
 	// A human-readable string describing the source of this
 	// diagnostic, e.g. 'typescript' or 'super lint'.
 	source string
