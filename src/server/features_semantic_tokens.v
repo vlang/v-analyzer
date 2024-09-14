@@ -17,13 +17,12 @@ pub fn (mut ls LanguageServer) semantic_tokens(text_document lsp.TextDocumentIde
 
 	lines := file.psi_file.source_text.count('\n')
 
-	if lines > server.max_line_for_any_semantic_tokens {
+	if lines > max_line_for_any_semantic_tokens {
 		// File too large, don't compute any tokens.
 		return lsp.SemanticTokens{}
 	}
 
-	if lines > server.max_line_for_resolve_semantic_tokens
-		|| ls.cfg.enable_semantic_tokens == .syntax {
+	if lines > max_line_for_resolve_semantic_tokens || ls.cfg.enable_semantic_tokens == .syntax {
 		// We don't want to send too many tokens (and compute it), so we just
 		// send dumb-aware tokens for large files.
 		dumb_aware_visitor := semantic.new_dumb_aware_semantic_visitor(range, file.psi_file)

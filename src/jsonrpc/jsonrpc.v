@@ -51,7 +51,7 @@ pub const null = Null{}
 // https://www.jsonrpc.org/specification#request_object
 pub struct Request {
 pub mut:
-	jsonrpc string = jsonrpc.version
+	jsonrpc string = version
 	id      string @[raw]
 	method  string
 	params  string @[raw]
@@ -61,7 +61,7 @@ pub mut:
 pub fn (req Request) json() string {
 	// NOTE: make request act as a notification for server_test_utils
 	id_payload := if req.id.len != 0 { ',"id":${req.id},' } else { ',' }
-	return '{"jsonrpc":"${jsonrpc.version}"${id_payload}"method":"${req.method}","params":${req.params}}'
+	return '{"jsonrpc":"${version}"${id_payload}"method":"${req.method}","params":${req.params}}'
 }
 
 // decode_params decodes the parameters of a Request.
@@ -73,7 +73,7 @@ pub fn (req Request) decode_params[T]() !T {
 // https://www.jsonrpc.org/specification#response_object
 pub struct Response[T] {
 pub:
-	jsonrpc string = jsonrpc.version
+	jsonrpc string = version
 	id      string
 	//	error   ResponseError
 	result T
@@ -97,20 +97,20 @@ const error_field_in_u8 = ',"error":'.bytes()
 const result_field_in_u8 = ',"result":'.bytes()
 
 fn encode_response[T](resp Response[T], mut writer io.Writer) {
-	writer.write('{"jsonrpc":"${jsonrpc.version}","id":'.bytes()) or {}
+	writer.write('{"jsonrpc":"${version}","id":'.bytes()) or {}
 	if resp.id.len == 0 {
-		writer.write(jsonrpc.null_in_u8) or {}
+		writer.write(null_in_u8) or {}
 	} else {
 		writer.write(resp.id.bytes()) or {}
 	}
 	if resp.error.code != 0 {
 		err := json.encode(resp.error)
-		writer.write(jsonrpc.error_field_in_u8) or {}
+		writer.write(error_field_in_u8) or {}
 		writer.write(err.bytes()) or {}
 	} else {
-		writer.write(jsonrpc.result_field_in_u8) or {}
+		writer.write(result_field_in_u8) or {}
 		$if T is Null {
-			writer.write(jsonrpc.null_in_u8) or {}
+			writer.write(null_in_u8) or {}
 		} $else {
 			res := json.encode(resp.result)
 			writer.write(res.bytes()) or {}
@@ -129,7 +129,7 @@ fn encode_response[T](resp Response[T], mut writer io.Writer) {
 // https://www.jsonrpc.org/specification#notification
 pub struct NotificationMessage[T] {
 pub:
-	jsonrpc string = jsonrpc.version
+	jsonrpc string = version
 	method  string
 	params  T
 }
@@ -145,9 +145,9 @@ pub fn (notif NotificationMessage[T]) json() string {
 }
 
 fn encode_notification[T](notif NotificationMessage[T], mut writer io.Writer) {
-	writer.write('{"jsonrpc":"${jsonrpc.version}","method":"${notif.method}","params":'.bytes()) or {}
+	writer.write('{"jsonrpc":"${version}","method":"${notif.method}","params":'.bytes()) or {}
 	$if T is Null {
-		writer.write(jsonrpc.null_in_u8) or {}
+		writer.write(null_in_u8) or {}
 	} $else {
 		res := json.encode(notif.params)
 		writer.write(res.bytes()) or {}
@@ -156,9 +156,9 @@ fn encode_notification[T](notif NotificationMessage[T], mut writer io.Writer) {
 }
 
 fn encode_request[T](notif NotificationMessage[T], mut writer io.Writer) {
-	writer.write('{"jsonrpc":"${jsonrpc.version}","id": 1, "method":"${notif.method}","params":'.bytes()) or {}
+	writer.write('{"jsonrpc":"${version}","id": 1, "method":"${notif.method}","params":'.bytes()) or {}
 	$if T is Null {
-		writer.write(jsonrpc.null_in_u8) or {}
+		writer.write(null_in_u8) or {}
 	} $else {
 		res := json.encode(notif.params)
 		writer.write(res.bytes()) or {}

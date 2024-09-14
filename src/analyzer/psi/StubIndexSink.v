@@ -16,7 +16,7 @@ const non_fqn_keys = [StubIndexKey.global_variables, .methods_fingerprint, .fiel
 
 fn (mut s StubIndexSink) occurrence(key StubIndexKey, value string) {
 	module_fqn := s.module_fqn()
-	resulting_value := if module_fqn != '' && key !in psi.non_fqn_keys {
+	resulting_value := if module_fqn != '' && key !in non_fqn_keys {
 		'${module_fqn}.${value}'
 	} else {
 		value

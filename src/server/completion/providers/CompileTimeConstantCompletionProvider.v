@@ -26,7 +26,7 @@ fn (_ &CompileTimeConstantCompletionProvider) is_available(ctx &completion.Compl
 }
 
 fn (mut _ CompileTimeConstantCompletionProvider) add_completion(ctx &completion.CompletionContext, mut result completion.CompletionResultSet) {
-	for constant, description in providers.compile_time_constant {
+	for constant, description in compile_time_constant {
 		result.add_element(lsp.CompletionItem{
 			label:       '@${constant}'
 			kind:        .constant

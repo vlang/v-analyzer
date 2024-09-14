@@ -43,7 +43,7 @@ fn (k &AttributesCompletionProvider) is_available(ctx &completion.CompletionCont
 }
 
 fn (mut k AttributesCompletionProvider) add_completion(ctx &completion.CompletionContext, mut result completion.CompletionResultSet) {
-	for attribute in providers.attributes {
+	for attribute in attributes {
 		result.add_element(lsp.CompletionItem{
 			label:       attribute
 			kind:        .struct_
@@ -51,7 +51,7 @@ fn (mut k AttributesCompletionProvider) add_completion(ctx &completion.Completio
 		})
 	}
 
-	for attribute in providers.attributes_with_colon {
+	for attribute in attributes_with_colon {
 		result.add_element(lsp.CompletionItem{
 			label:              "${attribute}: 'value'"
 			kind:               .struct_
