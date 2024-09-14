@@ -36,7 +36,7 @@ pub fn new_stub_base(parent &StubElement, stub_type StubType, name string, ident
 	} else {
 		&StubList{}
 	}
-	parent_id := if !isnil(parent) { parent.id() } else { psi.non_stubbed_element }
+	parent_id := if !isnil(parent) { parent.id() } else { non_stubbed_element }
 	mut stub := &StubBase{
 		name:                  name
 		text:                  data.text

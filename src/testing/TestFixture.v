@@ -55,7 +55,7 @@ pub fn new_fixture() &Fixture {
 }
 
 pub fn (mut t Fixture) initialize(with_stdlib bool) !lsp.InitializeResult {
-	os.mkdir_all(testing.temp_path)!
+	os.mkdir_all(temp_path)!
 
 	mut options := ['no-index-save', 'no-diagnostics']
 	if !with_stdlib {
@@ -69,8 +69,8 @@ pub fn (mut t Fixture) initialize(with_stdlib bool) !lsp.InitializeResult {
 			name:    'Testing'
 			version: '0.0.1'
 		}
-		root_uri:               lsp.document_uri_from_path(testing.temp_path)
-		root_path:              testing.temp_path
+		root_uri:               lsp.document_uri_from_path(temp_path)
+		root_path:              temp_path
 		initialization_options: options.join(' ')
 		capabilities:           lsp.ClientCapabilities{}
 		trace:                  ''
@@ -89,7 +89,7 @@ pub fn (mut t Fixture) configure_by_file(path string) ! {
 	content := os.read_file(rel_path)!
 	prepared_text := content + '\n\n' // add extra lines to make sure the caret is not at the end of the file
 	prepared_content := prepared_text.replace('/*caret*/', '')
-	abs_path := os.join_path(testing.temp_path, path)
+	abs_path := os.join_path(temp_path, path)
 	dir_path := os.dir(abs_path)
 	os.mkdir_all(dir_path)!
 	os.write_file(abs_path, prepared_content)!
@@ -110,7 +110,7 @@ pub fn (mut t Fixture) configure_by_file(path string) ! {
 pub fn (mut t Fixture) configure_by_text(filename string, text string) ! {
 	prepared_text := text + '\n\n' // add extra lines to make sure the caret is not at the end of the file
 	content := prepared_text.replace('/*caret*/', '')
-	abs_path := os.join_path(testing.temp_path, filename)
+	abs_path := os.join_path(temp_path, filename)
 	abs_path_without_name := os.dir(abs_path)
 	os.mkdir_all(abs_path_without_name)!
 	os.write_file(abs_path, content)!

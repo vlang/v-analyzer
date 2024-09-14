@@ -49,8 +49,8 @@ pub fn (mut stream StdioStream) read(mut buf []u8) !int {
 		if len == 0 {
 			// encounter empty line ('\r\n') in header, header end
 			break
-		} else if line.starts_with(streams.content_length) {
-			conlen = line.all_after(streams.content_length).int()
+		} else if line.starts_with(content_length) {
+			conlen = line.all_after(content_length).int()
 		}
 	}
 
@@ -97,7 +97,7 @@ const base_ip = '127.0.0.1'
 pub fn new_socket_stream_server(port int, log bool) !io.ReaderWriter {
 	server_label := 'v-analyzer-server'
 
-	address := '${streams.base_ip}:${port}'
+	address := '${base_ip}:${port}'
 	mut listener := net.listen_tcp(.ip, address)!
 
 	if log {
@@ -125,7 +125,7 @@ pub fn new_socket_stream_server(port int, log bool) !io.ReaderWriter {
 }
 
 fn new_socket_stream_client(port int) !io.ReaderWriter {
-	address := '${streams.base_ip}:${port}'
+	address := '${base_ip}:${port}'
 	mut conn := net.dial_tcp(address)!
 	mut reader := io.new_buffered_reader(reader: conn, cap: 1024 * 1024)
 	conn.set_blocking(true) or {}
@@ -173,14 +173,14 @@ pub fn (mut stream SocketStream) read(mut buf []u8) !int {
 		// read header line
 		got_header := stream.reader.read_line() or { return IError(io.Eof{}) }
 		buf << got_header.bytes()
-		buf << streams.newlines
+		buf << newlines
 		header_len = got_header.len + 2
 
 		if got_header.len == 0 {
 			// encounter empty line ('\r\n') in header, header end
 			break
-		} else if got_header.starts_with(streams.content_length) {
-			conlen = got_header.all_after(streams.content_length).int()
+		} else if got_header.starts_with(content_length) {
+			conlen = got_header.all_after(content_length).int()
 		}
 	}
 

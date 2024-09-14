@@ -28,7 +28,7 @@ fn (mut k TopLevelCompletionProvider) add_completion(ctx &completion.CompletionC
 }
 
 fn (mut k TopLevelCompletionProvider) pub_keyword(mut result completion.CompletionResultSet) {
-	for label, variant in providers.top_level_map {
+	for label, variant in top_level_map {
 		result.add_element(lsp.CompletionItem{
 			label:              label
 			kind:               .keyword
@@ -38,7 +38,7 @@ fn (mut k TopLevelCompletionProvider) pub_keyword(mut result completion.Completi
 		})
 	}
 
-	for label, variant in providers.top_level_map {
+	for label, variant in top_level_map {
 		result.add_element(lsp.CompletionItem{
 			label:              'pub ${label}'
 			kind:               .keyword

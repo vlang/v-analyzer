@@ -138,11 +138,11 @@ pub const close_event = '${event_prefix}/close'
 pub const state_event = '${event_prefix}/state'
 
 pub fn (mut l LogRecorder) on_event(name string, data jsonrpc.InterceptorData) ! {
-	if name == log.set_logpath_event && data is string {
+	if name == set_logpath_event && data is string {
 		l.set_logpath(data)!
-	} else if name == log.close_event {
+	} else if name == close_event {
 		l.close()
-	} else if name == log.state_event && data is bool {
+	} else if name == state_event && data is bool {
 		if data {
 			l.enable()
 		} else {

@@ -31,23 +31,23 @@ pub mut:
 	file_to_module map[string]string
 	// data defines the index data that allows you to get the description of the element
 	// in 2 accesses to the array elements and one lookup by key.
-	data [psi.count_stub_index_location_keys][psi.count_index_keys]map[string]StubResult
+	data [count_stub_index_location_keys][count_index_keys]map[string]StubResult
 	// all_elements_by_modules contains all top-level elements in the module.
-	all_elements_by_modules [psi.count_stub_index_location_keys]map[string][]PsiElement
+	all_elements_by_modules [count_stub_index_location_keys]map[string][]PsiElement
 	// types_by_modules contains all top-level types in the module.
-	types_by_modules [psi.count_stub_index_location_keys]map[string][]PsiElement
+	types_by_modules [count_stub_index_location_keys]map[string][]PsiElement
 }
 
 pub fn new_stubs_index(sinks []StubIndexSink) &StubIndex {
 	mut index := &StubIndex{
 		sinks:                   sinks
 		module_to_files:         map[string][]StubIndexSink{}
-		all_elements_by_modules: unsafe { [psi.count_stub_index_location_keys]map[string][]PsiElement{} }
-		types_by_modules:        unsafe { [psi.count_stub_index_location_keys]map[string][]PsiElement{} }
+		all_elements_by_modules: unsafe { [count_stub_index_location_keys]map[string][]PsiElement{} }
+		types_by_modules:        unsafe { [count_stub_index_location_keys]map[string][]PsiElement{} }
 	}
 
-	for i in 0 .. psi.count_stub_index_location_keys {
-		for j in 0 .. psi.count_index_keys {
+	for i in 0 .. count_stub_index_location_keys {
+		for j in 0 .. count_index_keys {
 			index.data[i][j] = map[string]StubResult{}
 		}
 	}
@@ -144,8 +144,8 @@ pub fn (mut s StubIndex) update_stubs_index(changed_sinks []StubIndexSink, all_s
 	s.file_to_module = map[string]string{}
 
 	// clear all workspace index
-	s.data[StubIndexLocationKind.workspace] = [psi.count_index_keys]map[string]StubResult{}
-	for i in 0 .. psi.count_index_keys {
+	s.data[StubIndexLocationKind.workspace] = [count_index_keys]map[string]StubResult{}
+	for i in 0 .. count_index_keys {
 		s.data[StubIndexLocationKind.workspace][i] = map[string]StubResult{}
 	}
 
