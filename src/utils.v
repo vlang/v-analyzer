@@ -21,6 +21,10 @@ pub fn successln(msg string) {
 }
 
 pub fn download_install_vsh() ! {
+	download_dir := os.join_path(os.vtmp_dir(), 'v-analyzer')
+	if !os.exists(download_dir) {
+		os.mkdir(download_dir) or { return error('Failed to create tmp dir: ${err}') }
+	}
 	http.download_file(analyzer_install_script_download_path, analyzer_install_script_path) or {
 		return error('Failed to download script: ${err}')
 	}
