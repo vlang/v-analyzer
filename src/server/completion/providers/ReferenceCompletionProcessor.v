@@ -45,10 +45,10 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 
 	if element is psi.VarDefinition {
 		c.add_item(
-			label:         name
-			kind:          .variable
-			detail:        element.get_type().readable_name()
-			label_details: lsp.CompletionItemLabelDetails{
+			label:              name
+			kind:               .variable
+			detail:             element.get_type().readable_name()
+			label_details:      lsp.CompletionItemLabelDetails{
 				description: element.get_type().readable_name()
 			}
 			documentation:      ''
@@ -60,10 +60,10 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 
 	if element is psi.ParameterDeclaration {
 		c.add_item(
-			label:         name
-			kind:          .variable
-			detail:        element.get_type().readable_name()
-			label_details: lsp.CompletionItemLabelDetails{
+			label:              name
+			kind:               .variable
+			detail:             element.get_type().readable_name()
+			label_details:      lsp.CompletionItemLabelDetails{
 				description: element.get_type().readable_name()
 			}
 			documentation:      ''
@@ -75,10 +75,10 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 
 	if element is psi.Receiver {
 		c.add_item(
-			label:         element.name()
-			kind:          .variable
-			detail:        element.get_type().readable_name()
-			label_details: lsp.CompletionItemLabelDetails{
+			label:              element.name()
+			kind:               .variable
+			detail:             element.get_type().readable_name()
+			label_details:      lsp.CompletionItemLabelDetails{
 				description: element.get_type().readable_name()
 			}
 			documentation:      ''
@@ -134,9 +134,9 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 		insert_text_builder.write_string('$0')
 
 		c.add_item(
-			label:         '${name}'
-			kind:          if receiver_text == '' { .function } else { .method }
-			label_details: lsp.CompletionItemLabelDetails{
+			label:              '${name}'
+			kind:               if receiver_text == '' { .function } else { .method }
+			label_details:      lsp.CompletionItemLabelDetails{
 				detail: signature.get_text()
 			}
 			detail:             'fn ${receiver_text}${element.name()}${generic_parameters_text}${signature.get_text()}'
@@ -194,9 +194,9 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 		insert_text_builder.write_string('$0')
 
 		c.add_item(
-			label:         '${name}'
-			kind:          .method
-			label_details: lsp.CompletionItemLabelDetails{
+			label:              '${name}'
+			kind:               .method
+			label_details:      lsp.CompletionItemLabelDetails{
 				detail: signature.get_text()
 			}
 			detail:             'fn ${receiver_text}${element.name()}${generic_parameters_text}${signature.get_text()}'
@@ -238,10 +238,10 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 
 	if element is psi.ConstantDefinition {
 		c.add_item(
-			label:         element.name()
-			kind:          .constant
-			detail:        element.get_type().readable_name()
-			label_details: lsp.CompletionItemLabelDetails{
+			label:              element.name()
+			kind:               .constant
+			detail:             element.get_type().readable_name()
+			label_details:      lsp.CompletionItemLabelDetails{
 				description: element.get_type().readable_name()
 			}
 			documentation:      element.doc_comment()
@@ -260,10 +260,10 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 		}
 
 		c.add_item(
-			label:         element.name()
-			kind:          .field
-			detail:        element.get_type().readable_name()
-			label_details: lsp.CompletionItemLabelDetails{
+			label:              element.name()
+			kind:               .field
+			detail:             element.get_type().readable_name()
+			label_details:      lsp.CompletionItemLabelDetails{
 				description: element.get_type().readable_name()
 			}
 			documentation:      element.doc_comment()
@@ -290,10 +290,10 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 			''
 		}
 		c.add_item(
-			label:         element.name()
-			kind:          .method
-			detail:        'fn ${element.name()}${signature.get_text()}'
-			label_details: lsp.CompletionItemLabelDetails{
+			label:              element.name()
+			kind:               .method
+			detail:             'fn ${element.name()}${signature.get_text()}'
+			label_details:      lsp.CompletionItemLabelDetails{
 				detail:      signature.get_text()
 				description: owner_name
 			}
@@ -339,8 +339,8 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 			label_details: lsp.CompletionItemLabelDetails{
 				detail: ' (global defined in ${module_name})'
 			}
-			kind:        .variable
-			insert_text: element.name()
+			kind:          .variable
+			insert_text:   element.name()
 		)
 	}
 

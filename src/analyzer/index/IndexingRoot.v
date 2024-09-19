@@ -191,7 +191,7 @@ pub fn (mut i IndexingRoot) index_file(path string, content string) !FileIndex {
 			kind:      unsafe { psi.StubIndexLocationKind(u8(i.kind)) }
 			stub_list: unsafe { nil }
 		}
-		stub_list: unsafe { nil }
+		stub_list:          unsafe { nil }
 	}
 	stub_tree := build_stub_tree(psi_file, i.root)
 

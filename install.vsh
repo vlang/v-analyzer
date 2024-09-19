@@ -490,7 +490,7 @@ mut cmd := cli.Command{
 		release_type := get_release_type(cmd)
 		install(no_interaction, release_type)!
 	}
-	flags: [
+	flags:       [
 		cli.Flag{
 			flag:        .bool
 			name:        'no-interaction' // Used primarily for VS Code extension, to install v-analyzer from sources
@@ -508,7 +508,7 @@ cmd.add_command(cli.Command{
 		release_type := get_release_type(cmd)
 		update(nightly, release_type)!
 	}
-	flags: [
+	flags:       [
 		cli.Flag{
 			flag:        .bool
 			name:        'nightly'

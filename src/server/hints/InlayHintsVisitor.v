@@ -36,8 +36,8 @@ pub fn (mut v InlayHintsVisitor) process_node(node psi.AstNode, containing_file 
 					line:      int(start_point.row)
 					character: int(start_point.column)
 				}
-				label: '≤'
-				kind:  .type_
+				label:    '≤'
+				kind:     .type_
 			}
 		}
 		if need_right {
@@ -46,8 +46,8 @@ pub fn (mut v InlayHintsVisitor) process_node(node psi.AstNode, containing_file 
 					line:      int(end_point.row)
 					character: int(end_point.column)
 				}
-				label: '<'
-				kind:  .type_
+				label:    '<'
+				kind:     .type_
 			}
 		}
 		return
@@ -67,8 +67,8 @@ pub fn (mut v InlayHintsVisitor) process_node(node psi.AstNode, containing_file 
 					line:      range.line
 					character: range.end_column
 				}
-				label: ': ' + element.get_type().readable_name()
-				kind:  .type_
+				label:    ': ' + element.get_type().readable_name()
+				kind:     .type_
 			}
 		}
 	}
@@ -84,8 +84,8 @@ pub fn (mut v InlayHintsVisitor) process_node(node psi.AstNode, containing_file 
 					line:      range.line
 					character: range.end_column
 				}
-				label: ': ' + typ.readable_name()
-				kind:  .type_
+				label:    ': ' + typ.readable_name()
+				kind:     .type_
 			}
 		}
 	}
@@ -133,8 +133,8 @@ pub fn (mut v InlayHintsVisitor) handle_enum_field(enum_field psi.AstNode, conta
 				line:      int(text_range.line)
 				character: int(text_range.end_column)
 			}
-			label: ' = ${value_presentation}'
-			kind:  .type_
+			label:    ' = ${value_presentation}'
+			kind:     .type_
 		}
 	}
 }
@@ -179,8 +179,8 @@ pub fn (mut v InlayHintsVisitor) handle_call_expression(call psi.AstNode, contai
 						line:      arg_range.line
 						character: arg_range.column
 					}
-					label: '${name}: '
-					kind:  .parameter
+					label:    '${name}: '
+					kind:     .parameter
 				}
 			}
 		}
@@ -218,7 +218,7 @@ pub fn (mut v InlayHintsVisitor) handle_implicit_error_variable(block psi.AstNod
 			line:      int(start_point.row)
 			character: int(start_point.column + 1)
 		}
-		label: ' err →'
-		kind:  .parameter
+		label:    ' err →'
+		kind:     .parameter
 	}
 }

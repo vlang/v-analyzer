@@ -192,7 +192,7 @@ pub fn (mut v CodeLensVisitor) add_lens(node psi.AstNode, cmd lsp.Command) {
 		character: int(start_point.column)
 	}
 	v.result << lsp.CodeLens{
-		range: lsp.Range{
+		range:   lsp.Range{
 			start: start
 			end:   start
 		}
