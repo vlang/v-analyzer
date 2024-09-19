@@ -68,9 +68,9 @@ fn (_ &DiagnosticReporter) convert_report(report inspections.Report) lsp.Diagnos
 			.warning { lsp.DiagnosticSeverity.warning }
 			.notice { lsp.DiagnosticSeverity.information }
 		}
-		source:  'compiler'
-		message: report.message
-		tags:    tags
+		source:   'compiler'
+		message:  report.message
+		tags:     tags
 	}
 }
 

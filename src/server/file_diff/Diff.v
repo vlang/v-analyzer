@@ -26,7 +26,7 @@ pub fn (mut diff Diff) append_to_begin(line int, text string) {
 pub fn (mut diff Diff) append_to(line int, col int, text string) {
 	pos := Diff.line_pos(line, col)
 	diff.edits << Edit{
-		range: lsp.Range{
+		range:    lsp.Range{
 			start: pos
 			end:   pos
 		}
@@ -37,7 +37,7 @@ pub fn (mut diff Diff) append_to(line int, col int, text string) {
 pub fn (mut diff Diff) append_as_prev_line(line int, text string) {
 	pos := Diff.line_begin_pos(line)
 	diff.edits << Edit{
-		range: lsp.Range{
+		range:    lsp.Range{
 			start: pos
 			end:   pos
 		}
@@ -48,7 +48,7 @@ pub fn (mut diff Diff) append_as_prev_line(line int, text string) {
 pub fn (mut diff Diff) append_as_next_line(line int, text string) {
 	pos := Diff.line_begin_pos(line)
 	diff.edits << Edit{
-		range: lsp.Range{
+		range:    lsp.Range{
 			start: pos
 			end:   pos
 		}

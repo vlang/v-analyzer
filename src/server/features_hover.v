@@ -51,14 +51,14 @@ pub fn (mut ls LanguageServer) hover(params lsp.HoverParams) ?lsp.Hover {
 			return lsp.Hover{
 				contents: lsp.hover_markdown_string('```\n' + grand_elem + '\n  ' + parent_elem +
 					'\n   ' + this + '\n```')
-				range: tform.text_range_to_lsp_range(element.text_range())
+				range:    tform.text_range_to_lsp_range(element.text_range())
 			}
 		}
 
 		return lsp.Hover{
 			contents: lsp.hover_markdown_string(element.type_name() + ': ' +
 				element.node.type_name.str())
-			range: tform.text_range_to_lsp_range(element.text_range())
+			range:    tform.text_range_to_lsp_range(element.text_range())
 		}
 	}
 

@@ -25,7 +25,7 @@ pub fn text_range_to_lsp_range(pos psi.TextRange) lsp.Range {
 			line:      pos.line
 			character: pos.column
 		}
-		end: lsp.Position{
+		end:   lsp.Position{
 			line:      pos.end_line
 			character: pos.end_column
 		}

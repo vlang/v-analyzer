@@ -139,7 +139,7 @@ pub fn (s &Server) writer(cfg NewWriterConfig) &ResponseWriter {
 				},
 			]
 		}
-		sb: if cfg.own_buffer { s.res_buf.clone() } else { s.res_buf }
+		sb:     if cfg.own_buffer { s.res_buf.clone() } else { s.res_buf }
 	}
 }
 

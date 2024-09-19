@@ -167,15 +167,15 @@ pub fn (mut d IndexDeserializer) deserialize_stub() &psi.StubBase {
 			end_line:   identifier_end_line
 			end_column: identifier_end_column
 		}
-		text_range: psi.TextRange{
+		text_range:            psi.TextRange{
 			line:       line
 			column:     column
 			end_line:   end_line
 			end_column: end_column
 		}
-		parent_id: parent_id
-		stub_list: unsafe { nil } // will be set later
-		stub_type: stub_type
-		id:        id
+		parent_id:             parent_id
+		stub_list:             unsafe { nil } // will be set later
+		stub_type:             stub_type
+		id:                    id
 	}
 }

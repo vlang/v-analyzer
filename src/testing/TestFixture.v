@@ -64,8 +64,8 @@ pub fn (mut t Fixture) initialize(with_stdlib bool) !lsp.InitializeResult {
 
 	result := t.test_client.send[lsp.InitializeParams, lsp.InitializeResult]('initialize',
 		lsp.InitializeParams{
-		process_id:  75556
-		client_info: lsp.ClientInfo{
+		process_id:             75556
+		client_info:            lsp.ClientInfo{
 			name:    'Testing'
 			version: '0.0.1'
 		}
@@ -141,7 +141,7 @@ fn (mut t Fixture) send_open_current_file_request() ! {
 
 	t.test_client.send[lsp.DidChangeTextDocumentParams, jsonrpc.Null]('textDocument/didChange',
 		lsp.DidChangeTextDocumentParams{
-		text_document: lsp.VersionedTextDocumentIdentifier{
+		text_document:   lsp.VersionedTextDocumentIdentifier{
 			uri:     lsp.document_uri_from_path(t.current_file.path)
 			version: 1
 		}
@@ -173,7 +173,7 @@ pub fn (mut t Fixture) definition(pos lsp.Position) []lsp.LocationLink {
 		text_document: lsp.TextDocumentIdentifier{
 			uri: lsp.document_uri_from_path(t.current_file.path)
 		}
-		position: pos
+		position:      pos
 	}) or { []lsp.LocationLink{} }
 
 	return links
@@ -189,8 +189,8 @@ pub fn (mut t Fixture) complete(pos lsp.Position) []lsp.CompletionItem {
 		text_document: lsp.TextDocumentIdentifier{
 			uri: lsp.document_uri_from_path(t.current_file.path)
 		}
-		position: pos
-		context:  lsp.CompletionContext{
+		position:      pos
+		context:       lsp.CompletionContext{
 			trigger_kind: .invoked
 		}
 	}) or { []lsp.CompletionItem{} }
@@ -230,7 +230,7 @@ pub fn (mut t Fixture) implementation(pos lsp.Position) []lsp.Location {
 		text_document: lsp.TextDocumentIdentifier{
 			uri: lsp.document_uri_from_path(t.current_file.path)
 		}
-		position: pos
+		position:      pos
 	}) or { []lsp.Location{} }
 
 	return links
@@ -253,7 +253,7 @@ pub fn (mut t Fixture) documentation(pos lsp.Position) ?lsp.Hover {
 		text_document: lsp.TextDocumentIdentifier{
 			uri: lsp.document_uri_from_path(t.current_file.path)
 		}
-		position: pos
+		position:      pos
 	}) or { return none }
 
 	return hover

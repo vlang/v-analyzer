@@ -34,11 +34,11 @@ fn test_serialize_deserialize_stub_element() {
 			end_line:   3
 			end_column: 4
 		}
-		stub_type: .function_declaration
-		id:        123456
-		text:      'some text with spaces'
-		comment:   '// comment data'
-		receiver:  'Foo'
+		stub_type:  .function_declaration
+		id:         123456
+		text:       'some text with spaces'
+		comment:    '// comment data'
+		receiver:   'Foo'
 	}
 
 	serialize_stub_element(mut s, data)

@@ -51,7 +51,7 @@ fn parse_compiler_diagnostic(msg string) ?inspections.Report {
 	}
 
 	return inspections.Report{
-		range: psi.TextRange{
+		range:    psi.TextRange{
 			line:       line_nr
 			column:     col_nr
 			end_line:   line_nr
