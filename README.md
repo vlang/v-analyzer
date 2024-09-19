@@ -147,9 +147,10 @@ The source code for extension is contained in the [`editors/code`](https://githu
 
 ## NVIM LSP / Mason
 
-For Neovim users, v-analyzer is available via [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#v_analyzer).
-It is part of the mason registry and can be installated with:
-`:LspInstall v_analyzer` for nvim-lspconfig, or `:MasonInstall v_analyzer` for Mason.
+For Neovim users, v-analyzer is available via [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#v_analyzer) plugin.
+It is part of the [mason registry](https://mason-registry.dev/registry/list#v-analyzer) and could be installed with both Neovim plugins:
+- [mason.nvim](https://github.com/williamboman/mason.nvim) with `:MasonInstall v_analyzer` command
+- [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim) with `:LspInstall` command
 
 ## Authors
 
