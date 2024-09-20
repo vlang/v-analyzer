@@ -4,6 +4,10 @@ import os
 import term
 import net.http
 
+const download_dir = os.join_path(os.vtmp_dir(), 'v-analyzer')
+const analyzer_install_script_download_path = 'https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh'
+const analyzer_install_script_path = os.join_path(download_dir, 'install.vsh')
+
 pub fn errorln(msg string) {
 	eprintln('${term.red('[ERROR]')} ${msg}')
 }
@@ -21,7 +25,6 @@ pub fn successln(msg string) {
 }
 
 pub fn download_install_vsh() ! {
-	download_dir := os.join_path(os.vtmp_dir(), 'v-analyzer')
 	if !os.exists(download_dir) {
 		os.mkdir(download_dir) or { return error('Failed to create tmp dir: ${err}') }
 	}
