@@ -23,10 +23,11 @@ pub fn (mut ls LanguageServer) formatting(params lsp.DocumentFormattingParams) !
 	}
 	fmt_proc.run()
 
-	loglib.info('Formatting finished with code: ${fmt_proc.code}')
-
 	// read entire output until EOF
 	mut output := fmt_proc.stdout_slurp()
+	fmt_proc.wait()
+
+	loglib.info('Formatting finished with code: ${fmt_proc.code} and status ${fmt_proc.status}')
 
 	$if windows {
 		output = output.replace('\r\r', '\r')
@@ -36,6 +37,7 @@ pub fn (mut ls LanguageServer) formatting(params lsp.DocumentFormattingParams) !
 		errors := fmt_proc.stderr_slurp().trim_space()
 		ls.client.show_message(errors, .info)
 		return error('Formatting failed: ${errors}')
+		// return []
 	}
 
 
