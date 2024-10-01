@@ -16,7 +16,7 @@ pub fn (mut ls LanguageServer) formatting(params lsp.DocumentFormattingParams) !
 	}
 
 	loglib.with_fields({
-		'uri':  file.uri
+		'uri':  file.uri.str()
 	}).info('Formatting file')
 
 	mut fmt_proc := ls.launch_tool('fmt', os.norm_path(temp_formatting_file_path)) or { return [] }

@@ -7,7 +7,7 @@ import analyzer.psi
 import analyzer.parser
 
 fn test_large_file() {
-	test_file := os.norm_path(@VMODROOT + '/src/server/general.v')
+	test_file := os.real_path(@VMODROOT + '/src/server/general.v')
 
 	src := os.read_file(test_file) or { panic('Cannot read file') }
 
