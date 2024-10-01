@@ -15,7 +15,9 @@ pub fn (mut ls LanguageServer) formatting(params lsp.DocumentFormattingParams) !
 		return error('Cannot write temp file for formatting: ${err}')
 	}
 
-	loglib.info('Formatting file: ${temp_formatting_file_path} ${file.uri}')
+	loglib.with_fields({
+		'uri':  file.uri
+	}).info('Formatting file')
 
 	mut fmt_proc := ls.launch_tool('fmt', os.norm_path(temp_formatting_file_path)) or { return [] }
 	defer {
@@ -27,19 +29,21 @@ pub fn (mut ls LanguageServer) formatting(params lsp.DocumentFormattingParams) !
 	mut output := fmt_proc.stdout_slurp()
 	fmt_proc.wait()
 
-	loglib.info('Formatting finished with code: ${fmt_proc.code} and status ${fmt_proc.status}')
+	loglib.with_fields({
+		'code':   fmt_proc.code.str()
+		'status': fmt_proc.status.str()
+	}).info('Formatting finished')
 
 	$if windows {
 		output = output.replace('\r\r', '\r')
 	}
 
-	if (fmt_proc.code != 0) && (fmt_proc.status == .exited) {
+	if fmt_proc.code != 0 && fmt_proc.status == .exited {
 		errors := fmt_proc.stderr_slurp().trim_space()
 		ls.client.show_message(errors, .info)
 		return error('Formatting failed: ${errors}')
 		// return []
 	}
-
 
 	return [
 		lsp.TextEdit{
