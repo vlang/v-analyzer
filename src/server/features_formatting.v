@@ -11,9 +11,7 @@ pub fn (mut ls LanguageServer) formatting(params lsp.DocumentFormattingParams) !
 	uri := params.text_document.uri.normalize()
 	file := ls.get_file(uri) or { return error('Cannot format not opened file') }
 
-	os.write_file(temp_formatting_file_path, file.psi_file.source_text) or {
-		return error('Cannot write temp file for formatting: ${err}')
-	}
+	os.write_file(temp_formatting_file_path, file.psi_file.source_text)!
 
 	loglib.with_fields({
 		'uri': file.uri.str()
@@ -42,7 +40,6 @@ pub fn (mut ls LanguageServer) formatting(params lsp.DocumentFormattingParams) !
 		errors := fmt_proc.stderr_slurp().trim_space()
 		ls.client.show_message(errors, .info)
 		return error('Formatting failed: ${errors}')
-		// return []
 	}
 
 	return [
