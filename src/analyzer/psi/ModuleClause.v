@@ -74,6 +74,12 @@ pub fn module_qualified_name(file &PsiFile, indexing_root string) string {
 		module_names = module_names[..module_names.len - 1].clone()
 	}
 
+	if module_names.len >= 2 && module_names[module_names.len - 1] == 'src'
+		&& module_names[module_names.len - 2] == module_name
+		&& os.is_file(os.join_path(indexing_root, module_names[0..module_names.len - 1].join(os.path_separator), 'v.mod')) {
+		module_names = module_names[..module_names.len - 2].clone()
+	}
+
 	qualifier := module_names.join('.')
 	if qualifier == '' {
 		return module_name
