@@ -3044,6 +3044,10 @@
         ]
       }
     },
+    "field_name": {
+      "type": "SYMBOL",
+      "name": "reference_expression"
+    },
     "keyed_element": {
       "type": "SEQ",
       "members": [
@@ -3051,13 +3055,8 @@
           "type": "FIELD",
           "name": "key",
           "content": {
-            "type": "ALIAS",
-            "content": {
-              "type": "SYMBOL",
-              "name": "reference_expression"
-            },
-            "named": true,
-            "value": "field_name"
+            "type": "SYMBOL",
+            "name": "field_name"
           }
         },
         {

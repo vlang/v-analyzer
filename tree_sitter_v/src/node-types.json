@@ -1278,7 +1278,7 @@
       "required": true,
       "types": [
         {
-          "type": "identifier",
+          "type": "reference_expression",
           "named": true
         }
       ]
