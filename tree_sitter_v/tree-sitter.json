@@ -1,0 +1,31 @@
+{
+  "grammars": [
+    {
+      "name": "v",
+      "camelcase": "V",
+      "scope": "source.v",
+      "path": ".",
+      "file-types": [
+        "v",
+        "vsh",
+        "v.mod"
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "0.0.4-beta.1",
+    "license": "MIT",
+    "description": "v grammar for tree-sitter",
+    "links": {
+      "repository": "https://github.com/vlang/v-analyzer.git"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true
+  }
+}
