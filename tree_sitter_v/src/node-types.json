@@ -1278,7 +1278,7 @@
       "required": true,
       "types": [
         {
-          "type": "identifier",
+          "type": "reference_expression",
           "named": true
         }
       ]
@@ -3557,6 +3557,7 @@
   {
     "type": "source_file",
     "named": true,
+    "root": true,
     "fields": {},
     "children": {
       "multiple": true,

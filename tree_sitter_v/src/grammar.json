@@ -1,4 +1,5 @@
 {
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
   "name": "v",
   "word": "identifier",
   "rules": {
@@ -3043,6 +3044,10 @@
         ]
       }
     },
+    "field_name": {
+      "type": "SYMBOL",
+      "name": "reference_expression"
+    },
     "keyed_element": {
       "type": "SEQ",
       "members": [
@@ -3050,13 +3055,8 @@
           "type": "FIELD",
           "name": "key",
           "content": {
-            "type": "ALIAS",
-            "content": {
-              "type": "SYMBOL",
-              "name": "reference_expression"
-            },
-            "named": true,
-            "value": "field_name"
+            "type": "SYMBOL",
+            "name": "field_name"
           }
         },
         {

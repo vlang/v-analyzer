@@ -46,7 +46,8 @@ Array type initializer with field
         (element_list
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (int_literal))))))))
 
@@ -68,12 +69,14 @@ Array type initializer with fields
         (element_list
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (int_literal)))
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (int_literal))))))))
 
@@ -95,17 +98,20 @@ Array type initializer with all fields
         (element_list
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (int_literal)))
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (int_literal)))
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (binary_expression
               (reference_expression
                 (identifier))
@@ -130,7 +136,8 @@ Foo{
         (element_list
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (int_literal))))))))
 
@@ -154,17 +161,20 @@ Foo{
         (element_list
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (int_literal)))
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (interpreted_string_literal)))
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (float_literal))))))))
 
@@ -211,12 +221,14 @@ Foo{
               (identifier)))
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (int_literal)))
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (interpreted_string_literal))))))))
 
@@ -282,7 +294,8 @@ Foo{
         (element_list
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (type_initializer
               (plain_type
                 (type_reference_expression
@@ -291,12 +304,14 @@ Foo{
                 (element_list
                   (keyed_element
                     (field_name
-                      (identifier))
+                      (reference_expression
+                        (identifier)))
                     (literal
                       (interpreted_string_literal)))
                   (keyed_element
                     (field_name
-                      (identifier))
+                      (reference_expression
+                        (identifier)))
                     (literal
                       (int_literal))))))))))))
 
@@ -323,17 +338,20 @@ Foo{
         (element_list
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (interpreted_string_literal)))
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (int_literal)))
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (type_initializer
               (plain_type
                 (type_reference_expression
@@ -342,12 +360,14 @@ Foo{
                 (element_list
                   (keyed_element
                     (field_name
-                      (identifier))
+                      (reference_expression
+                        (identifier)))
                     (literal
                       (interpreted_string_literal)))
                   (keyed_element
                     (field_name
-                      (identifier))
+                      (reference_expression
+                        (identifier)))
                     (literal
                       (int_literal))))))))))))
 
@@ -378,12 +398,14 @@ Foo[int, string]{
         (element_list
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (interpreted_string_literal)))
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (int_literal))))))))
 
@@ -406,12 +428,14 @@ C.Foo{
         (element_list
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (interpreted_string_literal)))
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (literal
               (int_literal))))))))
 

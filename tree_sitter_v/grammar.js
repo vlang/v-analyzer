@@ -561,9 +561,12 @@ module.exports = grammar({
 		short_element_list: ($) =>
 			repeat1(seq(alias($._expression, $.element), optional(list_separator))),
 
+		field_name: ($) =>
+			$.reference_expression,
+
 		keyed_element: ($) =>
 			seq(
-				field('key', alias($.reference_expression, $.field_name)),
+				field('key', $.field_name),
 				':',
 				field('value', $._expression),
 			),
