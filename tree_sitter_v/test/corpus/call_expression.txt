@@ -240,7 +240,8 @@ foo(name: value)
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))))))
 
@@ -259,19 +260,22 @@ foo(name: value, name2: value2, name3: value3)
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))))))
 
@@ -296,19 +300,22 @@ foo(plain, plain2, name: value, name2: value2, name3: value3)
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))))))
 
@@ -331,19 +338,22 @@ foo(
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))))))
 
@@ -366,19 +376,22 @@ foo(
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))))))
 
@@ -405,19 +418,22 @@ foo(
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))
         (argument
           (keyed_element
             (field_name
-              (identifier))
+              (reference_expression
+                (identifier)))
             (reference_expression
               (identifier))))))))
 
