@@ -15,6 +15,8 @@ const analyzer_sources_dir_path = join_path(analyzer_config_dir_path, 'sources')
 const analyzer_bin_dir_path = join_path(analyzer_config_dir_path, 'bin')
 const analyzer_bin_file_path = join_path(analyzer_bin_dir_path, 'v-analyzer')
 
+const is_github_job = os.getenv('GITHUB_JOB') != ''
+
 struct ReleaseAsset {
 	tag_name             string @[json: '-']
 	browser_download_url string
@@ -287,7 +289,7 @@ fn install_from_sources(no_interaction bool) ! {
 	println('${term.yellow('[WARNING]')} Currently ${term.bold('v-analyzer')} has no prebuilt binaries for your platform')
 
 	// Used primarily for VS Code extension
-	if !no_interaction {
+	if !(is_github_job || no_interaction) {
 		mut answer := os.input('Do you want to build it from sources? (y/n) ')
 		if answer != 'y' {
 			println('')
@@ -304,15 +306,15 @@ fn install_from_sources(no_interaction bool) ! {
 			return
 		}
 	}
+	println('... building from source ...')
 
 	if already_cloned() {
+		println('... removing already cloned folder ...')
 		os.rmdir_all(analyzer_sources_dir_path) or {
 			errorln('Failed to remove directory: ${analyzer_sources_dir_path}: ${err}')
 			return
 		}
 	}
-
-	println('')
 
 	clone_repository()!
 	build_from_sources()!
@@ -486,7 +488,7 @@ mut cmd := cli.Command{
 	description: 'Install and update v-analyzer'
 	posix_mode:  true
 	execute:     fn (cmd cli.Command) ! {
-		no_interaction := cmd.flags.get_bool('no-interaction') or { os.getenv('GITHUB_JOB') != '' }
+		no_interaction := cmd.flags.get_bool('no-interaction') or { is_github_job }
 		release_type := get_release_type(cmd)
 		install(no_interaction, release_type)!
 	}
