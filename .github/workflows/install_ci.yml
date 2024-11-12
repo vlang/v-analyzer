@@ -2,15 +2,7 @@ name: Install CI
 
 on:
   push:
-    paths:
-      - 'install.vsh'
-      - 'build.vsh'
-      - '**/install_ci.yml'
   pull_request:
-    paths:
-      - 'install.vsh'
-      - 'build.vsh'
-      - '**/install_ci.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
