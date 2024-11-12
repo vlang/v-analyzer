@@ -113,7 +113,10 @@ fn (mut p Provider) import_spec_documentation(element psi.ImportSpec) ? {
 	p.sb.write_string('```')
 
 	dir := element.resolve_directory()
-	readme_path := os.join_path(dir, 'README.md')
+	mut readme_path := os.join_path(dir, 'README.md')
+	if !os.exists(readme_path) && os.file_name(dir) == 'src' {
+		readme_path = os.join_path(os.dir(dir), 'README.md')
+	}
 	if os.exists(readme_path) {
 		p.write_separator()
 		mut content := os.read_file(readme_path) or { return }

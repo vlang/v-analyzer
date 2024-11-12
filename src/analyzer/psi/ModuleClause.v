@@ -50,6 +50,16 @@ pub fn module_qualified_name(file &PsiFile, indexing_root string) string {
 		root_dirs << src_dir
 	}
 
+	root_modules_dir := os.join_path(indexing_root, 'modules')
+	if os.exists(root_modules_dir) {
+		root_dirs << root_modules_dir
+	}
+
+	src_modules_dir := os.join_path(indexing_root, 'src', 'modules')
+	if os.exists(src_modules_dir) {
+		root_dirs << src_modules_dir
+	}
+
 	containing_dir := os.dir(file.path)
 
 	mut module_names := []string{}
@@ -72,6 +82,12 @@ pub fn module_qualified_name(file &PsiFile, indexing_root string) string {
 
 	if module_names.len != 0 && module_names.last() == module_name {
 		module_names = module_names[..module_names.len - 1].clone()
+	}
+
+	if module_names.len >= 2 && module_names[module_names.len - 1] == 'src'
+		&& module_names[module_names.len - 2] == module_name
+		&& os.is_file(os.join_path(dir, module_names[0..module_names.len - 1].join(os.path_separator), 'v.mod')) {
+		module_names = module_names[..module_names.len - 2].clone()
 	}
 
 	qualifier := module_names.join('.')
