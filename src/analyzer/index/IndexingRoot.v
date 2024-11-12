@@ -235,6 +235,7 @@ pub fn (mut i IndexingRoot) spawn_indexing_workers(cache_chan chan FileIndex, fi
 						'uri':   lsp.document_uri_from_path(filepath).str()
 						'error': err.str()
 					}).error('Error indexing file')
+					continue
 				}
 			}
 
