@@ -39,6 +39,8 @@ fn (m ReleaseMode) compile_cmd() string {
 	}
 	cflags := $if cross_compile_macos_arm64 ? {
 		'-cflags "-target arm64-apple-darwin"'
+	} $else $if cross_compile_macos_x86_64 ? {
+		'-cflags "-target x86_64-apple-darwin"'
 	} $else $if linux {
 		if m == .release { '-cflags -static' } else { '' }
 	} $else {

@@ -36,6 +36,7 @@ jobs:
             os: ubuntu-20.04
           - target: darwin-x86_64
             os: macos-latest
+            vflags: -d cross_compile_macos_x86_64
           - target: darwin-arm64
             os: macos-latest
             vflags: -d cross_compile_macos_arm64
