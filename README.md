@@ -26,8 +26,8 @@ The features provided by v-analyzer include:
 
 ### Linux and macOS
 
-```sh
-v -e "$(curl -fsSL https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh)"
+```sh 
+v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; rm install.vsh
 ```
 
 ### Windows
@@ -35,16 +35,10 @@ v -e "$(curl -fsSL https://raw.githubusercontent.com/vlang/v-analyzer/main/insta
 The `install.vsh` file is downloaded to the current directory and stored there temporarily.
 If there is another file with this name, make sure it is safe when it is overwritten/deleted.
 
-#### Powershell
+#### Powershell && Command shell
 
 ```sh
-curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
-```
-
-#### Command shell
-
-```sh
-curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh && v run install.vsh && del install.vsh
+v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
 ```
 
 ## Pre-built binaries
