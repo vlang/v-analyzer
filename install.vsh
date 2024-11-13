@@ -319,7 +319,9 @@ fn install_from_sources(no_interaction bool) ! {
 	clone_repository()!
 	build_from_sources()!
 
-	println('Path to the ${term.bold('binary')}: ${analyzer_bin_file_path}')
+	println('Path to the binary: ${term.bold(analyzer_bin_file_path)}')
+	println('Binary version:')
+	os.system('${os.quoted_path(analyzer_bin_file_path)} version')
 
 	show_hint_about_path_if_needed(analyzer_bin_file_path)
 }
