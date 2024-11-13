@@ -478,6 +478,7 @@ pub fn get_release_type(cmd cli.Command) string {
 			if cmd.flags.get_string('release') or { return '' } != '' {
 				return ''
 			}
+			return ''
 		}
 	}
 }
