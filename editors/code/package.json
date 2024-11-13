@@ -4,7 +4,7 @@
 	"description": "V language support (syntax highlighting, formatter, language server) for Visual Studio Code.",
 	"publisher": "VOSCA",
 	"icon": "icons/icon.png",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"engines": {
 		"vscode": "^1.66.0"
 	},
