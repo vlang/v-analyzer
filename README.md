@@ -24,21 +24,14 @@ The features provided by v-analyzer include:
 
 ## Installation
 
-### Linux and macOS
+### Linux, macOS, Windows
+Note: the following command will download `install.vsh` to the current directory, then 
+run it, and then *delete it*. If there is a pre-existing file with this name, make sure it
+is safe, when it is overwritten/deleted, or change the current directory (the script itself
+can be run from anywhere).
 
 ```sh 
-v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v install.vsh; rm install.vsh
-```
-
-### Windows
-
-The `install.vsh` file is downloaded to the current directory and stored there temporarily.
-If there is another file with this name, make sure it is safe when it is overwritten/deleted.
-
-#### Powershell && Command shell
-
-```sh
-v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v install.vsh; del install.vsh
+v download -RD https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh
 ```
 
 ## Pre-built binaries

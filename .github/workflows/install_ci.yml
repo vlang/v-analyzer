@@ -23,13 +23,8 @@ jobs:
         with:
           check-latest: true
 
-      - name: Install via webscript (Windows)
-        if: runner.os == 'Windows'
-        run: v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v install.vsh; del install.vsh
-
-      - name: Install via webscript (nix)
-        if: runner.os != 'Windows'
-        run: v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v install.vsh; rm -rf install.vsh
+      - name: Install via webscript
+        run: v download -RD https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh
 
       - name: Verify installation success
         run: ~/.config/v-analyzer/bin/v-analyzer --version
