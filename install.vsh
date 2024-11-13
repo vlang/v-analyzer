@@ -9,7 +9,7 @@ import compress.szip
 import cli
 import net.http
 
-const installer_version = '0.0.2'
+const installer_version = '0.0.5'
 const analyzer_config_dir_path = join_path(home_dir(), '.config', 'v-analyzer')
 const analyzer_sources_dir_path = join_path(analyzer_config_dir_path, 'sources')
 const analyzer_bin_dir_path = join_path(analyzer_config_dir_path, 'bin')
@@ -489,66 +489,69 @@ pub fn get_release_type(cmd cli.Command) string {
 	}
 }
 
-mut cmd := cli.Command{
-	name:        'v-analyzer-installer-updated'
-	version:     installer_version
-	description: 'Install and update v-analyzer'
-	posix_mode:  true
-	execute:     fn (cmd cli.Command) ! {
-		no_interaction := cmd.flags.get_bool('no-interaction') or { is_github_job }
-		release_type := get_release_type(cmd)
-		install(no_interaction, release_type)!
-	}
-	flags:       [
-		cli.Flag{
-			flag:        .bool
-			name:        'no-interaction' // Used primarily for VS Code extension, to install v-analyzer from sources
-			description: 'Do not ask any questions, use default values'
-		},
-	]
-}
-
-cmd.add_command(cli.Command{
-	name:        'up'
-	description: 'Update v-analyzer to the latest version'
-	posix_mode:  true
-	execute:     fn (cmd cli.Command) ! {
-		nightly := cmd.flags.get_bool('nightly') or { false }
-		release_type := get_release_type(cmd)
-		update(nightly, release_type)!
-	}
-	flags:       [
-		cli.Flag{
-			flag:        .bool
-			name:        'nightly'
-			description: 'Install the latest nightly build'
-		},
-	]
-})
-
-cmd.add_command(cli.Command{
-	name:        'check-availability'
-	description: 'Check if v-analyzer binary is available for the current platform (service command for editors)'
-	posix_mode:  true
-	execute:     fn (cmd cli.Command) ! {
-		release_type := get_release_type(cmd)
-		find_latest_asset(release_type) or {
-			println('Prebuild v-analyzer binary is not available for your platform')
-			return
+fn main() {
+	println('Installer version: ${term.bold(installer_version)}')
+	mut cmd := cli.Command{
+		name:        'v-analyzer-installer-updated'
+		version:     installer_version
+		description: 'Install and update v-analyzer'
+		posix_mode:  true
+		execute:     fn (cmd cli.Command) ! {
+			no_interaction := cmd.flags.get_bool('no-interaction') or { is_github_job }
+			release_type := get_release_type(cmd)
+			install(no_interaction, release_type)!
 		}
-
-		println('${term.green('✓')} Prebuild v-analyzer binary is available for your platform')
+		flags:       [
+			cli.Flag{
+				flag:        .bool
+				name:        'no-interaction' // Used primarily for VS Code extension, to install v-analyzer from sources
+				description: 'Do not ask any questions, use default values'
+			},
+		]
 	}
-})
 
-cmd.add_command(cli.Command{
-	name:        'check-updates'
-	description: 'Checks for v-analyzer updates.'
-	posix_mode:  true
-	execute:     fn (cmd cli.Command) ! {
-		release_type := get_release_type(cmd)
-		check_updates(release_type)!
-	}
-})
+	cmd.add_command(cli.Command{
+		name:        'up'
+		description: 'Update v-analyzer to the latest version'
+		posix_mode:  true
+		execute:     fn (cmd cli.Command) ! {
+			nightly := cmd.flags.get_bool('nightly') or { false }
+			release_type := get_release_type(cmd)
+			update(nightly, release_type)!
+		}
+		flags:       [
+			cli.Flag{
+				flag:        .bool
+				name:        'nightly'
+				description: 'Install the latest nightly build'
+			},
+		]
+	})
 
-cmd.parse(os.args)
+	cmd.add_command(cli.Command{
+		name:        'check-availability'
+		description: 'Check if v-analyzer binary is available for the current platform (service command for editors)'
+		posix_mode:  true
+		execute:     fn (cmd cli.Command) ! {
+			release_type := get_release_type(cmd)
+			find_latest_asset(release_type) or {
+				println('Prebuild v-analyzer binary is not available for your platform')
+				return
+			}
+
+			println('${term.green('✓')} Prebuild v-analyzer binary is available for your platform')
+		}
+	})
+
+	cmd.add_command(cli.Command{
+		name:        'check-updates'
+		description: 'Checks for v-analyzer updates.'
+		posix_mode:  true
+		execute:     fn (cmd cli.Command) ! {
+			release_type := get_release_type(cmd)
+			check_updates(release_type)!
+		}
+	})
+
+	cmd.parse(os.args)
+}
