@@ -278,8 +278,8 @@ fn update_from_sources(update bool, nightly bool) ! {
 fn show_info_about_binary(analyzer_bin_file_path string) {
 	println('Path to the binary: ${term.bold(analyzer_bin_file_path)}')
 	println('Size of the binary: ${term.bold(os.file_size(analyzer_bin_file_path).str())}')
-	print('Binary version: ')
-	os.system('${os.quoted_path(analyzer_bin_file_path)} version')
+	bversion := os.execute('${os.quoted_path(analyzer_bin_file_path)} version')
+	println('Binary version: ${term.bold(bversion.output.trim_space())}')
 }
 
 fn get_latest_commit_hash() !string {
