@@ -157,7 +157,7 @@ fn install_from_binary(asset ReleaseAsset, update bool) ! {
 		println('${term.green('✓')} ${term.bold('v-analyzer')} successfully updated to ${term.bold(asset.tag_name)}')
 	}
 
-	show_info_about_binary(analyzer_bin_file_path)	
+	show_info_about_binary(analyzer_bin_file_path)
 
 	if !update {
 		show_hint_about_path_if_needed(analyzer_bin_file_path)
@@ -271,14 +271,14 @@ fn update_from_sources(update bool, nightly bool) ! {
 		println('${term.green('✓')} ${term.bold('v-analyzer')} successfully updated to ${updated_version}')
 	}
 
-	show_info_about_binary(analyzer_bin_file_path)	
+	show_info_about_binary(analyzer_bin_file_path)
 	return
 }
 
 fn show_info_about_binary(analyzer_bin_file_path string) {
 	println('Path to the binary: ${term.bold(analyzer_bin_file_path)}')
-	println('Size of the binary: ${os.file_size(analyzer_bin_file_path)}')
-	println('Binary version:')
+	println('Size of the binary: ${term.bold(os.file_size(analyzer_bin_file_path).str())}')
+	print('Binary version: ')
 	os.system('${os.quoted_path(analyzer_bin_file_path)} version')
 }
 
