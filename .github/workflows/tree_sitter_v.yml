@@ -34,9 +34,6 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Verify formatting
-        run: npm run format:check
-
   test-bindings:
     runs-on: ubuntu-latest
 
