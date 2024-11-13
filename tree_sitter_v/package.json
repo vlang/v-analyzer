@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-v",
-  "version": "0.0.4-beta.1",
+  "version": "0.0.5",
   "main": "bindings/node",
   "types": "bindings/node",
   "license": "MIT",
