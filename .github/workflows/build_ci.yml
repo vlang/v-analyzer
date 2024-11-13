@@ -47,7 +47,7 @@ jobs:
           submodules: true
 
       - name: Build
-        run: v run build.vsh ${{ matrix.mode }}
+        run: v build.vsh ${{ matrix.mode }}
 
       - name: Check if the build is successful
         run: ./bin/v-analyzer --version

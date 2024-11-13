@@ -64,7 +64,7 @@ jobs:
           VFLAGS: ${{ matrix.vflags }}
         shell: bash
         run: |
-          v run build.vsh ${{ matrix.build_type }}
+          v build.vsh ${{ matrix.build_type }}
           if [[ "${{ matrix.os }}" != "macos-latest" ]]; then
             strip --strip-unneeded ./bin/v-analyzer${{ matrix.bin_ext }}
             strip --discard-all ./bin/v-analyzer${{ matrix.bin_ext }}

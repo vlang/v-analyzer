@@ -27,7 +27,7 @@ The features provided by v-analyzer include:
 ### Linux and macOS
 
 ```sh 
-v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; rm install.vsh
+v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v install.vsh; rm install.vsh
 ```
 
 ### Windows
@@ -38,7 +38,7 @@ If there is another file with this name, make sure it is safe when it is overwri
 #### Powershell && Command shell
 
 ```sh
-v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
+v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v install.vsh; del install.vsh
 ```
 
 ## Pre-built binaries

@@ -56,7 +56,7 @@ jobs:
         if: runner.os != 'Windows'
         run: |
           # Build and install v-analyzer at the head ref of the submitted changes.
-          v run build.vsh
+          v build.vsh
           sudo mv ./bin/v-analyzer /usr/local/bin/v-analyzer
           v-analyzer --version
 

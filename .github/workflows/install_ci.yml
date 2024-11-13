@@ -25,11 +25,11 @@ jobs:
 
       - name: Install via webscript (Windows)
         if: runner.os == 'Windows'
-        run: v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
+        run: v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v install.vsh; del install.vsh
 
       - name: Install via webscript (nix)
         if: runner.os != 'Windows'
-        run: v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; rm -rf install.vsh
+        run: v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v install.vsh; rm -rf install.vsh
 
       - name: Verify installation success
         run: ~/.config/v-analyzer/bin/v-analyzer --version
@@ -48,7 +48,7 @@ jobs:
         # regressions related to the install script would only become visible AFTER pushing changes to the main branch.
         # We reduce the potential for errors by simulating downloading the script and running it separately.
       - name: Install via local script
-        run: cd Downloads && v run install.vsh
+        run: cd Downloads && v install.vsh
 
       - name: Verify installation success
         run: ~/.config/v-analyzer/bin/v-analyzer --version
