@@ -25,11 +25,11 @@ jobs:
 
       - name: Install via webscript (Windows)
         if: runner.os == 'Windows'
-        run: curl -o install.vsh https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
+        run: v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; del install.vsh
 
       - name: Install via webscript (nix)
         if: runner.os != 'Windows'
-        run: v -e "$(curl https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh -fsSL)"
+        run: v download https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh; v run install.vsh; rm -rf install.vsh
 
       - name: Verify installation success
         run: ~/.config/v-analyzer/bin/v-analyzer --version
