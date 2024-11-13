@@ -157,7 +157,7 @@ fn install_from_binary(asset ReleaseAsset, update bool) ! {
 		println('${term.green('✓')} ${term.bold('v-analyzer')} successfully updated to ${term.bold(asset.tag_name)}')
 	}
 
-	println('Path to the ${term.bold('binary')}: ${analyzer_bin_file_path}')
+	show_info_about_binary(analyzer_bin_file_path)	
 
 	if !update {
 		show_hint_about_path_if_needed(analyzer_bin_file_path)
@@ -271,8 +271,15 @@ fn update_from_sources(update bool, nightly bool) ! {
 		println('${term.green('✓')} ${term.bold('v-analyzer')} successfully updated to ${updated_version}')
 	}
 
-	println('Path to the ${term.bold('binary')}: ${analyzer_bin_file_path}')
+	show_info_about_binary(analyzer_bin_file_path)	
 	return
+}
+
+fn show_info_about_binary(analyzer_bin_file_path string) {
+	println('Path to the binary: ${term.bold(analyzer_bin_file_path)}')
+	println('Size of the binary: ${os.file_size(analyzer_bin_file_path)}')
+	println('Binary version:')
+	os.system('${os.quoted_path(analyzer_bin_file_path)} version')
 }
 
 fn get_latest_commit_hash() !string {
@@ -319,10 +326,7 @@ fn install_from_sources(no_interaction bool) ! {
 	clone_repository()!
 	build_from_sources()!
 
-	println('Path to the binary: ${term.bold(analyzer_bin_file_path)}')
-	println('Binary version:')
-	os.system('${os.quoted_path(analyzer_bin_file_path)} version')
-
+	show_info_about_binary(analyzer_bin_file_path)
 	show_hint_about_path_if_needed(analyzer_bin_file_path)
 }
 
