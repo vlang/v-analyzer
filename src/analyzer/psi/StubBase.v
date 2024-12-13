@@ -162,7 +162,7 @@ fn (s &StubBase) parent_of_type(typ StubType) ?StubElement {
 		parent := res.parent_stub()?
 
 		if parent is StubBase {
-			res = parent
+			res = unsafe { parent }
 		} else {
 			return none
 		}
@@ -183,7 +183,7 @@ fn (s &StubBase) sibling_of_type_backward(typ StubType) ?StubElement {
 		prev := res.prev_sibling()?
 
 		if prev is StubBase {
-			res = prev
+			res = unsafe { prev }
 		} else {
 			return none
 		}
