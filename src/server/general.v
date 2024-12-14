@@ -25,7 +25,10 @@ pub fn (mut ls LanguageServer) initialize(params lsp.InitializeParams, mut wr Re
 	ls.status = .initialized
 
 	ls.progress.support_work_done_progress = params.capabilities.window.work_done_progress
-	ls.initialization_options = params.initialization_options.fields()
+	options := params.initialization_options
+	if options is string {
+		ls.initialization_options = options.fields()
+	}
 
 	ls.print_info(params.process_id, params.client_info)
 	ls.setup()
