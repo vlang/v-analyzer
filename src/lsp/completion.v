@@ -9,7 +9,6 @@ pub mut:
 pub struct CompletionItemSettings {
 	snippet_support           bool     @[json: snippetSupport]
 	commit_characters_support bool     @[json: commitCharactersSupport]
-	documentation_format      []string @[json: documentationFormat]
 	preselect_support         bool     @[json: preselectSupport]
 	deprecated_support        bool     @[json: deprecatedSupport]
 	tag_support               ValueSet @[json: tag_support]
