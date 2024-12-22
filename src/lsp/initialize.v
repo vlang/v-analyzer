@@ -1,14 +1,18 @@
 module lsp
 
+// TODO: These LSPAny need to change to `?LSPAny` too.
+type LSPAny = []LSPAny | map[string]LSPAny | f64 | bool | string
+
 // method: ‘initialize’
 // response: InitializeResult
 pub struct InitializeParams {
 pub mut:
-	process_id             int = -2         @[json: processId]
-	client_info            ClientInfo  @[json: clientInfo]
-	root_uri               DocumentUri @[json: rootUri]
-	root_path              DocumentUri @[json: rootPath]
-	initialization_options string      @[json: initializationOptions]
+	process_id  int = -2         @[json: processId]
+	client_info ClientInfo  @[json: clientInfo]
+	root_uri    DocumentUri @[json: rootUri]
+	root_path   DocumentUri @[json: rootPath]
+	// TODO: Change this to `?LSPAny` once V fixed its JSON decoder codegen. (or shall we use json2?)
+	initialization_options LSPAny @[json: initializationOptions]
 	capabilities           ClientCapabilities
 	trace                  string
 	workspace_folders      []WorkspaceFolder @[skip]
