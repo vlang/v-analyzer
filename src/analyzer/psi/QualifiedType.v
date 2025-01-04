@@ -14,13 +14,13 @@ fn (n &QualifiedType) qualifier() ?PsiElement {
 	return n.first_child_or_stub()
 }
 
-fn (n &QualifiedType) reference() PsiReference {
+fn (n &QualifiedType) reference() ?PsiReference {
 	ref_expr := n.right()
 	return new_reference(n.containing_file, ref_expr? as ReferenceExpressionBase, true)
 }
 
 fn (n &QualifiedType) resolve() ?PsiElement {
-	return n.reference().resolve()
+	return n.reference()?.resolve()
 }
 
 fn (n &QualifiedType) get_type() types.Type {
