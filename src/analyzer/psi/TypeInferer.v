@@ -643,7 +643,7 @@ pub fn (t &TypeInferer) infer_index_type(typ types.Type) types.Type {
 
 pub fn (t &TypeInferer) convert_type(plain_type ?PsiElement, mut visited map[string]types.Type) types.Type {
 	typ := plain_type or { return types.unknown_type }
-	if plain_type !is PlainType {
+	if typ !is PlainType {
 		return types.unknown_type
 	}
 
