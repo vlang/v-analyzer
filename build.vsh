@@ -1,18 +1,20 @@
 #!/usr/bin/env -S v
 
 // This script is used to build the v-analyzer binary.
-// Usage:
-//  v build.vsh [debug|dev|release]
-// By default, just `v build.vsh` will use debug mode.
+// Usage: `v build.vsh [debug|dev|release]`
+// By default, doing just `v build.vsh` will use debug mode.
 import os
 import cli
 import term
 import time
 import src.metadata
 
+const vexe = @VEXE
 const bin_path = './bin/v-analyzer' + $if windows { '.exe' } $else { '' }
 const build_commit = os.execute('git rev-parse --short HEAD').output.trim_space()
-const build_datetime = time.now().format_ss()
+const build_time = time.now()
+const build_datetime = build_time.format_ss()
+const gcheck = term.green('✓')
 
 enum ReleaseMode {
 	release
@@ -20,12 +22,12 @@ enum ReleaseMode {
 	dev
 }
 
-fn errorln(msg string) {
+fn eline(msg string) {
 	eprintln('${term.red('[ERROR]')} ${msg}')
 }
 
 fn (m ReleaseMode) compile_cmd() string {
-	base_build_cmd := '"${@VEXE}" "${@VMODROOT}" -o "${bin_path}" -no-parallel'
+	base_build_cmd := '${os.quoted_path(@VEXE)} ${os.quoted_path(@VMODROOT)} -o ${quoted_path(bin_path)} -no-parallel'
 	cc := if v := os.getenv_opt('CC') {
 		'-cc ${v}'
 	} else {
@@ -47,7 +49,7 @@ fn (m ReleaseMode) compile_cmd() string {
 		''
 	}
 	libbacktrace := $if windows { '' } $else { '-d use_libbacktrace' }
-	build_cmd := '${base_build_cmd} ${cc} ${cflags}'
+	build_cmd := '${base_build_cmd} ${cc} ${cflags}'.trim_space()
 	mut resulting_cmd := match m {
 		.release { '${build_cmd} -prod' }
 		.debug { '${build_cmd} -g ${libbacktrace}' }
@@ -62,38 +64,51 @@ fn (m ReleaseMode) compile_cmd() string {
 	return resulting_cmd
 }
 
-fn prepare_output_dir() {
-	if os.exists('./bin') {
-		return
+fn prepare_output_dir() string {
+	output_dir := './bin'
+	if os.exists(output_dir) {
+		return output_dir
 	}
-	os.mkdir('./bin') or { errorln('Failed to create output directory: ${err}') }
+	os.mkdir(output_dir) or { eline('Failed to create output directory: ${err}') }
+	return output_dir
 }
 
 fn build(mode ReleaseMode, explicit_debug bool) {
-	println('Building v-analyzer at commit: ${build_commit}, build time: ${build_datetime} ...')
+	vexe_version := os.execute('${os.quoted_path(vexe)} version').output.trim_space()
+	println('${gcheck} Building with ${vexe_version} .')
+	println('${gcheck} Building v-analyzer at commit: ${build_commit} .')
+	println('${gcheck} Building start time: ${build_datetime} .')
 
-	prepare_output_dir()
-	println('${term.green('✓')} Prepared output directory')
+	odir := prepare_output_dir()
+	println('${gcheck} Prepared output directory `${odir}` .')
 
 	cmd := mode.compile_cmd()
-	println('Building v-analyzer in ${term.bold(mode.str())} mode, using: ${cmd}')
+	println('Building v-analyzer in ${term.bold(mode.str())} mode, using:')
+	println('  ${cmd}')
 	if mode == .release {
-		println('This may take a while...')
+		println('This may take 1-2 minutes... Please wait.')
 	}
 
 	if !explicit_debug && mode == .debug {
-		println('To build in ${term.bold('release')} mode, run ${term.bold('v build.vsh release')}')
-		println('Release mode is recommended for production use. At runtime, it is about 30-40% faster than debug mode.')
+		println('')
+		println('Note: to build in ${term.bold('release')} mode, run `${term.bold('v build.vsh release')}` .')
+		println('    Release mode is recommended for production use.')
+		println('    At runtime, it is about 30-40% faster than debug mode.')
+		println('')
 	}
 
 	os.execute_opt(cmd) or {
-		errorln('Failed to build v-analyzer')
+		eline('Failed to build v-analyzer')
 		eprintln(err)
 		exit(1)
 	}
 
-	println('${term.green('✓')} Successfully built v-analyzer!')
-	println('Binary is located at ${term.bold(abs_path(bin_path))}')
+	final_path := abs_path(bin_path)
+	nbytes := os.file_size(final_path)
+	println('The binary size in bytes is: ${nbytes} .')
+	println('The binary is located at ${term.bold(final_path)} .')
+	elapsed_ms := f64((time.now() - build_time).milliseconds())
+	println('${gcheck} Successfully built v-analyzer, in ${elapsed_ms / 1000.0:5.3f}s .')
 }
 
 // main program:
