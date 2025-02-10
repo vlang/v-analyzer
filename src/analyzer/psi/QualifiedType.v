@@ -16,7 +16,9 @@ fn (n &QualifiedType) qualifier() ?PsiElement {
 
 fn (n &QualifiedType) reference() ?PsiReference {
 	ref_expr := n.right()
-	return new_reference(n.containing_file, ref_expr? as ReferenceExpressionBase, true)
+	reb := ref_expr? as ReferenceExpressionBase
+	res := new_reference(n.containing_file, reb, true)
+	return res
 }
 
 fn (n &QualifiedType) resolve() ?PsiElement {

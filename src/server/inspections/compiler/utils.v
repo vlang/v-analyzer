@@ -46,7 +46,7 @@ fn parse_compiler_diagnostic(msg string) ?inspections.Report {
 	diag_kind := match msg_type {
 		'error' { inspections.ReportKind.error }
 		'warning' { inspections.ReportKind.warning }
-		'notice' { inspections.ReportKind.notice }
+		//'notice' { inspections.ReportKind.notice }
 		else { inspections.ReportKind.notice }
 	}
 

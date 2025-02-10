@@ -1,8 +1,6 @@
 #ifndef TREE_SITTER_V_H_
 #define TREE_SITTER_V_H_
 
-typedef struct TSLanguage TSLanguage;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
