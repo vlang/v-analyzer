@@ -14,7 +14,9 @@ const bin_path = './bin/v-analyzer' + $if windows { '.exe' } $else { '' }
 const build_commit = os.execute('git rev-parse --short HEAD').output.trim_space()
 const build_time = time.now()
 const build_datetime = build_time.format_ss()
-const gcheck = term.green('✓')
+const gcheck = term.bold(term.green('✓'))
+const ynote = term.bold(term.gray('ⓘ'))
+const is_nixos = os.exists('/etc/NIXOS')
 
 enum ReleaseMode {
 	release
@@ -23,7 +25,25 @@ enum ReleaseMode {
 }
 
 fn eline(msg string) {
-	eprintln('${term.red('[ERROR]')} ${msg}')
+	eprintln('${term.bold(term.red('[ERROR]'))} ${msg}')
+}
+
+fn detect_build_os() {
+	$if windows {
+		println('${ynote} Detected Windows .')
+	}
+	$if macos {
+		println('${ynote} Detected macOS .')
+	}
+	$if linux {
+		println('${ynote} Detected Linux .')
+	}
+	$if freebsd {
+		println('${ynote} Detected FreeBSD .')
+	}
+	if is_nixos {
+		println('${ynote} NIXOS detected ... The build *should NOT* be static .')
+	}
 }
 
 fn (m ReleaseMode) compile_cmd() string {
@@ -39,15 +59,21 @@ fn (m ReleaseMode) compile_cmd() string {
 			''
 		}
 	}
+
 	cflags := $if cross_compile_macos_arm64 ? {
 		'-cflags "-target arm64-apple-darwin"'
 	} $else $if cross_compile_macos_x86_64 ? {
 		'-cflags "-target x86_64-apple-darwin"'
 	} $else $if linux {
-		if m == .release { '-cflags -static' } else { '' }
+		if !is_nixos && m == .release {
+			'-cflags -static'
+		} else {
+			''
+		}
 	} $else {
 		''
 	}
+
 	libbacktrace := $if windows { '' } $else { '-d use_libbacktrace' }
 	build_cmd := '${base_build_cmd} ${cc} ${cflags}'.trim_space()
 	mut resulting_cmd := match m {
@@ -74,17 +100,19 @@ fn prepare_output_dir() string {
 }
 
 fn build(mode ReleaseMode, explicit_debug bool) {
-	vexe_version := os.execute('${os.quoted_path(vexe)} version').output.trim_space()
-	println('${gcheck} Building with ${vexe_version} .')
-	println('${gcheck} Building v-analyzer at commit: ${build_commit} .')
-	println('${gcheck} Building start time: ${build_datetime} .')
-
 	odir := prepare_output_dir()
 	println('${gcheck} Prepared output directory `${odir}` .')
 
+	detect_build_os()
+
+	vexe_version := os.execute('${os.quoted_path(vexe)} version').output.trim_space()
+	println('${ynote} Building with ${vexe_version} .')
+	println('${ynote} Building v-analyzer at commit: ${build_commit} .')
+	println('${ynote} Building start time: ${build_datetime} .')
+
 	cmd := mode.compile_cmd()
-	println('Building v-analyzer in ${term.bold(mode.str())} mode, using:')
-	println('  ${cmd}')
+	println('${ynote} Compiling v-analyzer in ${term.bold(mode.str())} mode, using:')
+	println(cmd)
 	if mode == .release {
 		println('This may take 1-2 minutes... Please wait.')
 	}
@@ -105,8 +133,8 @@ fn build(mode ReleaseMode, explicit_debug bool) {
 
 	final_path := abs_path(bin_path)
 	nbytes := os.file_size(final_path)
-	println('The binary size in bytes is: ${nbytes} .')
-	println('The binary is located at ${term.bold(final_path)} .')
+	println('${ynote} The binary size in bytes is: ${nbytes:8} .')
+	println('${ynote} The binary is located here: ${term.bold(final_path)} .')
 	elapsed_ms := f64((time.now() - build_time).milliseconds())
 	println('${gcheck} Successfully built v-analyzer, in ${elapsed_ms / 1000.0:5.3f}s .')
 }
