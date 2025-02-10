@@ -15,7 +15,7 @@ const build_commit = os.execute('git rev-parse --short HEAD').output.trim_space(
 const build_time = time.now()
 const build_datetime = build_time.format_ss()
 const gcheck = term.bold(term.green('✓'))
-const ynote = term.bold(term.gray('ⓘ'))
+const ynote = term.bold(term.gray('ⓘ '))
 const is_nixos = os.exists('/etc/NIXOS')
 
 enum ReleaseMode {
