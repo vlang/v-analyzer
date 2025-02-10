@@ -48,11 +48,18 @@ fn (m ReleaseMode) compile_cmd() string {
 	}
 	libbacktrace := $if windows { '' } $else { '-d use_libbacktrace' }
 	build_cmd := '${base_build_cmd} ${cc} ${cflags}'
-	return match m {
+	mut resulting_cmd := match m {
 		.release { '${build_cmd} -prod' }
 		.debug { '${build_cmd} -g ${libbacktrace}' }
 		.dev { '${build_cmd} -d show_ast_on_hover -g ${libbacktrace}' }
 	}
+	$if !windows {
+		// Treesitter's generated C code uses gotos;
+		// Older V versions of the json codegen generated `if(cond) \nstatement; statement2;` with wrong indentation, instead of blocks;
+		// => Adding the flags below allows v-analyzer to be compiled with -cstrict, and wider range of supported C compilers
+		resulting_cmd += ' -cflags "-Wno-misleading-indentation -Wno-jump-misses-init -Wno-error=jump-misses-init -Wno-typedef-redefinition"'
+	}
+	return resulting_cmd
 }
 
 fn prepare_output_dir() {
