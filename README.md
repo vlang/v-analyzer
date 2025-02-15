@@ -34,6 +34,13 @@ can be run from anywhere).
 v download -RD https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh
 ```
 
+Note: if you get messages about `response does not start with HTTP/`, try going to the
+main V repository, then do `./v -d use_openssl cmd/tools/vdownload.v` .
+After that, retry the same command:
+```sh 
+v download -RD https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh
+```
+
 ## Pre-built binaries
 
 You can download pre-built binaries from the [release page](https://github.com/vlang/v-analyzer/releases).
