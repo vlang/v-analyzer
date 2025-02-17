@@ -29,7 +29,7 @@ pub fn download_install_vsh() ! {
 		os.mkdir(download_dir) or { return error('Failed to create tmp dir: ${err}') }
 	}
 
-	mut file := os.open_file(analyzer_install_script_path, '777') or {
+	mut file := os.create(analyzer_install_script_path) or {
 		return error('Error creating/opening file for script: ${err}')
 	}
 	defer { file.close() }
