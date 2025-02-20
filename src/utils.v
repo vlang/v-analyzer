@@ -29,9 +29,16 @@ pub fn download_install_vsh() ! {
 		os.mkdir(download_dir) or { return error('Failed to create tmp dir: ${err}') }
 	}
 
-	http.download_file(analyzer_install_script_download_path, analyzer_install_script_path) or {
+	mut file := os.create(analyzer_install_script_path) or {
+		return error('Error creating/opening file for script: ${err}')
+	}
+	defer { file.close() }
+
+	req := http.get(analyzer_install_script_download_path) or {
 		return error('Failed to download script: ${err}')
 	}
+
+	file.write(req.body.bytes()) or { return error('Error writing to script file: ${err}') }
 }
 
 pub fn call_install_vsh(cmd string) !int {
