@@ -9,7 +9,7 @@ import compress.szip
 import cli
 import net.http
 
-const installer_version = '0.0.5'
+const installer_version = '0.0.6'
 const analyzer_config_dir_path = join_path(home_dir(), '.config', 'v-analyzer')
 const analyzer_sources_dir_path = join_path(analyzer_config_dir_path, 'sources')
 const analyzer_bin_dir_path = join_path(analyzer_config_dir_path, 'bin')

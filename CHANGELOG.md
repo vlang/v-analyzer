@@ -1,5 +1,15 @@
 # v-analyser Changelog
 
+## [0.0.6] - 2025/02/27
+Sixth public release.
+
+This release contains mainly installation issue fixes.
+You can now install it on all platforms, using an uniform command:
+`v download -RD https://raw.githubusercontent.com/vlang/v-analyzer/main/install.vsh`
+It also has improvements to the diagnostic output of the build and install scripts.
+V-analyzer has also been fixed to compile with the latest and stricter V versions.
+The last notable change is the upgrade of our tree_sitter bindings.
+
 ## [0.0.5] - 2024/11/13
 Fifth public release.
 
@@ -26,7 +36,8 @@ Fifth public release.
 ∙ analyzer: support shebang syntax (#34)
 ∙ analyzer: add inline struct field comments (#52)
 ∙ analyzer: use build version aware caching (#57)
-∙ analyzer: update parser.c to align with the current development state (#13), fixes highlighting for code in between 2 block comments
+∙ analyzer: update parser.c to align with the current development state (#13), 
+            fixes highlighting for code in between 2 block comments
 ∙ build: follow a default directory structure for V projects (#25)
 ∙ build: update install.vsh to make repeated usage of path expand fn obsolete (#24)
 ∙ install: add debug and dev binaries install (#60)
@@ -62,7 +73,8 @@ Fifth public release.
 ∙ tree_sitter: add sum type to tree node (#87)
 
 ### Documentation:
-∙ docs: update README.md with more detailed instructions about how to clone the project locally, fix `v check-md` warnings
+∙ docs: update README.md with more detailed instructions about
+        how to clone the project locally, fix `v check-md` warnings
 ∙ docs: fix for Neovim LSP/Mason (#122)
 ∙ docs: fix typo in readme
 ∙ docs: make submodule info in readme better visible and its commands easier to copy
