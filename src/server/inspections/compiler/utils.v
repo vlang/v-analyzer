@@ -23,20 +23,14 @@ fn parse_compiler_diagnostic(msg string) ?inspections.Report {
 
 	first_line := lines.first()
 
-	line_colon_idx := first_line.index_after(':', 2) // deal with `d:/v/...:2:4: error: ...`
-	if line_colon_idx < 0 {
-		return none
-	}
+	line_colon_idx := first_line.index_after(':', 2) or { return none } // deal with `d:/v/...:2:4: error: ...`
 	mut filepath := first_line[..line_colon_idx]
 	$if windows {
 		filepath = filepath.replace('/', '\\')
 	}
-	col_colon_idx := first_line.index_after(':', line_colon_idx + 1)
-	colon_sep_idx := first_line.index_after(':', col_colon_idx + 1)
-	msg_type_colon_idx := first_line.index_after(':', colon_sep_idx + 1)
-	if msg_type_colon_idx == -1 || col_colon_idx == -1 || colon_sep_idx == -1 {
-		return none
-	}
+	col_colon_idx := first_line.index_after(':', line_colon_idx + 1) or { return none }
+	colon_sep_idx := first_line.index_after(':', col_colon_idx + 1) or { return none }
+	msg_type_colon_idx := first_line.index_after(':', colon_sep_idx + 1) or { return none }
 
 	line_nr := first_line[line_colon_idx + 1..col_colon_idx].int() - 1
 	col_nr := first_line[col_colon_idx + 1..colon_sep_idx].int() - 1
