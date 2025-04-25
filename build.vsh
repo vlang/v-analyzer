@@ -11,7 +11,9 @@ import src.metadata
 
 const vexe = @VEXE
 const bin_path = './bin/v-analyzer' + $if windows { '.exe' } $else { '' }
-const build_commit = os.execute('git rev-parse --short HEAD').output.trim_space()
+const gen = os.getenv('GITHUB_EVENT_NAME')
+const current_commit_name = if gen == 'pull_request' { 'HEAD^' } else { 'HEAD' }
+const build_commit = os.execute('git rev-parse --short ${current_commit_name}').output.trim_space()
 const build_time = time.now()
 const build_datetime = build_time.format_ss()
 const gcheck = term.bold(term.green('✓'))
