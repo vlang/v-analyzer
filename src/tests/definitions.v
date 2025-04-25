@@ -213,6 +213,23 @@ fn definitions() testing.Tester {
 		t.assert_definition_name(first, 'name')!
 	})
 
+	t.test('it as function parameter', fn (mut t testing.Test, mut fixture testing.Fixture) ! {
+		fixture.configure_by_text('1.v', "
+		fn foo(it int) {
+			if i/*caret*/t.str() == 1 {
+				println('one')
+			}
+		}
+		".trim_indent())!
+
+		locations := fixture.definition_at_cursor()
+		t.assert_has_definition(locations)!
+
+		first := locations.first()
+		t.assert_uri(first.target_uri, fixture.current_file_uri())!
+		t.assert_definition_name(first, 'it')!
+	})
+
 	t.slow_test('shell script implicit os module', fn (mut t testing.Test, mut fixture testing.Fixture) ! {
 		fixture.configure_by_text('1.vsh', '
 		abs_/*caret*/path()

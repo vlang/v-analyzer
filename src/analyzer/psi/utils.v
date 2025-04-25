@@ -19,7 +19,7 @@ pub fn get_it_call(element PsiElement) ?&CallExpression {
 	methods_names := ['filter', 'map', 'any', 'all']
 	if mut parent_call is CallExpression {
 		for !is_array_method_call(*parent_call, ...methods_names) {
-			parent_call = parent_call.parent_of_type(.call_expression) or { break }
+			return none
 		}
 	}
 
