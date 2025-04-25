@@ -11,15 +11,8 @@ import src.metadata
 
 const vexe = @VEXE
 const bin_path = './bin/v-analyzer' + $if windows { '.exe' } $else { '' }
-
-// In pull requests, GA creates a merge commit, to test the latest changes,
-// as if they would have been merged in the main branch. However for building
-// and version checking, we need the commit hash of the actual last change in the PR.
-const gh_event_name = os.getenv('GITHUB_EVENT_NAME')
-const gh_wsha = os.getenv('GITHUB_WORKFLOW_SHA')
-const git_short_head = os.execute('git rev-parse --short HEAD').output.trim_space()
-const build_commit = if gh_event_name == 'pull_request' { gh_wsha } else { git_short_head }
 const build_time = time.now()
+const build_commit = get_build_commit()
 const build_datetime = build_time.format_ss()
 
 const gcheck = term.bold(term.green('✓'))
@@ -30,6 +23,14 @@ enum ReleaseMode {
 	release
 	debug
 	dev
+}
+
+fn get_build_commit() string {
+	// In pull requests, GA creates a merge commit, to test the latest changes,
+	// as if they would have been merged in the main branch. However for building
+	// and version checking, we need the commit hash of the actual last change in the PR.
+	committish := os.getenv_opt('GITHUB_WORKFLOW_SHA') or { 'HEAD' }
+	return os.execute('git rev-parse --short ${committish}').output.trim_space()
 }
 
 fn eline(msg string) {
