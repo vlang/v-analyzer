@@ -33,7 +33,7 @@ jobs:
             os: windows-latest
             bin_ext: .exe
           - target: linux-x86_64
-            os: ubuntu-20.04
+            os: ubuntu-latest
           - target: darwin-x86_64
             os: macos-latest
             vflags: -d cross_compile_macos_x86_64
