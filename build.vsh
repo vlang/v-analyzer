@@ -11,11 +11,16 @@ import src.metadata
 
 const vexe = @VEXE
 const bin_path = './bin/v-analyzer' + $if windows { '.exe' } $else { '' }
+
+// In pull requests, GA creates a merge commit, to test the latest changes,
+// as if they would have been merged in the main branch. However for building
+// and version checking, we need the commit hash of the actual last change in the PR.
 const gen = os.getenv('GITHUB_EVENT_NAME')
-const current_commit_name = if gen == 'pull_request' { 'HEAD^' } else { 'HEAD' }
+const current_commit_name = if gen == 'pull_request' { 'HEAD^2' } else { 'HEAD' }
 const build_commit = os.execute('git rev-parse --short ${current_commit_name}').output.trim_space()
 const build_time = time.now()
 const build_datetime = build_time.format_ss()
+
 const gcheck = term.bold(term.green('✓'))
 const ynote = term.bold(term.gray('ⓘ '))
 const is_nixos = os.exists('/etc/NIXOS')
