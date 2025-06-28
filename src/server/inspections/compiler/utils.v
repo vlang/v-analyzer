@@ -72,13 +72,13 @@ fn exec_compiler_diagnostics(compiler_path string, uri lsp.DocumentUri) ?[]inspe
 
 	defer {
 		p.signal_term() // terminate the process gracefully
-		spawn fn [mut p] () {
+		spawn fn (mut p os.Process) {
 			// timeout for if the process is still alive
 			time.sleep(400 * time.millisecond)
 			if p.is_alive() {
 				p.signal_kill()
 			}
-		}()
+		}(mut p)
 		p.wait()
 		p.close()
 	}
