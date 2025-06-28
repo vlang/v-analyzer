@@ -3,7 +3,6 @@ module compiler
 import os
 import lsp
 import term
-import time
 import server.inspections
 import analyzer.psi
 
@@ -59,73 +58,54 @@ fn parse_compiler_diagnostic(msg string) ?inspections.Report {
 }
 
 fn exec_compiler_diagnostics(compiler_path string, uri lsp.DocumentUri) ?[]inspections.Report {
-	mut reports := []inspections.Report{}
-
 	dir_path := uri.dir_path()
 	filepath := uri.path()
 	is_module := !filepath.ends_with('.vv')
 	input_path := if is_module { dir_path } else { filepath }
 
-	mut p := os.new_process(compiler_path)
-	p.set_args(['-enable-globals', '-shared', '-check', input_path])
-	p.set_redirect_stdio()
+	res := os.execute('${compiler_path} -enable-globals -shared -check ${input_path}')
 
-	defer {
-		p.signal_term() // terminate the process gracefully
-		spawn fn (mut p os.Process) {
-			// timeout for if the process is still alive
-			time.sleep(400 * time.millisecond)
-			if p.is_alive() {
-				p.signal_kill()
-			}
-		}(mut p)
-		p.wait()
-		p.close()
-	}
-	p.run()
-	if p.code == 0 {
+	if res.exit_code == 0 {
 		return none
 	}
 
-	output_lines := p.stderr_slurp().split_into_lines().map(term.strip_ansi(it))
+	output_lines := res.output.split_into_lines().map(term.strip_ansi(it))
 	errors := split_lines_to_errors(output_lines)
 
+	mut reports := []inspections.Report{}
+
 	for error in errors {
-		mut report := parse_compiler_diagnostic(error) or { continue }
+		report := parse_compiler_diagnostic(error) or { continue }
+
+		// ignore this error
+		if report.message.contains('unexpected eof') {
+			continue
+		}
+
 		file_dir_path := os.dir(report.filepath)
 
-		if os.is_abs_path(file_dir_path) {
+		report_filepath := if os.is_abs_path(file_dir_path) {
 			// do nothing
+			report.filepath
 		} else if file_dir_path == '..' {
-			report = inspections.Report{
-				...report
-				filepath: os.join_path_single(dir_path, report.filepath)
-			}
+			os.join_path_single(dir_path, report.filepath)
 		} else if start_idx := dir_path.last_index(file_dir_path) {
 			// reported file appears to be in a subdirectory of dir_path
-			report = inspections.Report{
-				...report
-				filepath: dir_path[..start_idx] + report.filepath
-			}
+			dir_path[..start_idx] + report.filepath
 		} else {
 			// reported file appears to be in a parent directory of dir_path
-			report = inspections.Report{
-				...report
-				filepath: os.join_path_single(dir_path, report.filepath)
-			}
+			os.join_path_single(dir_path, report.filepath)
 		}
 
-		if report.message.contains('unexpected eof') {
-			// ignore this error
+		// ignore errors in other files
+		if report_filepath != uri.path() {
 			continue
 		}
 
-		if report.filepath != uri.path() {
-			// ignore errors in other files
-			continue
+		reports << inspections.Report{
+			...report
+			filepath: report_filepath
 		}
-
-		reports << report
 	}
 	return reports
 }
