@@ -70,6 +70,14 @@ fn exec_compiler_diagnostics(compiler_path string, uri lsp.DocumentUri) ?[]inspe
 	p.set_redirect_stdio()
 
 	defer {
+		p.signal_term() // terminate the process gracefully
+		spawn fn [mut p] () {
+			// 1 second timeout for if the process is still alive
+			time.sleep(time.second)
+			if p.is_alive() {
+				p.signal_kill()
+			}
+		}()
 		p.wait()
 		p.close()
 	}
