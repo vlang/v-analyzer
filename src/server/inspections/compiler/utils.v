@@ -3,6 +3,7 @@ module compiler
 import os
 import lsp
 import term
+import time
 import server.inspections
 import analyzer.psi
 
