@@ -70,6 +70,7 @@ fn exec_compiler_diagnostics(compiler_path string, uri lsp.DocumentUri) ?[]inspe
 	p.set_redirect_stdio()
 
 	defer {
+		p.wait()
 		p.close()
 	}
 	p.run()
