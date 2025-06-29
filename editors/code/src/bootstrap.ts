@@ -27,9 +27,20 @@ export async function bootstrap(): Promise<string> {
 		);
 	}
 
-	const rpath = fs.realpathSync(path);
 	log.info("Using server binary at", path);
-	log.info("Server binary realpath:", rpath);
+	try {
+		const rpath = fs.realpathSync(path);
+		log.info("Server binary realpath:", rpath);
+	} catch (err) {
+		try {
+			const command =
+				process.platform === "win32" ? `where ${path}` : `which ${path}`;
+			const rpath = cp.execSync(command).toString().trim().split("\n")[0];
+			log.info("Server binary realpath:", rpath);
+		} catch (err) {
+			log.error("Error:", err.message);
+		}
+	}
 
 	return path;
 }
