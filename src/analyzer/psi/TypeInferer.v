@@ -30,28 +30,137 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 
 	mut visited := map[string]types.Type{}
 
-	if element.node.type_name in [.in_expression, .is_expression] {
-		return types.new_primitive_type('bool')
-	}
-
-	if element is BinaryExpression {
-		operator := element.operator()
-		if operator in ['&&', '||', '==', '!=', '<', '<=', '>', '>='] {
+	match element.node.type_name {
+		.in_expression, .is_expression, .select_expression {
 			return types.new_primitive_type('bool')
 		}
-
-		match operator {
-			'<<' { return types.new_primitive_type('int') }
-			'>>' { return types.new_primitive_type('int') }
-			else {}
+		.inc_expression, .dec_expression {
+			return t.infer_type(element.first_child())
 		}
-
-		if operator in ['+', '-', '|', '^', '&'] {
-			left := element.left() or { return types.unknown_type }
-			return t.infer_type(left)
+		.as_type_cast_expression {
+			return t.infer_type(element.last_child())
 		}
+		.spawn_expression, .go_expression {
+			return types.new_thread_type(t.infer_type(element.last_child()))
+		}
+		.parenthesized_expression {
+			expr := element.find_child_by_name('expression') or { return types.unknown_type }
+			return t.infer_type(expr)
+		}
+		.receive_expression {
+			operand := element.find_child_by_name('operand') or { return types.unknown_type }
+			return types.unwrap_channel_type(t.infer_type(operand))
+		}
+		else {}
+	}
 
-		if operator in ['*', '/'] {
+	match element {
+		BinaryExpression {
+			return t.infer_binary_expression_type(element)
+		}
+		UnaryExpression {
+			return t.infer_unary_expression_type(element)
+		}
+		OrBlockExpression, ResultPropagationExpression, OptionPropagationExpression {
+			expr := element.expression() or { return types.unknown_type }
+			expr_type := t.infer_type(expr)
+			return types.unwrap_result_or_option_type(expr_type)
+		}
+		IndexExpression {
+			return t.infer_index_expression_type(element)
+		}
+		SliceExpression {
+			return t.infer_slice_expression_type(element)
+		}
+		Range {
+			return t.infer_range_type(element)
+		}
+		SelectorExpression {
+			return t.infer_selector_expression_type(element)
+		}
+		ReferenceExpression {
+			return t.infer_reference_expression_type(element)
+		}
+		TypeInitializer {
+			return t.infer_type_initializer_type(element, mut visited)
+		}
+		UnsafeExpression {
+			return t.infer_unsafe_expression_type(element)
+		}
+		IfExpression {
+			return t.infer_if_expression_type(element)
+		}
+		CompileTimeIfExpression {
+			return t.infer_compile_time_if_expression_type(element)
+		}
+		MatchExpression {
+			return t.infer_match_expression_type(element)
+		}
+		ArrayCreation {
+			return t.infer_array_creation_type(element)
+		}
+		MapInitExpression {
+			return t.infer_map_init_expression_type(element)
+		}
+		CallExpression {
+			return t.infer_call_expression_type(element, mut visited)
+		}
+		Literal {
+			return t.infer_literal_type(element)
+		}
+		Signature {
+			return t.process_signature(element)
+		}
+		VarDefinition {
+			return t.infer_var_definition_type(element)
+		}
+		FieldDeclaration {
+			return t.infer_from_plain_type(element)
+		}
+		Receiver {
+			return t.infer_from_plain_type(element)
+		}
+		ParameterDeclaration {
+			return t.infer_parameter_declaration_type(element)
+		}
+		Block {
+			return t.infer_block_type(element)
+		}
+		FunctionLiteral, FunctionOrMethodDeclaration, StaticMethodDeclaration,
+		InterfaceMethodDeclaration {
+			signature := element.signature() or { return types.unknown_type }
+			return t.process_signature(signature)
+		}
+		EnumDeclaration, EnumFieldDeclaration, ConstantDefinition {
+			return element.get_type()
+		}
+		TypeReferenceExpression {
+			return t.infer_type_reference_type(element, mut visited)
+		}
+		GlobalVarDefinition {
+			return t.infer_global_var_definition_type(element, mut visited)
+		}
+		EmbeddedDefinition {
+			return t.infer_embedded_definition_type(element, mut visited)
+		}
+		else {
+			return types.unknown_type
+		}
+	}
+}
+
+pub fn (t &TypeInferer) infer_binary_expression_type(element BinaryExpression) types.Type {
+	match element.operator() {
+		'&&', '||', '==', '!=', '<', '<=', '>', '>=' {
+			return types.new_primitive_type('bool')
+		}
+		'<<' {
+			return types.new_primitive_type('int')
+		}
+		'>>', '>>>' {
+			return types.new_primitive_type('int')
+		}
+		'+', '-', '|', '^', '&', '*', '/' {
 			left := element.left() or { return types.unknown_type }
 			if left.node.type_name != .literal {
 				return t.infer_type(left)
@@ -59,322 +168,225 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 			right := element.right() or { return types.unknown_type }
 			return t.infer_type(right)
 		}
+		else {
+			return types.unknown_type
+		}
 	}
+}
 
-	if element.node.type_name == .select_expression {
+pub fn (t &TypeInferer) infer_unary_expression_type(element UnaryExpression) types.Type {
+	operator := element.operator()
+	if operator == '!' {
 		return types.new_primitive_type('bool')
 	}
 
-	if element is UnaryExpression {
-		operator := element.operator()
-		if operator == '!' {
-			return types.new_primitive_type('bool')
-		}
+	expression := element.expression() or { return types.unknown_type }
+	expr_type := t.infer_type(expression)
 
-		expression := element.expression() or { return types.unknown_type }
-		expr_type := t.infer_type(expression)
+	return match operator {
+		'&' { types.Type(types.new_pointer_type(expr_type)) }
+		'*' { types.unwrap_pointer_type(expr_type) }
+		'<-' { types.unwrap_channel_type(expr_type) }
+		else { expr_type }
+	}
+}
 
-		match operator {
-			'&' { return types.new_pointer_type(expr_type) }
-			'*' { return types.unwrap_pointer_type(expr_type) }
-			'<-' { return types.unwrap_channel_type(expr_type) }
-			else { return expr_type }
-		}
+pub fn (t &TypeInferer) infer_index_expression_type(element IndexExpression) types.Type {
+	expr := element.expression() or { return types.unknown_type }
+	expr_type := t.infer_type(expr)
+	return t.infer_index_type(expr_type)
+}
+
+pub fn (t &TypeInferer) infer_slice_expression_type(element SliceExpression) types.Type {
+	expr := element.expression() or { return types.unknown_type }
+	expr_type := t.infer_type(expr)
+	if expr_type is types.FixedArrayType {
+		// [3]int -> []int
+		return types.new_array_type(expr_type.inner)
+	}
+	return expr_type
+}
+
+pub fn (t &TypeInferer) infer_compile_time_if_expression_type(element CompileTimeIfExpression) types.Type {
+	block := element.block()
+	block_type := t.infer_type(block)
+	if block_type is types.UnknownType {
+		else_branch := element.else_branch() or { return types.unknown_type }
+		return t.infer_type(else_branch)
+	}
+	return block_type
+}
+
+pub fn (t &TypeInferer) infer_match_expression_type(element MatchExpression) types.Type {
+	arms := element.arms()
+	if arms.len == 0 {
+		return types.unknown_type
+	}
+	first := arms.first()
+	block := first.find_child_by_name('block') or { return types.unknown_type }
+	return t.infer_type(block)
+}
+
+pub fn (t &TypeInferer) infer_array_creation_type(element ArrayCreation) types.Type {
+	expressions := element.expressions()
+	if expressions.len == 0 {
+		return types.new_array_type(types.unknown_type)
+	}
+	first_expr := expressions.first()
+
+	if element.is_fixed {
+		return types.new_fixed_array_type(t.infer_type(first_expr), expressions.len)
 	}
 
-	if element.node.type_name == .inc_expression || element.node.type_name == .dec_expression {
-		return t.infer_type(element.first_child())
-	}
+	return types.new_array_type(t.infer_type(first_expr))
+}
 
-	if element.node.type_name == .as_type_cast_expression {
-		return t.infer_type(element.last_child())
-	}
-
-	if element.node.type_name in [.spawn_expression, .go_expression] {
-		return types.new_thread_type(t.infer_type(element.last_child()))
-	}
-
-	if element.node.type_name == .parenthesized_expression {
-		expr := element.find_child_by_name('expression') or { return types.unknown_type }
-		return t.infer_type(expr)
-	}
-
-	if element.node.type_name == .receive_expression {
-		operand := element.find_child_by_name('operand') or { return types.unknown_type }
-		return types.unwrap_channel_type(t.infer_type(operand))
-	}
-
-	if element is OrBlockExpression {
-		expr := element.expression() or { return types.unknown_type }
-		expr_type := t.infer_type(expr)
-		return types.unwrap_result_or_option_type(expr_type)
-	}
-
-	if element is ResultPropagationExpression {
-		expr := element.expression() or { return types.unknown_type }
-		expr_type := t.infer_type(expr)
-		return types.unwrap_result_or_option_type(expr_type)
-	}
-
-	if element is OptionPropagationExpression {
-		expr := element.expression() or { return types.unknown_type }
-		expr_type := t.infer_type(expr)
-		return types.unwrap_result_or_option_type(expr_type)
-	}
-
-	if element is IndexExpression {
-		expr := element.expression() or { return types.unknown_type }
-		expr_type := t.infer_type(expr)
-		return t.infer_index_type(expr_type)
-	}
-
-	if element is SliceExpression {
-		expr := element.expression() or { return types.unknown_type }
-		expr_type := t.infer_type(expr)
-		if expr_type is types.FixedArrayType {
-			// [3]int -> []int
-			return types.new_array_type(expr_type.inner)
-		}
-		return expr_type
-	}
-
-	if element is Range {
-		if element.inclusive() {
-			left := element.left() or { return types.unknown_type }
-			return t.infer_type(left)
-		}
-
-		return types.new_array_type(types.new_primitive_type('int'))
-	}
-
-	if element is FunctionLiteral {
-		signature := element.signature() or { return types.unknown_type }
-		return t.process_signature(signature)
-	}
-
-	if element is SelectorExpression {
-		resolved := element.resolve() or { return types.unknown_type }
-		typ := t.infer_type(resolved)
-		if types.is_generic(typ) {
-			return GenericTypeInferer{}.infer_generic_fetch(resolved, element, typ)
-		}
-		return typ
-	}
-
-	if element is ReferenceExpression {
-		if element.text_matches('it') {
-			call := get_it_call(*element) or { return types.unknown_type }
-			caller_type := call.caller_type()
-			if caller_type is types.ArrayType {
-				return caller_type.inner
-			}
-			return types.unknown_type
-		}
-
-		resolved := element.resolve() or { return types.unknown_type }
-		return t.infer_type(resolved)
-	}
-
-	if element is TypeInitializer {
-		type_element := element.find_child_by_type(.plain_type) or { return types.unknown_type }
-		return t.convert_type(type_element, mut visited)
-	}
-
-	if element is UnsafeExpression {
-		block := element.block()
-		return t.infer_type(block)
-	}
-
-	if element is IfExpression {
-		block := element.block()
-		block_type := t.infer_type(block)
-		if block_type is types.UnknownType {
-			else_branch := element.else_branch() or { return types.unknown_type }
-			return t.infer_type(else_branch)
-		}
-		return block_type
-	}
-
-	if element is CompileTimeIfExpression {
-		block := element.block()
-		block_type := t.infer_type(block)
-		if block_type is types.UnknownType {
-			else_branch := element.else_branch() or { return types.unknown_type }
-			return t.infer_type(else_branch)
-		}
-		return block_type
-	}
-
-	if element is MatchExpression {
-		arms := element.arms()
-		if arms.len == 0 {
-			return types.unknown_type
-		}
-		first := arms.first()
-		block := first.find_child_by_name('block') or { return types.unknown_type }
-		return t.infer_type(block)
-	}
-
-	if element is ArrayCreation {
-		expressions := element.expressions()
-		if expressions.len == 0 {
-			return types.new_array_type(types.unknown_type)
-		}
-		first_expr := expressions.first()
-
-		if element.is_fixed {
-			return types.new_fixed_array_type(t.infer_type(first_expr), expressions.len)
-		}
-
-		return types.new_array_type(t.infer_type(first_expr))
-	}
-
-	if element is MapInitExpression {
-		module_fqn := element.containing_file.module_fqn()
-		key_values := element.key_values()
-		if key_values.len == 0 {
-			return types.new_map_type(module_fqn, types.unknown_type, types.unknown_type)
-		}
-
-		first_key_value := key_values.first()
-		if first_key_value is MapKeyedElement {
-			key := first_key_value.key() or { return types.unknown_type }
-			value := first_key_value.value() or { return types.unknown_type }
-			key_type := t.infer_type(key)
-			value_type := t.infer_type(value)
-			return types.new_map_type(module_fqn, key_type, value_type)
-		}
-
+pub fn (t &TypeInferer) infer_map_init_expression_type(element MapInitExpression) types.Type {
+	module_fqn := element.containing_file.module_fqn()
+	key_values := element.key_values()
+	if key_values.len == 0 {
 		return types.new_map_type(module_fqn, types.unknown_type, types.unknown_type)
 	}
 
-	if element is CallExpression {
-		if grand := element.expression() {
-			if grand is FunctionLiteral {
-				signature := grand.signature() or { return types.unknown_type }
-				return t.convert_type(signature.result(), mut visited)
+	first_key_value := key_values.first()
+	if first_key_value is MapKeyedElement {
+		key := first_key_value.key() or { return types.unknown_type }
+		value := first_key_value.value() or { return types.unknown_type }
+		key_type := t.infer_type(key)
+		value_type := t.infer_type(value)
+		return types.new_map_type(module_fqn, key_type, value_type)
+	}
+
+	return types.new_map_type(module_fqn, types.unknown_type, types.unknown_type)
+}
+
+pub fn (t &TypeInferer) infer_call_expression_type(element CallExpression, mut visited map[string]types.Type) types.Type {
+	if grand := element.expression() {
+		if grand is FunctionLiteral {
+			signature := grand.signature() or { return types.unknown_type }
+			return t.convert_type(signature.result(), mut visited)
+		}
+	}
+	return t.infer_call_expr_type(element)
+}
+
+pub fn (t &TypeInferer) infer_var_definition_type(element VarDefinition) types.Type {
+	grand := element.parent_nth(2) or { return types.unknown_type }
+	if grand.node.type_name == .range_clause {
+		return t.process_range_clause(element, grand)
+	}
+
+	decl := element.declaration() or { return types.unknown_type }
+	if init := decl.initializer_of(element) {
+		typ := t.infer_type(init)
+		if decl_parent := decl.parent() {
+			if decl_parent is IfExpression {
+				return types.unwrap_result_or_option_type(typ)
 			}
 		}
-		return t.infer_call_expr_type(element)
-	}
 
-	if element is Literal {
-		return t.infer_literal_type(element)
-	}
+		if typ is types.MultiReturnType {
+			parent := element.parent() or { return types.unknown_type }
 
-	if element is Signature {
-		return t.process_signature(element)
-	}
-
-	if element is VarDefinition {
-		grand := element.parent_nth(2) or { return types.unknown_type }
-		if grand.node.type_name == .range_clause {
-			return t.process_range_clause(element, grand)
-		}
-
-		decl := element.declaration() or { return types.unknown_type }
-		if init := decl.initializer_of(element) {
-			typ := t.infer_type(init)
-			if decl_parent := decl.parent() {
-				if decl_parent is IfExpression {
-					return types.unwrap_result_or_option_type(typ)
+			mut define_index := 0
+			for index, def in parent.find_children_by_type(.reference_expression) {
+				if def.is_equal(element) {
+					define_index = index
+					break
 				}
 			}
 
-			if typ is types.MultiReturnType {
-				parent := element.parent() or { return types.unknown_type }
+			inner_types := typ.types
+			return inner_types[define_index] or { return types.unknown_type }
+		}
 
-				mut define_index := 0
-				for index, def in parent.find_children_by_type(.reference_expression) {
-					if def.is_equal(element) {
-						define_index = index
-						break
-					}
-				}
+		return typ
+	}
+	return types.unknown_type
+}
 
-				inner_types := typ.types
-				return inner_types[define_index] or { return types.unknown_type }
-			}
+pub fn (t &TypeInferer) infer_parameter_declaration_type(element ParameterDeclaration) types.Type {
+	type_ := t.infer_from_plain_type(element)
+	if _ := element.find_child_by_name('variadic') {
+		return types.new_array_type(type_)
+	}
+	return type_
+}
 
-			return typ
+pub fn (t &TypeInferer) infer_block_type(element Block) types.Type {
+	last_expression := element.last_expression() or { return types.unknown_type }
+	return t.infer_type(last_expression)
+}
+
+pub fn (t &TypeInferer) infer_global_var_definition_type(element GlobalVarDefinition, mut visited map[string]types.Type) types.Type {
+	type_element := element.find_child_by_type_or_stub(.plain_type) or { return types.unknown_type }
+	return t.convert_type(type_element, mut visited)
+}
+
+pub fn (t &TypeInferer) infer_embedded_definition_type(element EmbeddedDefinition, mut visited map[string]types.Type) types.Type {
+	if qualified_type := element.find_child_by_type_or_stub(.qualified_type) {
+		return t.convert_type_inner(qualified_type, mut visited)
+	}
+	if generic_type := element.find_child_by_type_or_stub(.generic_type) {
+		return t.convert_type_inner(generic_type, mut visited)
+	}
+	if ref_expression := element.find_child_by_type_or_stub(.type_reference_expression) {
+		if ref_expression is TypeReferenceExpression {
+			return t.infer_type_reference_type(ref_expression, mut visited)
+		}
+	}
+	return types.unknown_type
+}
+
+pub fn (t &TypeInferer) infer_reference_expression_type(element ReferenceExpression) types.Type {
+	if element.text_matches('it') {
+		call := get_it_call(element) or { return types.unknown_type }
+		caller_type := call.caller_type()
+		if caller_type is types.ArrayType {
+			return caller_type.inner
 		}
 		return types.unknown_type
 	}
 
-	if element is ConstantDefinition {
-		return element.get_type()
-	}
+	resolved := element.resolve() or { return types.unknown_type }
+	return t.infer_type(resolved)
+}
 
-	if element is FieldDeclaration {
-		return t.infer_from_plain_type(element)
+pub fn (t &TypeInferer) infer_if_expression_type(element IfExpression) types.Type {
+	block := element.block()
+	block_type := t.infer_type(block)
+	if block_type is types.UnknownType {
+		else_branch := element.else_branch() or { return types.unknown_type }
+		return t.infer_type(else_branch)
 	}
+	return block_type
+}
 
-	if element is Receiver {
-		return t.infer_from_plain_type(element)
+pub fn (t &TypeInferer) infer_unsafe_expression_type(element UnsafeExpression) types.Type {
+	block := element.block()
+	return t.infer_type(block)
+}
+
+pub fn (t &TypeInferer) infer_type_initializer_type(element TypeInitializer, mut visited map[string]types.Type) types.Type {
+	type_element := element.find_child_by_type(.plain_type) or { return types.unknown_type }
+	return t.convert_type(type_element, mut visited)
+}
+
+pub fn (t &TypeInferer) infer_selector_expression_type(element SelectorExpression) types.Type {
+	resolved := element.resolve() or { return types.unknown_type }
+	typ := t.infer_type(resolved)
+	if types.is_generic(typ) {
+		return GenericTypeInferer{}.infer_generic_fetch(resolved, element, typ)
 	}
+	return typ
+}
 
-	if element is ParameterDeclaration {
-		type_ := t.infer_from_plain_type(element)
-		if _ := element.find_child_by_name('variadic') {
-			return types.new_array_type(type_)
-		}
-		return type_
+pub fn (t &TypeInferer) infer_range_type(element Range) types.Type {
+	if element.inclusive() {
+		left := element.left() or { return types.unknown_type }
+		return t.infer_type(left)
 	}
-
-	if element is Block {
-		last_expression := element.last_expression() or { return types.unknown_type }
-		return t.infer_type(last_expression)
-	}
-
-	if element is FunctionOrMethodDeclaration {
-		signature := element.signature() or { return types.unknown_type }
-		return t.process_signature(signature)
-	}
-
-	if element is StaticMethodDeclaration {
-		signature := element.signature() or { return types.unknown_type }
-		return t.process_signature(signature)
-	}
-
-	if element is InterfaceMethodDeclaration {
-		signature := element.signature() or { return types.unknown_type }
-		return t.process_signature(signature)
-	}
-
-	if element is EnumDeclaration {
-		return element.get_type()
-	}
-
-	if element is EnumFieldDeclaration {
-		return element.get_type()
-	}
-
-	if element is TypeReferenceExpression {
-		return t.infer_type_reference_type(element, mut visited)
-	}
-
-	if element is GlobalVarDefinition {
-		type_element := element.find_child_by_type_or_stub(.plain_type) or {
-			return types.unknown_type
-		}
-		return t.convert_type(type_element, mut visited)
-	}
-
-	if element is EmbeddedDefinition {
-		if qualified_type := element.find_child_by_type_or_stub(.qualified_type) {
-			return t.convert_type_inner(qualified_type, mut visited)
-		}
-		if generic_type := element.find_child_by_type_or_stub(.generic_type) {
-			return t.convert_type_inner(generic_type, mut visited)
-		}
-		if ref_expression := element.find_child_by_type_or_stub(.type_reference_expression) {
-			if ref_expression is TypeReferenceExpression {
-				return t.infer_type_reference_type(ref_expression, mut visited)
-			}
-		}
-	}
-
-	return types.unknown_type
+	return types.new_array_type(types.new_primitive_type('int'))
 }
 
 pub fn (t &TypeInferer) process_signature(signature Signature) types.Type {
