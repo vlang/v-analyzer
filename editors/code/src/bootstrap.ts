@@ -27,9 +27,7 @@ export async function bootstrap(): Promise<string> {
 		);
 	}
 
-	const rpath = fs.realpathSync(path);
-	log.info("Using server binary at", path);
-	log.info("Server binary realpath:", rpath);
+	log.info("Server binary path:", path);
 
 	return path;
 }
