@@ -61,14 +61,10 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 		UnaryExpression {
 			return t.infer_unary_expression_type(element)
 		}
-		OrBlockExpression {
-			return t.infer_or_block_expression_type(element)
-		}
-		ResultPropagationExpression {
-			return t.infer_result_propagation_expression_type(element)
-		}
-		OptionPropagationExpression {
-			return t.infer_option_propagation_expression_type(element)
+		OrBlockExpression, ResultPropagationExpression, OptionPropagationExpression {
+			expr := element.expression() or { return types.unknown_type }
+			expr_type := t.infer_type(expr)
+			return types.unwrap_result_or_option_type(expr_type)
 		}
 		IndexExpression {
 			return t.infer_index_expression_type(element)
@@ -206,24 +202,6 @@ pub fn (t &TypeInferer) infer_unary_expression_type(element UnaryExpression) typ
 		'<-' { types.unwrap_channel_type(expr_type) }
 		else { expr_type }
 	}
-}
-
-pub fn (t &TypeInferer) infer_or_block_expression_type(element OrBlockExpression) types.Type {
-	expr := element.expression() or { return types.unknown_type }
-	expr_type := t.infer_type(expr)
-	return types.unwrap_result_or_option_type(expr_type)
-}
-
-pub fn (t &TypeInferer) infer_result_propagation_expression_type(element ResultPropagationExpression) types.Type {
-	expr := element.expression() or { return types.unknown_type }
-	expr_type := t.infer_type(expr)
-	return types.unwrap_result_or_option_type(expr_type)
-}
-
-pub fn (t &TypeInferer) infer_option_propagation_expression_type(element OptionPropagationExpression) types.Type {
-	expr := element.expression() or { return types.unknown_type }
-	expr_type := t.infer_type(expr)
-	return types.unwrap_result_or_option_type(expr_type)
 }
 
 pub fn (t &TypeInferer) infer_index_expression_type(element IndexExpression) types.Type {
