@@ -75,9 +75,6 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 		Range {
 			return t.infer_range_type(element)
 		}
-		FunctionLiteral {
-			return t.infer_function_literal_type(element)
-		}
 		SelectorExpression {
 			return t.infer_selector_expression_type(element)
 		}
@@ -117,14 +114,8 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 		VarDefinition {
 			return t.infer_var_definition_type(element)
 		}
-		ConstantDefinition {
-			return t.infer_constant_definition_type(element)
-		}
-		FieldDeclaration {
-			return t.infer_field_declaration_type(element)
-		}
-		Receiver {
-			return t.infer_receiver_type(element)
+		FieldDeclaration, Receiver {
+			return t.infer_from_plain_type(element)
 		}
 		ParameterDeclaration {
 			return t.infer_parameter_declaration_type(element)
@@ -132,20 +123,13 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 		Block {
 			return t.infer_block_type(element)
 		}
-		FunctionOrMethodDeclaration {
-			return t.infer_function_or_method_declaration_type(element)
-		}
-		StaticMethodDeclaration {
-			return t.infer_static_method_declaration_type(element)
-		}
+		FunctionLiteral, FunctionOrMethodDeclaration, StaticMethodDeclaration,
 		InterfaceMethodDeclaration {
-			return t.infer_interface_method_declaration_type(element)
+			signature := element.signature() or { return types.unknown_type }
+			return t.process_signature(signature)
 		}
-		EnumDeclaration {
-			return t.infer_enum_declaration_type(element)
-		}
-		EnumFieldDeclaration {
-			return t.infer_enum_field_declaration_type(element)
+		EnumDeclaration, EnumFieldDeclaration, ConstantDefinition {
+			return element.get_type()
 		}
 		TypeReferenceExpression {
 			return t.infer_type_reference_type(element, mut visited)
@@ -318,18 +302,6 @@ pub fn (t &TypeInferer) infer_var_definition_type(element VarDefinition) types.T
 	return types.unknown_type
 }
 
-pub fn (t &TypeInferer) infer_constant_definition_type(element ConstantDefinition) types.Type {
-	return element.get_type()
-}
-
-pub fn (t &TypeInferer) infer_field_declaration_type(element FieldDeclaration) types.Type {
-	return t.infer_from_plain_type(element)
-}
-
-pub fn (t &TypeInferer) infer_receiver_type(element Receiver) types.Type {
-	return t.infer_from_plain_type(element)
-}
-
 pub fn (t &TypeInferer) infer_parameter_declaration_type(element ParameterDeclaration) types.Type {
 	type_ := t.infer_from_plain_type(element)
 	if _ := element.find_child_by_name('variadic') {
@@ -341,29 +313,6 @@ pub fn (t &TypeInferer) infer_parameter_declaration_type(element ParameterDeclar
 pub fn (t &TypeInferer) infer_block_type(element Block) types.Type {
 	last_expression := element.last_expression() or { return types.unknown_type }
 	return t.infer_type(last_expression)
-}
-
-pub fn (t &TypeInferer) infer_function_or_method_declaration_type(element FunctionOrMethodDeclaration) types.Type {
-	signature := element.signature() or { return types.unknown_type }
-	return t.process_signature(signature)
-}
-
-pub fn (t &TypeInferer) infer_static_method_declaration_type(element StaticMethodDeclaration) types.Type {
-	signature := element.signature() or { return types.unknown_type }
-	return t.process_signature(signature)
-}
-
-pub fn (t &TypeInferer) infer_interface_method_declaration_type(element InterfaceMethodDeclaration) types.Type {
-	signature := element.signature() or { return types.unknown_type }
-	return t.process_signature(signature)
-}
-
-pub fn (t &TypeInferer) infer_enum_declaration_type(element EnumDeclaration) types.Type {
-	return element.get_type()
-}
-
-pub fn (t &TypeInferer) infer_enum_field_declaration_type(element EnumFieldDeclaration) types.Type {
-	return element.get_type()
 }
 
 pub fn (t &TypeInferer) infer_global_var_definition_type(element GlobalVarDefinition, mut visited map[string]types.Type) types.Type {
@@ -427,11 +376,6 @@ pub fn (t &TypeInferer) infer_selector_expression_type(element SelectorExpressio
 		return GenericTypeInferer{}.infer_generic_fetch(resolved, element, typ)
 	}
 	return typ
-}
-
-pub fn (t &TypeInferer) infer_function_literal_type(element FunctionLiteral) types.Type {
-	signature := element.signature() or { return types.unknown_type }
-	return t.process_signature(signature)
 }
 
 pub fn (t &TypeInferer) infer_range_type(element Range) types.Type {
