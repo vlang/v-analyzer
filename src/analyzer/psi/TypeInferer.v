@@ -114,7 +114,10 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 		VarDefinition {
 			return t.infer_var_definition_type(element)
 		}
-		FieldDeclaration, Receiver {
+		FieldDeclaration {
+			return t.infer_from_plain_type(element)
+		}
+		Receiver {
 			return t.infer_from_plain_type(element)
 		}
 		ParameterDeclaration {
