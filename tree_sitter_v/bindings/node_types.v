@@ -74,6 +74,7 @@ pub enum NodeType {
 	identifier_list
 	if_attribute
 	if_expression
+	implements
 	import_alias
 	import_declaration
 	import_list
@@ -383,6 +384,7 @@ const node_type_name_to_enum = {
 	'identifier_list':                  NodeType.identifier_list
 	'if_attribute':                     NodeType.if_attribute
 	'if_expression':                    NodeType.if_expression
+	'implements':                       NodeType.implements
 	'import_alias':                     NodeType.import_alias
 	'import_declaration':               NodeType.import_declaration
 	'import_list':                      NodeType.import_list
