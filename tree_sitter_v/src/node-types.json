@@ -1795,6 +1795,25 @@
     }
   },
   {
+    "type": "implements",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "qualified_type",
+          "named": true
+        },
+        {
+          "type": "type_reference_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "import_alias",
     "named": true,
     "fields": {},
@@ -3557,7 +3576,6 @@
   {
     "type": "source_file",
     "named": true,
-    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -3792,6 +3810,16 @@
         "types": [
           {
             "type": "generic_parameters",
+            "named": true
+          }
+        ]
+      },
+      "implements": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "implements",
             "named": true
           }
         ]
@@ -4630,6 +4658,10 @@
   },
   {
     "type": "if",
+    "named": false
+  },
+  {
+    "type": "implements",
     "named": false
   },
   {
