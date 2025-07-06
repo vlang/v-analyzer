@@ -324,7 +324,14 @@ module.exports = grammar({
 				choice('struct', 'union'),
 				field('name', $.identifier),
 				optional(field('generic_parameters', $.generic_parameters)),
+				optional(seq('implements', field('implements', $.implements))),
 				$._struct_body,
+			),
+
+		implements: ($) =>
+			seq(
+				choice($.type_reference_expression, $.qualified_type),
+				repeat(seq(',', choice($.type_reference_expression, $.qualified_type)))
 			),
 
 		_struct_body: ($) =>

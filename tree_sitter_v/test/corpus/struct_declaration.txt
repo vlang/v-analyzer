@@ -652,3 +652,52 @@ __global:
       (plain_type
         (type_reference_expression
           (identifier))))))
+
+================================================================================
+Struct with single explicit interface implementation
+================================================================================
+pub struct Foo implements Bar {
+    name string
+}
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (visibility_modifiers)
+    (identifier)
+    (implements
+      (type_reference_expression
+        (identifier)))
+    (struct_field_declaration
+      (identifier)
+      (plain_type
+        (type_reference_expression
+          (identifier))))))
+
+================================================================================
+Struct with multiple explicit interface implementations
+================================================================================
+pub struct Foo implements Interface1, Interface2, qualified.Interface3 {
+    name string
+}
+--------------------------------------------------------------------------------
+
+(source_file
+  (struct_declaration
+    (visibility_modifiers)
+    (identifier)
+    (implements
+      (type_reference_expression
+        (identifier))
+      (type_reference_expression
+        (identifier))
+      (qualified_type
+        (reference_expression
+          (identifier))
+        (type_reference_expression
+          (identifier))))
+    (struct_field_declaration
+      (identifier)
+      (plain_type
+        (type_reference_expression
+          (identifier))))))
