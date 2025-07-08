@@ -613,7 +613,7 @@
 				},
 				{
 					"name": "keyword.$1.v",
-					"match": "(?<!@)\\b(fn|type|typeof|enum|struct|interface|map|assert|sizeof|__offsetof)\\b"
+					"match": "(?<!@)\\b(fn|type|typeof|enum|struct|implements|interface|map|assert|sizeof|__offsetof)\\b"
 				}
 			]
 		},
