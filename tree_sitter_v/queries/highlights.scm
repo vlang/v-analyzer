@@ -53,6 +53,7 @@
  "go"
  "goto"
  "if"
+ "$if"
  "implements"
  "import"
  "in"
