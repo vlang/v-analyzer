@@ -73,6 +73,7 @@
  "shared"
  "static"
  "struct"
+ "implements"
  "type"
  "union"
  "unsafe"
