@@ -2,10 +2,12 @@ module server
 
 import lsp
 import loglib
+import os
 
 pub fn (mut ls LanguageServer) did_change_watched_files(params lsp.DidChangeWatchedFilesParams) {
 	changes := params.changes
 	mut is_rename := false
+	mut structure_changed := false
 
 	// NOTE:
 	// 1. Renaming a file returns two events: one "created" event for the
@@ -17,6 +19,12 @@ pub fn (mut ls LanguageServer) did_change_watched_files(params lsp.DidChangeWatc
 	//    but with no "deleted" event prior to it.
 	for i, change in changes {
 		change_uri := change.uri.normalize()
+
+		filename := os.file_name(change_uri.path())
+		if filename == 'v.mod' || filename == '.git' {
+			structure_changed = true
+		}
+
 		match change.typ {
 			.created {
 				if next_change := changes[i + 1] {
@@ -74,5 +82,14 @@ pub fn (mut ls LanguageServer) did_change_watched_files(params lsp.DidChangeWatc
 		}
 
 		ls.client.log_message(change.str(), .info)
+	}
+
+	if structure_changed {
+		loglib.info('Project structure changed, clearing project root cache')
+		ls.project_resolver.clear()
+
+		for uri, _ in ls.opened_files {
+			ls.run_diagnostics_in_bg(uri)
+		}
 	}
 }
