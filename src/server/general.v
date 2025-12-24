@@ -13,6 +13,7 @@ import server.protocol
 import server.semantic
 import server.progress
 import server.intentions
+import server.workspace
 
 // initialize sends the server capabilities to the client
 pub fn (mut ls LanguageServer) initialize(params lsp.InitializeParams, mut wr ResponseWriter) lsp.InitializeResult {
@@ -23,6 +24,7 @@ pub fn (mut ls LanguageServer) initialize(params lsp.InitializeParams, mut wr Re
 
 	ls.root_uri = params.root_uri
 	ls.status = .initialized
+	ls.project_resolver = workspace.ProjectResolver.new(ls.root_uri.path())
 
 	ls.progress.support_work_done_progress = params.capabilities.window.work_done_progress
 	options := params.initialization_options

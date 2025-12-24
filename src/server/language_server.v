@@ -11,6 +11,7 @@ import loglib
 import server.progress
 import server.protocol
 import server.intentions
+import server.workspace
 
 pub enum ServerStatus {
 	off
@@ -77,6 +78,8 @@ pub mut:
 	progress &progress.Tracker = unsafe { nil }
 	// indexing_mng is used to manage indexing.
 	indexing_mng analyzer.IndexingManager
+	// project_resolver is used to resolve the project root for a given file.
+	project_resolver &workspace.ProjectResolver = unsafe { nil }
 }
 
 pub fn LanguageServer.new(indexing analyzer.IndexingManager) &LanguageServer {

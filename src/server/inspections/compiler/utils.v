@@ -57,13 +57,12 @@ fn parse_compiler_diagnostic(msg string) ?inspections.Report {
 	}
 }
 
-fn exec_compiler_diagnostics(compiler_path string, uri lsp.DocumentUri) ?[]inspections.Report {
-	dir_path := uri.dir_path()
+fn exec_compiler_diagnostics(compiler_path string, uri lsp.DocumentUri, project_root string) ?[]inspections.Report {
 	filepath := uri.path()
-	is_module := !filepath.ends_with('.vv')
-	input_path := if is_module { dir_path } else { filepath }
+	is_script := filepath.ends_with('.vsh') || filepath.ends_with('.vv')
 
-	res := os.execute('${compiler_path} -enable-globals -shared -check ${input_path}')
+	check_target := if is_script { filepath } else { project_root }
+	res := os.execute('${compiler_path} -enable-globals -shared -check ${check_target}')
 
 	if res.exit_code == 0 {
 		return none
@@ -72,6 +71,7 @@ fn exec_compiler_diagnostics(compiler_path string, uri lsp.DocumentUri) ?[]inspe
 	output_lines := res.output.split_into_lines().map(term.strip_ansi(it))
 	errors := split_lines_to_errors(output_lines)
 
+	current_file_abs := os.real_path(filepath)
 	mut reports := []inspections.Report{}
 
 	for error in errors {
@@ -82,29 +82,14 @@ fn exec_compiler_diagnostics(compiler_path string, uri lsp.DocumentUri) ?[]inspe
 			continue
 		}
 
-		file_dir_path := os.dir(report.filepath)
-
-		report_filepath := if os.is_abs_path(file_dir_path) {
-			// do nothing
-			report.filepath
-		} else if file_dir_path == '..' {
-			os.join_path_single(dir_path, report.filepath)
-		} else if start_idx := dir_path.last_index(file_dir_path) {
-			// reported file appears to be in a subdirectory of dir_path
-			dir_path[..start_idx] + report.filepath
-		} else {
-			// reported file appears to be in a parent directory of dir_path
-			os.join_path_single(dir_path, report.filepath)
-		}
-
-		// ignore errors in other files
-		if report_filepath != uri.path() {
+		report_file_abs := os.real_path(report.filepath)
+		if os.to_slash(report_file_abs) != os.to_slash(current_file_abs) {
 			continue
 		}
 
 		reports << inspections.Report{
 			...report
-			filepath: report_filepath
+			filepath: filepath
 		}
 	}
 	return reports

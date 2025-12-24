@@ -15,8 +15,9 @@ pub fn (mut ls LanguageServer) run_diagnostics_in_bg(uri lsp.DocumentUri) {
 
 pub fn (mut ls LanguageServer) run_diagnostics(uri lsp.DocumentUri) {
 	watch := time.new_stopwatch(auto_start: true)
+	project_root := ls.project_resolver.resolve(uri)
 	ls.reporter.clear(uri)
-	ls.reporter.run_all_inspections(uri)
+	ls.reporter.run_all_inspections(uri, project_root)
 	ls.reporter.publish(mut ls.writer, uri)
 
 	loglib.with_fields({
@@ -31,11 +32,11 @@ mut:
 	reports       map[lsp.DocumentUri][]inspections.Report
 }
 
-fn (mut d DiagnosticReporter) run_all_inspections(uri lsp.DocumentUri) {
+fn (mut d DiagnosticReporter) run_all_inspections(uri lsp.DocumentUri, project_root string) {
 	mut source := compiler.CompilerReportsSource{
 		compiler_path: d.compiler_path
 	}
-	d.reports[uri] = source.process(uri)
+	d.reports[uri] = source.process(uri, project_root)
 }
 
 fn (mut d DiagnosticReporter) clear(uri lsp.DocumentUri) {

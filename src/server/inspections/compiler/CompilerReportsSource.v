@@ -8,7 +8,7 @@ pub:
 	compiler_path string
 }
 
-pub fn (mut c CompilerReportsSource) process(uri lsp.DocumentUri) []inspections.Report {
-	reports := exec_compiler_diagnostics(c.compiler_path, uri) or { return [] }
+pub fn (mut c CompilerReportsSource) process(uri lsp.DocumentUri, project_root string) []inspections.Report {
+	reports := exec_compiler_diagnostics(c.compiler_path, uri, project_root) or { return [] }
 	return reports
 }
