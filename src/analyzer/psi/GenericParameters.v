@@ -8,8 +8,8 @@ pub struct GenericParameters {
 
 fn (_ &GenericParameters) stub() {}
 
-pub fn (n &GenericParameters) parameters() []PsiElement  {
-    return n.find_children_by_type_or_stub(.generic_parameter)
+pub fn (n &GenericParameters) parameters() []PsiElement {
+	return n.find_children_by_type_or_stub(.generic_parameter)
 }
 
 pub fn (n &GenericParameters) text_presentation() string {
@@ -23,7 +23,6 @@ pub fn (n &GenericParameters) text_presentation() string {
 		if parameter is PsiNamedElement {
 			sb.write_string(parameter.name())
 		}
-        
 		if index < parameters.len - 1 {
 			sb.write_string(', ')
 		}

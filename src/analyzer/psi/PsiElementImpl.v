@@ -92,14 +92,14 @@ pub fn (n &PsiElementImpl) find_element_at(offset u32) ?PsiElement {
 
 pub fn (n &PsiElementImpl) find_reference_at(offset u32) ?PsiElement {
 	element := n.find_element_at(offset)?
-	if element is ReferenceExpressionBase {
-		return element as PsiElement
-	}
 	if element is Identifier {
 		parent := element.parent()?
 		if parent is ReferenceExpressionBase {
 			return parent as PsiElement
 		}
+	}
+	if element is ReferenceExpressionBase {
+		return element as PsiElement
 	}
 	return none
 }

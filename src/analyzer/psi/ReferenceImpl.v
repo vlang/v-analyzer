@@ -553,13 +553,13 @@ pub fn (r &SubResolver) process_block(mut processor PsiScopeProcessor) bool {
 }
 
 pub fn (r &SubResolver) process_module_clause(mut processor PsiScopeProcessor) bool {
-    file := r.containing_file or { return true }
+	file := r.containing_file or { return true }
 	mod := file.module_clause() or { return true }
 	return processor.execute(mod)
 }
 
 pub fn (r &SubResolver) process_imported_modules(mut processor PsiScopeProcessor) bool {
-    file := r.containing_file or { return true }
+	file := r.containing_file or { return true }
 	search_name := r.element().get_text()
 	import_spec := file.resolve_import_spec(search_name) or { return true }
 

@@ -10,7 +10,7 @@ pub fn (mut ls LanguageServer) workspace_symbol(_ lsp.WorkspaceSymbolParams) ?[]
 	mut workspace_symbols := []lsp.WorkspaceSymbol{cap: workspace_elements.len}
 
 	for elem in workspace_elements {
-        file := elem.containing_file() or { continue }
+		file := elem.containing_file() or { continue }
 		uri := file.uri()
 		module_name := file.module_name() or { '' }
 

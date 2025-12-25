@@ -30,7 +30,7 @@ pub fn (mut ls LanguageServer) type_definition(params lsp.TextDocumentPositionPa
 	typ := types.unwrap_generic_instantiation_type(types.unwrap_pointer_type(psi.infer_type(resolved)))
 	type_element := psi.find_element(typ.qualified_name())?
 
-    containing_file := type_element.containing_file() or { return [] }
+	containing_file := type_element.containing_file() or { return [] }
 	data := new_resolve_result(containing_file, type_element) or { return [] }
 	return [
 		data.to_location_link(element_text_range),

@@ -28,7 +28,7 @@ pub struct C.TSInput {
 mut:
 	payload  voidptr
 	read     fn (payload voidptr, byte_index u32, position C.TSPoint, bytes_read &u32) &char
-	encoding C.TSInputEncoding 
+	encoding C.TSInputEncoding
 }
 
 @[typedef]

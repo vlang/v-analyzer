@@ -442,9 +442,9 @@ pub fn create_element(node AstNode, containing_file ?&PsiFile) PsiElement {
 	}
 
 	return &PsiElementImpl{
-        node: node
-        containing_file: containing_file
-    }
+		node:            node
+		containing_file: containing_file
+	}
 }
 
 @[inline]

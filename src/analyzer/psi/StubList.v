@@ -22,10 +22,10 @@ fn (s StubList) root() &StubBase {
 }
 
 fn (s &StubList) get_stub(id StubId) ?&StubBase {
-    if id < 0 {
-        return none
-    }
-    return s.index_map[id] or { none }
+	if id < 0 {
+		return none
+	}
+	return s.index_map[id] or { none }
 }
 
 fn (mut s StubList) add_stub(mut stub StubBase, parent &StubElement) {
