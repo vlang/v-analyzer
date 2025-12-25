@@ -196,9 +196,12 @@ pub fn (mut t Tester) type_test(name string, filepath string) {
 					expected_type_string := first_child.content()
 
 					if expected_type_string != got_type_string {
+						containing_file := call.containing_file() or {
+							return error('Call expression has no containing file context')
+						}
 						test.state = .failed
 						test.message = '
-								In file ${call.containing_file.path}:${
+								In file ${containing_file.path}:${
 							call.text_range().line + 1}
 
 								Type mismatch.

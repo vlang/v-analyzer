@@ -44,7 +44,7 @@ pub fn (n &VarDefinition) get_type() types.Type {
 
 pub fn (n &VarDefinition) mutability_modifiers() ?&MutabilityModifiers {
 	if mut_expr := n.parent() {
-		if mut_expr.node.type_name == .mutable_expression {
+		if mut_expr.node().type_name == .mutable_expression {
 			modifiers := mut_expr.find_child_by_type(.mutability_modifiers)?
 			if modifiers is MutabilityModifiers {
 				return modifiers

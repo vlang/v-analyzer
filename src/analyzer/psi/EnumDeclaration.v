@@ -12,7 +12,11 @@ pub fn (e &EnumDeclaration) is_public() bool {
 }
 
 pub fn (e &EnumDeclaration) get_type() types.Type {
-	module_fqn := stubs_index.get_module_qualified_name(e.containing_file.path)
+	module_fqn := if file := e.containing_file() {
+		stubs_index.get_module_qualified_name(file.path)
+	} else {
+		''
+	}
 	return types.new_enum_type(e.name(), module_fqn)
 }
 

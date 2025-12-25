@@ -5,12 +5,12 @@ import utils
 
 pub struct ReferenceImpl {
 	element        ReferenceExpressionBase
-	file           &PsiFile
+	file           ?&PsiFile
 	for_types      bool
 	for_attributes bool
 }
 
-pub fn new_reference(file &PsiFile, element ReferenceExpressionBase, for_types bool) &ReferenceImpl {
+pub fn new_reference(file ?&PsiFile, element ReferenceExpressionBase, for_types bool) &ReferenceImpl {
 	return &ReferenceImpl{
 		element:   element
 		file:      file
@@ -18,7 +18,7 @@ pub fn new_reference(file &PsiFile, element ReferenceExpressionBase, for_types b
 	}
 }
 
-pub fn new_attribute_reference(file &PsiFile, element ReferenceExpressionBase) &ReferenceImpl {
+pub fn new_attribute_reference(file ?&PsiFile, element ReferenceExpressionBase) &ReferenceImpl {
 	return &ReferenceImpl{
 		element:        element
 		file:           file
@@ -31,14 +31,16 @@ fn (r &ReferenceImpl) element() PsiElement {
 }
 
 pub fn (r &ReferenceImpl) resolve() ?PsiElement {
+	file := r.file or { return none }
+
 	sub := SubResolver{
-		containing_file: r.file
+		containing_file: file
 		element:         r.element
 		for_types:       r.for_types
 		for_attributes:  r.for_attributes
 	}
 	mut processor := ResolveProcessor{
-		containing_file: r.file
+		containing_file: file
 		ref:             r.element
 		ref_name:        r.element.name()
 	}
@@ -59,7 +61,7 @@ pub fn (r &ReferenceImpl) resolve() ?PsiElement {
 
 pub struct SubResolver {
 pub:
-	containing_file &PsiFile
+	containing_file ?&PsiFile
 	element         ReferenceExpressionBase
 	for_types       bool
 	for_attributes  bool
@@ -100,7 +102,8 @@ pub fn (r &SubResolver) process_qualifier_expression(qualifier PsiElement, mut p
 		}
 
 		if resolved is ModuleClause {
-			module_name := stubs_index.get_module_qualified_name(r.containing_file.path)
+			file := r.containing_file or { return true }
+			module_name := stubs_index.get_module_qualified_name(file.path)
 			current_module_elements := stubs_index.get_all_declarations_from_module(module_name,
 				r.for_types)
 			for elem in current_module_elements {
@@ -374,7 +377,11 @@ pub fn (r &SubResolver) process_unqualified_resolve(mut processor PsiScopeProces
 		}
 	}
 
-	module_name := stubs_index.get_module_qualified_name(r.containing_file.path)
+	module_name := if file := r.containing_file {
+		stubs_index.get_module_qualified_name(file.path)
+	} else {
+		''
+	}
 
 	element := r.element()
 	if element is PsiNamedElement {
@@ -546,13 +553,15 @@ pub fn (r &SubResolver) process_block(mut processor PsiScopeProcessor) bool {
 }
 
 pub fn (r &SubResolver) process_module_clause(mut processor PsiScopeProcessor) bool {
-	mod := r.containing_file.module_clause() or { return true }
+	file := r.containing_file or { return true }
+	mod := file.module_clause() or { return true }
 	return processor.execute(mod)
 }
 
 pub fn (r &SubResolver) process_imported_modules(mut processor PsiScopeProcessor) bool {
+	file := r.containing_file or { return true }
 	search_name := r.element().get_text()
-	import_spec := r.containing_file.resolve_import_spec(search_name) or { return true }
+	import_spec := file.resolve_import_spec(search_name) or { return true }
 
 	if !processor.execute(import_spec) {
 		return false
@@ -625,7 +634,9 @@ pub fn (r &SubResolver) process_struct_type_fields(struct_type types.StructType,
 }
 
 pub fn (r &SubResolver) process_os_module(mut processor PsiScopeProcessor) bool {
-	if !r.containing_file.is_shell_script() {
+	file := r.containing_file or { return true }
+
+	if !file.is_shell_script() {
 		return true
 	}
 

@@ -66,13 +66,14 @@ pub fn (c ConstantDefinition) visibility_modifiers() ?&VisibilityModifiers {
 
 pub fn (c &ConstantDefinition) expression() ?PsiElement {
 	if stub := c.get_stub() {
+		file := c.containing_file() or { return none }
 		// pretty hacky but it works
 		res := parser.parse_code(stub.additional)
 		root := res.tree.root_node()
 		first_child := root.first_child()?
 		next_first_child := first_child.first_child()?
-		file := new_psi_file(c.containing_file.path, res.tree, res.source_text)
-		return create_element(AstNode(next_first_child), file)
+		synthetic_file := new_psi_file(file.path, res.tree, res.source_text)
+		return create_element(AstNode(next_first_child), synthetic_file)
 	}
 	return c.last_child()
 }

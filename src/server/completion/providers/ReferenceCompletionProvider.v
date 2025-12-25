@@ -23,7 +23,7 @@ fn (mut r ReferenceCompletionProvider) add_completion(ctx &completion.Completion
 	}
 
 	parent := element.parent() or { return }
-	containing_file := parent.containing_file
+	containing_file := parent.containing_file()
 
 	if parent is psi.ReferenceExpressionBase {
 		sub := psi.SubResolver{
@@ -49,7 +49,7 @@ fn (mut r ReferenceCompletionProvider) add_completion(ctx &completion.Completion
 fn (mut r ReferenceCompletionProvider) process_fields(ctx &completion.CompletionContext, element psi.PsiElement,
 	already_assigned []string) {
 	grand := element.parent() or { return }
-	if grand.node.type_name != .element_list {
+	if grand.node().type_name != .element_list {
 		return
 	}
 

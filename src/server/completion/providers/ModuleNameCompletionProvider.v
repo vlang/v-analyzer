@@ -7,7 +7,8 @@ import os
 pub struct ModuleNameCompletionProvider {}
 
 fn (_ &ModuleNameCompletionProvider) is_available(ctx &completion.CompletionContext) bool {
-	no_module_clause := if _ := ctx.element.containing_file.module_name() {
+	file := ctx.element.containing_file() or { return false }
+	no_module_clause := if _ := file.module_name() {
 		false
 	} else {
 		true
@@ -16,7 +17,8 @@ fn (_ &ModuleNameCompletionProvider) is_available(ctx &completion.CompletionCont
 }
 
 fn (mut p ModuleNameCompletionProvider) add_completion(ctx &completion.CompletionContext, mut result completion.CompletionResultSet) {
-	dir := os.dir(ctx.element.containing_file.path)
+	file := ctx.element.containing_file() or { return }
+	dir := os.dir(file.path)
 	dir_name := p.transform_module_name(os.file_name(dir))
 
 	result.add_element(lsp.CompletionItem{

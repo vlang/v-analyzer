@@ -3,7 +3,7 @@ module psi
 import strings
 
 pub fn extract_doc_comment(el PsiElement) string {
-	el_start_line := el.node.start_point().row
+	el_start_line := el.node().start_point().row
 	mut comment := el.prev_sibling() or { return '' }
 	if comment !is LineComment {
 		comment = comment.prev_sibling() or { return '' }
@@ -12,14 +12,14 @@ pub fn extract_doc_comment(el PsiElement) string {
 	mut comments := []PsiElement{}
 
 	for comment is LineComment {
-		comment_start_line := comment.node.start_point().row
+		comment_start_line := comment.node().start_point().row
 
 		if comment_start_line + 1 + u32(comments.len) != el_start_line {
 			break
 		}
 
 		line := comment.prev_sibling() or { break }
-		if line.node.start_point().row == comment_start_line {
+		if line.node().start_point().row == comment_start_line {
 			break
 		}
 		comments << comment

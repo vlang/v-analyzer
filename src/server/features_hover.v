@@ -45,9 +45,9 @@ pub fn (mut ls LanguageServer) hover(params lsp.HoverParams) ?lsp.Hover {
 		// Show AST tree for debugging purposes.
 		if grand := element.parent_nth(2) {
 			parent := element.parent()?
-			this := element.type_name() + ': ' + element.node.type_name.str()
-			parent_elem := parent.type_name() + ': ' + parent.node.type_name.str()
-			grand_elem := grand.type_name() + ': ' + grand.node.type_name.str()
+			this := element.type_name() + ': ' + element.node().type_name.str()
+			parent_elem := parent.type_name() + ': ' + parent.node().type_name.str()
+			grand_elem := grand.type_name() + ': ' + grand.node().type_name.str()
 			return lsp.Hover{
 				contents: lsp.hover_markdown_string('```\n' + grand_elem + '\n  ' + parent_elem +
 					'\n   ' + this + '\n```')
@@ -57,7 +57,7 @@ pub fn (mut ls LanguageServer) hover(params lsp.HoverParams) ?lsp.Hover {
 
 		return lsp.Hover{
 			contents: lsp.hover_markdown_string(element.type_name() + ': ' +
-				element.node.type_name.str())
+				element.node().type_name.str())
 			range:    tform.text_range_to_lsp_range(element.text_range())
 		}
 	}

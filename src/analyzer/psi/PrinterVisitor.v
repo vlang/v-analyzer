@@ -23,7 +23,7 @@ fn (mut r PrinterVisitor) visit_element(element PsiElement) {
 }
 
 fn (mut r PrinterVisitor) visit_element_impl(element PsiElement) bool {
-	r.lines << '  '.repeat(r.indent) + '${element.node.type_name}'
+	r.lines << '  '.repeat(r.indent) + '${element.node().type_name}'
 	r.text_lines << '${element.get_text()}'
 	return true
 }

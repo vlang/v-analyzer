@@ -11,7 +11,7 @@ fn (k &PureBlockExpressionCompletionProvider) is_available(ctx &completion.Compl
 
 fn (mut k PureBlockExpressionCompletionProvider) add_completion(ctx &completion.CompletionContext, mut result completion.CompletionResultSet) {
 	one_line := if parent := ctx.element.parent_nth(2) {
-		if parent.node.type_name == .simple_statement {
+		if parent.node().type_name == .simple_statement {
 			false
 		} else {
 			true

@@ -50,11 +50,11 @@ pub fn (r ReferenceExpression) qualifier() ?PsiElement {
 pub fn (r ReferenceExpression) reference() PsiReference {
 	if parent := r.parent() {
 		if parent is ValueAttribute {
-			return new_attribute_reference(r.containing_file, r)
+			return new_attribute_reference(r.containing_file(), r)
 		}
 	}
 
-	return new_reference(r.containing_file, r, false)
+	return new_reference(r.containing_file(), r, false)
 }
 
 pub fn (r ReferenceExpression) resolve() ?PsiElement {

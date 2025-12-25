@@ -118,14 +118,14 @@ pub fn (p &PsiFile) find_element_at_pos(pos Position) ?PsiElement {
 
 pub fn (p &PsiFile) find_reference_at(offset u32) ?ReferenceExpressionBase {
 	element := p.find_element_at(offset)?
-	if element is ReferenceExpressionBase {
-		return element
-	}
 	if element is Identifier {
 		parent := element.parent()?
 		if parent is ReferenceExpressionBase {
 			return parent
 		}
+	}
+	if element is ReferenceExpressionBase {
+		return element
 	}
 	return none
 }

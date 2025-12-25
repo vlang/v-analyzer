@@ -2,7 +2,7 @@ module psi
 
 struct PsiTreeWalker {
 mut:
-	containing_file &PsiFile
+	containing_file ?&PsiFile
 	tree_walker     TreeWalker
 }
 
@@ -13,7 +13,7 @@ pub fn (mut tw PsiTreeWalker) next() ?PsiElement {
 
 pub fn new_psi_tree_walker(root_node PsiElement) PsiTreeWalker {
 	return PsiTreeWalker{
-		tree_walker:     new_tree_walker(root_node.node)
-		containing_file: root_node.containing_file
+		tree_walker:     new_tree_walker(root_node.node())
+		containing_file: root_node.containing_file()
 	}
 }

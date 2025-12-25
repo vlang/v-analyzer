@@ -20,7 +20,8 @@ pub fn (s &InterfaceDeclaration) is_public() bool {
 }
 
 pub fn (s &InterfaceDeclaration) module_name() string {
-	return stubs_index.get_module_qualified_name(s.containing_file.path)
+	file := s.containing_file() or { return '' }
+	return stubs_index.get_module_qualified_name(file.path)
 }
 
 pub fn (s &InterfaceDeclaration) get_type() types.Type {

@@ -14,10 +14,11 @@ pub mut:
 }
 
 pub fn (mut v InlayHintsVisitor) accept(root psi.PsiElement) {
-	v.lines = root.containing_file.source_text.count('\n')
+	file := root.containing_file() or { return }
+	v.lines = file.source_text.count('\n')
 
-	for node in psi.new_tree_walker(root.node) {
-		v.process_node(node, root.containing_file)
+	for node in psi.new_tree_walker(root.node()) {
+		v.process_node(node, file)
 	}
 }
 
@@ -158,12 +159,12 @@ pub fn (mut v InlayHintsVisitor) handle_call_expression(call psi.AstNode, contai
 				}
 
 				arg := arguments[i] or { continue }
-				if arg.node.type_name == .keyed_element {
+				if arg.node().type_name == .keyed_element {
 					// don't show hint for named arguments
 					continue
 				}
 
-				arg_inner := if arg.node.type_name == .mutable_expression {
+				arg_inner := if arg.node().type_name == .mutable_expression {
 					arg.last_child() or { continue }
 				} else {
 					arg

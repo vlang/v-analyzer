@@ -34,7 +34,7 @@ pub fn (c CompletionContext) expression() bool {
 }
 
 pub fn (mut c CompletionContext) compute() {
-	containing_file := c.element.containing_file
+	containing_file := c.element.containing_file() or { return }
 	c.is_test_file = containing_file.is_test_file()
 
 	range := c.element.text_range()
@@ -48,7 +48,7 @@ pub fn (mut c CompletionContext) compute() {
 
 	parent := c.element.parent() or { return }
 
-	match parent.node.type_name {
+	match parent.node().type_name {
 		.import_name { c.is_import_name = true }
 		.keyed_element { c.inside_struct_init_with_keys = true }
 		.type_reference_expression { c.is_type_reference = true }
@@ -58,15 +58,15 @@ pub fn (mut c CompletionContext) compute() {
 
 	if grand := parent.parent() {
 		// Do not consider as reference_expression if it is inside an attribute.
-		if parent.node.type_name == .reference_expression {
-			c.is_expression = grand.node.type_name != .key_value_attribute
-			if grand.node.type_name == .element_list
+		if parent.node().type_name == .reference_expression {
+			c.is_expression = grand.node().type_name != .key_value_attribute
+			if grand.node().type_name == .element_list
 				|| grand.prev_sibling_of_type(.keyed_element) != none {
 				c.inside_struct_init_with_keys = true
 			}
 		}
 
-		match grand.node.type_name {
+		match grand.node().type_name {
 			.simple_statement { c.is_statement = true }
 			.assert_statement { c.is_assert_statement = true }
 			.value_attribute { c.is_attribute = true }
@@ -75,7 +75,7 @@ pub fn (mut c CompletionContext) compute() {
 		}
 
 		if grand_grand := grand.parent() {
-			match grand_grand.node.type_name {
+			match grand_grand.node().type_name {
 				.source_file { c.is_top_level = true }
 				.for_statement, .compile_time_for_statement { c.inside_loop = true }
 				else {}
