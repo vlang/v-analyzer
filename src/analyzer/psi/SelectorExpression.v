@@ -15,8 +15,26 @@ fn (n &SelectorExpression) qualifier() ?PsiElement {
 }
 
 fn (n &SelectorExpression) reference() PsiReference {
-	ref_expr := n.right() or { panic('no right element for SelectorExpression') }
-	return new_reference(n.containing_file, ref_expr as ReferenceExpressionBase, false)
+	right := n.right() or { panic('no right element for SelectorExpression') }
+	if right is FieldName {
+		if child := right.reference_expression() {
+			return new_reference(n.containing_file(), child, false)
+		}
+	}
+	if right is ReferenceExpression {
+		return new_reference(n.containing_file(), right, false)
+	}
+	if right is TypeReferenceExpression {
+		return new_reference(n.containing_file(), right, true)
+	}
+
+	if right is Identifier {
+		return new_reference(n.containing_file(), right, false)
+	}
+	ident := &Identifier{
+		PsiElementImpl: new_psi_node(n.containing_file(), right.node())
+	}
+	return new_reference(n.containing_file(), ident, false)
 }
 
 fn (n &SelectorExpression) resolve() ?PsiElement {
