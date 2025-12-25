@@ -5,7 +5,11 @@ import os
 pub struct SymlinkToolchainFlavor {}
 
 fn (s &SymlinkToolchainFlavor) get_home_page_candidates() []string {
-	symlink_path_candidates := ['/usr/local/bin/v', '${os.home_dir()}/.local/bin/v']
+	symlink_path_candidates := [
+		'/usr/bin/v',
+		'/usr/local/bin/v',
+		'${os.home_dir()}/.local/bin/v',
+	]
 
 	mut result := []string{}
 

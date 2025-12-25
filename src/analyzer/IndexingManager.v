@@ -15,6 +15,11 @@ pub fn IndexingManager.new() &IndexingManager {
 	}
 }
 
+pub fn (mut a IndexingManager) setup_empty_indexes() {
+	a.stub_index = psi.new_stubs_index([])
+	stubs_index = a.stub_index
+}
+
 pub fn (mut a IndexingManager) setup_stub_indexes() {
 	mut sinks := a.all_sinks()
 	a.stub_index = psi.new_stubs_index(sinks)

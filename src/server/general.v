@@ -95,6 +95,8 @@ pub fn (mut ls LanguageServer) initialize(params lsp.InitializeParams, mut wr Re
 
 pub fn (mut ls LanguageServer) initialized(mut wr ResponseWriter) {
 	loglib.info('-------- New session -------- ')
+	ls.indexing_mng.setup_empty_indexes()
+
 	if ls.paths.vexe == '' || ls.paths.vlib_root == '' {
 		ls.client.send_server_status(health: 'error', quiescent: true)
 		return
