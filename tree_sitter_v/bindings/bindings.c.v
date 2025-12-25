@@ -28,7 +28,7 @@ pub struct C.TSInput {
 mut:
 	payload  voidptr
 	read     fn (payload voidptr, byte_index u32, position C.TSPoint, bytes_read &u32) &char
-	encoding int
+	encoding C.TSInputEncoding 
 }
 
 @[typedef]
@@ -105,7 +105,7 @@ fn (mut p C.TSParser) parse_bytes_with_old_tree(content []u8, old_tree &TSTree) 
 	return p.parse(old_tree,
 		payload:  &content
 		read:     byte_array_input_read
-		encoding: int(TSVInputEncoding.utf8)
+		encoding: TSVInputEncoding.utf8
 	)
 }
 
@@ -173,7 +173,9 @@ fn (tree &TSTree) free() {
 
 @[typedef]
 pub struct C.TSNode {
-	tree &TSTree
+	context [4]u32
+	id      voidptr
+	tree    &TSTree
 }
 
 fn C.ts_node_string(node C.TSNode) &char

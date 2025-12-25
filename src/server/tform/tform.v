@@ -5,17 +5,20 @@ import analyzer.psi
 
 // elements_to_locations converts an array of PsiElements to a slice of LSP locations.
 pub fn elements_to_locations(elements []psi.PsiElement) []lsp.Location {
-	return elements.map(fn (element psi.PsiElement) lsp.Location {
+	mut locations := []lsp.Location{cap: elements.len}
+	for element in elements {
+		file := element.containing_file() or { continue }
 		range := if element is psi.PsiNamedElement {
 			element.identifier_text_range()
 		} else {
 			element.text_range()
 		}
-		return lsp.Location{
-			uri:   element.containing_file.uri()
+		locations << lsp.Location{
+			uri:   file.uri()
 			range: text_range_to_lsp_range(range)
 		}
-	})
+	}
+	return locations
 }
 
 // text_range_to_lsp_range converts a TextRange to an LSP Range.

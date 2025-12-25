@@ -25,7 +25,7 @@ pub fn (v ResolveSemanticVisitor) accept(root psi.PsiElement) []SemanticToken {
 	mut result := []SemanticToken{cap: 400}
 
 	for node in psi.new_psi_tree_walker(root) {
-		range := node.node.range()
+		range := node.node().range()
 		if v.with_range && (range.end_byte <= v.start || range.start_byte >= v.end) {
 			continue
 		}
@@ -41,14 +41,14 @@ fn (_ ResolveSemanticVisitor) highlight_node(node psi.PsiElement, root psi.PsiEl
 	if node is psi.VarDefinition {
 		if node.is_mutable() {
 			if identifier := node.identifier() {
-				result << element_to_semantic(identifier.node, .variable, 'mutable')
+				result << element_to_semantic(identifier.node(), .variable, 'mutable')
 			}
 		}
 	}
 
 	res, first_child := if node is psi.ReferenceExpression || node is psi.TypeReferenceExpression {
 		res := (node as psi.ReferenceExpressionBase).resolve() or { return }
-		first_child := (node as psi.PsiElement).node.first_child() or { return }
+		first_child := (node as psi.PsiElement).node().first_child() or { return }
 		res, first_child
 	} else {
 		return
@@ -91,7 +91,8 @@ fn (_ ResolveSemanticVisitor) highlight_node(node psi.PsiElement, root psi.PsiEl
 	} else if res is psi.ModuleClause {
 		result << element_to_semantic(first_child, .namespace)
 	} else if res is psi.TypeAliasDeclaration {
-		from_stubs := res.containing_file.path.contains('stubs')
+		file := res.containing_file() or { return }
+		from_stubs := file.path.contains('stubs')
 		if !from_stubs {
 			result << element_to_semantic(first_child, .type_)
 		}

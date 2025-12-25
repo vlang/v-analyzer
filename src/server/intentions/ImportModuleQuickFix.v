@@ -47,7 +47,7 @@ fn (_ &ImportModuleQuickFix) invoke(ctx IntentionContext) ?lsp.WorkspaceEdit {
 	}
 
 	mod := modules.first()
-	file := mod.containing_file
+	file := mod.containing_file() or { return none }
 	module_fqn := file.module_fqn()
 
 	imports := ctx.containing_file.get_imports()

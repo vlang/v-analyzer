@@ -24,7 +24,8 @@ pub fn (a &TypeAliasDeclaration) is_public() bool {
 }
 
 pub fn (a &TypeAliasDeclaration) module_name() string {
-	return stubs_index.get_module_qualified_name(a.containing_file.path)
+	file := a.containing_file() or { return '' }
+	return stubs_index.get_module_qualified_name(file.path)
 }
 
 pub fn (a TypeAliasDeclaration) doc_comment() string {

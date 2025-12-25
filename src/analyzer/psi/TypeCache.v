@@ -49,6 +49,7 @@ pub fn (mut t TypeCache) clear() {
 
 @[inline]
 fn (_ &TypeCache) element_fingerprint(element PsiElement) string {
+	file := element.containing_file() or { return '' }
 	range := element.text_range()
-	return '${element.containing_file.path}:${element.node.type_name}:${range.line}:${range.column}:${range.end_column}:${range.end_line}'
+	return '${file.path}:${element.node().type_name}:${range.line}:${range.column}:${range.end_column}:${range.end_line}'
 }

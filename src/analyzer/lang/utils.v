@@ -62,7 +62,9 @@ pub fn get_zero_value_for(typ types.Type) string {
 }
 
 pub fn is_same_module(context psi.PsiElement, element psi.PsiElement) bool {
-	context_module_fqn := context.containing_file.module_fqn()
-	element_module_fqn := element.containing_file.module_fqn()
+	context_file := context.containing_file() or { return false }
+	element_file := element.containing_file() or { return false }
+	context_module_fqn := context_file.module_fqn()
+	element_module_fqn := element_file.module_fqn()
 	return context_module_fqn == element_module_fqn
 }

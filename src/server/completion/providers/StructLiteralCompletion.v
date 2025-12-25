@@ -37,7 +37,7 @@ pub fn (s &StructLiteralCompletion) allowed_variants(ctx &completion.CompletionC
 		parent = parent.parent() or { return .none_ }
 	}
 
-	if parent.node.type_name != .element_list {
+	if parent.node().type_name != .element_list {
 		return .none_
 	}
 
@@ -65,7 +65,7 @@ pub fn (s &StructLiteralCompletion) allowed_variants(ctx &completion.CompletionC
 			continue
 		}
 
-		key_value := initializer.node.type_name == .keyed_element
+		key_value := initializer.node().type_name == .keyed_element
 		has_field_value_initializers = has_field_value_initializers || key_value
 		has_value_initializers = has_value_initializers || !key_value
 	}
@@ -83,7 +83,7 @@ pub fn (s &StructLiteralCompletion) already_assigned_fields(elements []psi.PsiEl
 	mut res := []string{cap: elements.len}
 
 	for element in elements {
-		if element.node.type_name == .keyed_element {
+		if element.node().type_name == .keyed_element {
 			if key := element.first_child() {
 				res << key.get_text()
 			}

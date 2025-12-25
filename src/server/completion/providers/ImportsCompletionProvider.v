@@ -11,7 +11,7 @@ fn (_ &ImportsCompletionProvider) is_available(ctx &completion.CompletionContext
 }
 
 fn (mut _ ImportsCompletionProvider) add_completion(ctx &completion.CompletionContext, mut result completion.CompletionResultSet) {
-	file := ctx.element.containing_file
+	file := ctx.element.containing_file() or { return }
 
 	imports := file.get_imports()
 	imports_names := imports.map(it.import_name())

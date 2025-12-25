@@ -21,12 +21,13 @@ pub fn (mut c ReferenceCompletionProcessor) elements() []lsp.CompletionItem {
 }
 
 fn (mut c ReferenceCompletionProcessor) is_local_resolve(element psi.PsiElement) bool {
-	element_module_fqn := element.containing_file.module_fqn()
+	file := element.containing_file() or { return false }
+	element_module_fqn := file.module_fqn()
 	equal := c.module_fqn == element_module_fqn
 	if equal && c.module_fqn == 'main' {
 		// We check that the module matches, but if it is main, then we need to check
 		// that the file is in the workspace.
-		return element.containing_file.path.starts_with(c.root)
+		return file.path.starts_with(c.root)
 	}
 	return equal
 }
@@ -109,11 +110,15 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 		}
 
 		text_ranga := c.ctx.element.text_range()
-		symbol := c.ctx.element.containing_file.symbol_at(psi.TextRange{
-			line:   text_ranga.line
-			column: text_ranga.end_column + 1
-		})
-		paren_after_cursor := symbol == `(`
+		paren_after_cursor := if ctx_file := c.ctx.element.containing_file() {
+			sym := ctx_file.symbol_at(psi.TextRange{
+				line:   text_ranga.line
+				column: text_ranga.end_column + 1
+			})
+			sym == `(`
+		} else {
+			false
+		}
 
 		mut insert_text_builder := strings.new_builder(20)
 		insert_text_builder.write_string(insert_name)
@@ -169,11 +174,15 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 		}
 
 		text_ranga := c.ctx.element.text_range()
-		symbol := c.ctx.element.containing_file.symbol_at(psi.TextRange{
-			line:   text_ranga.line
-			column: text_ranga.end_column + 1
-		})
-		paren_after_cursor := symbol == `(`
+		paren_after_cursor := if ctx_file := c.ctx.element.containing_file() {
+			sym := ctx_file.symbol_at(psi.TextRange{
+				line:   text_ranga.line
+				column: text_ranga.end_column + 1
+			})
+			sym == `{`
+		} else {
+			false
+		}
 
 		mut insert_text_builder := strings.new_builder(20)
 		insert_text_builder.write_string(insert_name)
@@ -214,11 +223,15 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 		}
 
 		text_ranga := c.ctx.element.text_range()
-		symbol := c.ctx.element.containing_file.symbol_at(psi.TextRange{
-			line:   text_ranga.line
-			column: text_ranga.end_column + 1
-		})
-		paren_after_cursor := symbol == `{`
+		paren_after_cursor := if ctx_file := c.ctx.element.containing_file() {
+			sym := ctx_file.symbol_at(psi.TextRange{
+				line:   text_ranga.line
+				column: text_ranga.end_column + 1
+			})
+			sym == `{`
+		} else {
+			false
+		}
 
 		insert_text := if c.ctx.is_type_reference || paren_after_cursor {
 			name // if it is a reference to a type, then insert only the name
@@ -333,7 +346,8 @@ fn (mut c ReferenceCompletionProcessor) execute(element psi.PsiElement) bool {
 	}
 
 	if element is psi.GlobalVarDefinition {
-		module_name := element.containing_file.module_fqn()
+		file := element.containing_file()
+		module_name := if file != none { file.module_fqn() } else { '' }
 		c.add_item(
 			label:         element.name()
 			label_details: lsp.CompletionItemLabelDetails{

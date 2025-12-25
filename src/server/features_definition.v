@@ -25,7 +25,8 @@ pub fn (mut ls LanguageServer) definition(params lsp.TextDocumentPositionParams)
 		return none
 	}
 
-	data := new_resolve_result(resolved.containing_file(), resolved) or { return [] }
+	containing_file := resolved.containing_file() or { return [] }
+	data := new_resolve_result(containing_file, resolved) or { return [] }
 	return [
 		data.to_location_link(element.text_range()),
 	]

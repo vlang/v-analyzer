@@ -30,7 +30,7 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 
 	mut visited := map[string]types.Type{}
 
-	match element.node.type_name {
+	match element.node().type_name {
 		.in_expression, .is_expression, .select_expression {
 			return types.new_primitive_type('bool')
 		}
@@ -162,7 +162,7 @@ pub fn (t &TypeInferer) infer_binary_expression_type(element BinaryExpression) t
 		}
 		'+', '-', '|', '^', '&', '*', '/' {
 			left := element.left() or { return types.unknown_type }
-			if left.node.type_name != .literal {
+			if left.node().type_name != .literal {
 				return t.infer_type(left)
 			}
 			right := element.right() or { return types.unknown_type }
@@ -242,7 +242,8 @@ pub fn (t &TypeInferer) infer_array_creation_type(element ArrayCreation) types.T
 }
 
 pub fn (t &TypeInferer) infer_map_init_expression_type(element MapInitExpression) types.Type {
-	module_fqn := element.containing_file.module_fqn()
+	file := element.containing_file() or { return types.unknown_type }
+	module_fqn := file.module_fqn()
 	key_values := element.key_values()
 	if key_values.len == 0 {
 		return types.new_map_type(module_fqn, types.unknown_type, types.unknown_type)
@@ -272,7 +273,7 @@ pub fn (t &TypeInferer) infer_call_expression_type(element CallExpression, mut v
 
 pub fn (t &TypeInferer) infer_var_definition_type(element VarDefinition) types.Type {
 	grand := element.parent_nth(2) or { return types.unknown_type }
-	if grand.node.type_name == .range_clause {
+	if grand.node().type_name == .range_clause {
 		return t.process_range_clause(element, grand)
 	}
 
@@ -401,8 +402,12 @@ pub fn (t &TypeInferer) process_signature(signature Signature) types.Type {
 	result := signature.result()
 	mut visited := map[string]types.Type{}
 	result_type := t.convert_type(result, mut visited)
-	return types.new_function_type(signature.containing_file.module_fqn(), param_types,
-		result_type, result == none)
+	module_fqn := if file := signature.containing_file() {
+		file.module_fqn()
+	} else {
+		''
+	}
+	return types.new_function_type(module_fqn, param_types, result_type, result == none)
 }
 
 pub fn (t &TypeInferer) process_range_clause(element PsiElement, range PsiElement) types.Type {
@@ -593,36 +598,36 @@ pub fn (_ &TypeInferer) process_map_method_call(element FunctionOrMethodDeclarat
 
 pub fn (_ &TypeInferer) infer_literal_type(element Literal) types.Type {
 	child := element.first_child() or { return types.unknown_type }
-	if child.node.type_name == .interpreted_string_literal
-		|| child.node.type_name == .raw_string_literal {
+	if child.node().type_name == .interpreted_string_literal
+		|| child.node().type_name == .raw_string_literal {
 		return types.string_type
 	}
 
-	if child.node.type_name == .c_string_literal {
+	if child.node().type_name == .c_string_literal {
 		return types.new_pointer_type(types.new_primitive_type('u8'))
 	}
 
-	if child.node.type_name == .int_literal {
+	if child.node().type_name == .int_literal {
 		return types.new_primitive_type('int')
 	}
 
-	if child.node.type_name == .float_literal {
+	if child.node().type_name == .float_literal {
 		return types.new_primitive_type('f64')
 	}
 
-	if child.node.type_name == .rune_literal {
+	if child.node().type_name == .rune_literal {
 		return types.new_primitive_type('rune')
 	}
 
-	if child.node.type_name == .true_ || child.node.type_name == .false_ {
+	if child.node().type_name == .true_ || child.node().type_name == .false_ {
 		return types.new_primitive_type('bool')
 	}
 
-	if child.node.type_name == .nil_ {
+	if child.node().type_name == .nil_ {
 		return types.new_primitive_type('voidptr')
 	}
 
-	if child.node.type_name == .none_ {
+	if child.node().type_name == .none_ {
 		return types.new_primitive_type('none')
 	}
 
@@ -719,7 +724,8 @@ pub fn (t &TypeInferer) convert_type_inner(element PsiElement, mut visited map[s
 	}
 
 	if element.element_type() == .map_type {
-		module_fqn := element.containing_file.module_fqn()
+		file := element.containing_file() or { return types.unknown_type }
+		module_fqn := file.module_fqn()
 		types_inner := element.find_children_by_type_or_stub(.plain_type)
 		if types_inner.len != 2 {
 			return types.new_map_type(module_fqn, types.unknown_type, types.unknown_type)
@@ -896,7 +902,7 @@ pub fn (t &TypeInferer) infer_context_type(elem ?PsiElement) types.Type {
 			typ := t.infer_type(called)
 
 			if typ is types.FunctionType {
-				index := call_expression.parameter_index_on_offset(parent.node.start_byte())
+				index := call_expression.parameter_index_on_offset(parent.node().start_byte())
 				param_type := typ.params[index] or { return types.unknown_type }
 				return param_type
 			}

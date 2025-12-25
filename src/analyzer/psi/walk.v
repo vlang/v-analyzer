@@ -39,5 +39,5 @@ fn (r &Inspector) visit_element(element PsiElement) {
 }
 
 fn (i &Inspector) visit_element_impl(element PsiElement) bool {
-	return i.cb(create_element(element.node, element.containing_file))
+	return i.cb(create_element(element.node(), element.containing_file()))
 }

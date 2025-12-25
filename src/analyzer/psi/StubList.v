@@ -21,6 +21,13 @@ fn (s StubList) root() &StubBase {
 	}
 }
 
+fn (s &StubList) get_stub(id StubId) ?&StubBase {
+    if id < 0 {
+        return none
+    }
+    return s.index_map[id] or { none }
+}
+
 fn (mut s StubList) add_stub(mut stub StubBase, parent &StubElement) {
 	stub_id := s.index_map.len
 	stub.id = stub_id
@@ -112,12 +119,4 @@ fn (s &StubList) next_sibling(id StubId) ?&StubElement {
 
 	prev_id := children_ids[index + 1] or { return none }
 	return s.index_map[prev_id] or { return none }
-}
-
-fn (s &StubList) get_stub(id StubId) ?&StubBase {
-	stub := s.index_map[id] or { return none }
-	if isnil(stub) {
-		return none
-	}
-	return stub
 }

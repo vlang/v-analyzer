@@ -55,7 +55,8 @@ pub fn (f &EnumFieldDeclaration) get_type() types.Type {
 
 pub fn (f &EnumFieldDeclaration) fingerprint() string {
 	owner := f.owner() or { return '' }
-	return '${f.containing_file.path}:${f.node.start_point()}${owner.name()}.${f.name()}'
+	file := f.containing_file() or { return '' }
+	return '${file.path}:${f.node.start_point()}${owner.name()}.${f.name()}'
 }
 
 pub fn (f &EnumFieldDeclaration) value() ?PsiElement {
@@ -64,12 +65,13 @@ pub fn (f &EnumFieldDeclaration) value() ?PsiElement {
 			return none
 		}
 
+		file := f.containing_file() or { return none }
 		res := parser.parse_code(stub.additional)
 		root := res.tree.root_node()
 		first_child := root.first_child()?
 		next_first_child := first_child.first_child()?
-		file := new_psi_file(f.containing_file.path, res.tree, res.source_text)
-		return create_element(next_first_child, file)
+		synthetic_file := new_psi_file(file.path, res.tree, res.source_text)
+		return create_element(next_first_child, synthetic_file)
 	}
 
 	return f.find_child_by_name('value')

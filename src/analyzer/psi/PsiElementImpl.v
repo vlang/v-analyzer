@@ -5,17 +5,16 @@ import tree_sitter_v.bindings
 pub struct PsiElementImpl {
 pub:
 	node            AstNode // base node from Tree Sitter
-	containing_file &PsiFile = unsafe { nil }
+	containing_file ?&PsiFile
 	// stubs related
-	stub_id    StubId    = non_stubbed_element
-	stubs_list &StubList = unsafe { nil }
+	stub_id    StubId = non_stubbed_element
+	stubs_list ?&StubList
 }
 
-pub fn new_psi_node(containing_file &PsiFile, node AstNode) PsiElementImpl {
+pub fn new_psi_node(containing_file ?&PsiFile, node AstNode) PsiElementImpl {
 	return PsiElementImpl{
 		node:            node
 		containing_file: containing_file
-		stubs_list:      unsafe { nil }
 	}
 }
 
@@ -28,40 +27,37 @@ fn new_psi_node_from_stub(id StubId, stubs_list &StubList) PsiElementImpl {
 	}
 }
 
+pub fn (n &PsiElementImpl) stub_id() StubId {
+	return n.stub_id
+}
+
 pub fn (n &PsiElementImpl) stub_based() bool {
-	return n.stub_id != non_stubbed_element && !isnil(n.stubs_list)
+	return n.stubs_list != none
+}
+
+pub fn (n &PsiElementImpl) get_stub() ?&StubBase {
+	list := n.stub_list()?
+	return list.get_stub(n.stub_id)
+}
+
+pub fn (n &PsiElementImpl) stub_list() ?&StubList {
+	return n.stubs_list
 }
 
 pub fn (n &PsiElementImpl) node() AstNode {
 	return n.node
 }
 
-pub fn (n &PsiElementImpl) get_stub() ?&StubBase {
-	if !n.stub_based() {
-		return none
-	}
-
-	return n.stubs_list.get_stub(n.stub_id)
-}
-
-pub fn (n &PsiElementImpl) stub_list() &StubList {
-	return n.stubs_list
-}
-
 pub fn (n &PsiElementImpl) element_type() bindings.NodeType {
 	if stub := n.get_stub() {
 		return stub.element_type()
 	}
-	if isnil(n.node) {
-		return .unknown
-	}
-	return n.node.type_name
+	return n.node().type_name
 }
 
-pub fn (n &PsiElementImpl) containing_file() &PsiFile {
-	if n.stub_based() {
-		path := n.stubs_list.path
-		return new_stub_psi_file(path, n.stubs_list)
+pub fn (n &PsiElementImpl) containing_file() ?&PsiFile {
+	if list := n.stubs_list {
+		return new_stub_psi_file(list.path, list)
 	}
 
 	return n.containing_file
@@ -88,7 +84,7 @@ pub fn (n &PsiElementImpl) accept_mut(mut visitor MutablePsiElementVisitor) {
 }
 
 pub fn (n &PsiElementImpl) find_element_at(offset u32) ?PsiElement {
-	start_byte := if n.node.type_name == .source_file { u32(0) } else { n.node.start_byte() }
+	start_byte := if n.node().type_name == .source_file { u32(0) } else { n.node.start_byte() }
 	abs_offset := start_byte + offset
 	el := n.node.descendant_for_byte_range(abs_offset, abs_offset)?
 	return create_element(el, n.containing_file)
@@ -209,7 +205,7 @@ pub fn (n &PsiElementImpl) sibling_of_type_backward(typ bindings.NodeType) ?PsiE
 }
 
 pub fn (n &PsiElementImpl) parent_of_type_or_self(typ bindings.NodeType) ?PsiElement {
-	if n.node.type_name == typ {
+	if n.node().type_name == typ {
 		return create_element(n.node, n.containing_file)
 	}
 	mut parent := n.parent()?
@@ -405,7 +401,11 @@ pub fn (n &PsiElementImpl) get_text() string {
 		return stub.text
 	}
 
-	return n.node.text(n.containing_file.source_text)
+	if file := n.containing_file() {
+		return n.node.text(file.source_text)
+	}
+
+	return ''
 }
 
 pub fn (n &PsiElementImpl) text_matches(value string) bool {
@@ -413,7 +413,11 @@ pub fn (n &PsiElementImpl) text_matches(value string) bool {
 		return stub.text == value
 	}
 
-	return n.node.text_matches(n.containing_file.source_text, value)
+	if file := n.containing_file() {
+		return n.node.text_matches(file.source_text, value)
+	}
+
+	return false
 }
 
 pub fn (n &PsiElementImpl) text_range() TextRange {

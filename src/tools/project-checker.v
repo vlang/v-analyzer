@@ -121,7 +121,7 @@ pub fn (mut c Checker) check_file(path string) []ErrorInfo {
 
 pub fn (mut c Checker) check_node(path string, node AstNode) []ErrorInfo {
 	mut errors := []ErrorInfo{}
-	if node.type_name == .error {
+	if node().type_name == .error {
 		errors << c.create_error(path, node)
 	}
 

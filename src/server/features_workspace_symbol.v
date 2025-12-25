@@ -10,8 +10,9 @@ pub fn (mut ls LanguageServer) workspace_symbol(_ lsp.WorkspaceSymbolParams) ?[]
 	mut workspace_symbols := []lsp.WorkspaceSymbol{cap: workspace_elements.len}
 
 	for elem in workspace_elements {
-		uri := elem.containing_file.uri()
-		module_name := elem.containing_file.module_name() or { '' }
+        file := elem.containing_file() or { continue }
+		uri := file.uri()
+		module_name := file.module_name() or { '' }
 
 		if elem is psi.PsiNamedElement {
 			name := elem.name()

@@ -1,6 +1,6 @@
 module psi
 
-pub fn create_element(node AstNode, containing_file &PsiFile) PsiElement {
+pub fn create_element(node AstNode, containing_file ?&PsiFile) PsiElement {
 	base_node := new_psi_node(containing_file, node)
 
 	if node.type_name == .module_clause {
@@ -445,7 +445,7 @@ pub fn create_element(node AstNode, containing_file &PsiFile) PsiElement {
 }
 
 @[inline]
-pub fn node_to_var_definition(node AstNode, containing_file &PsiFile, base_node ?PsiElementImpl) &VarDefinition {
+pub fn node_to_var_definition(node AstNode, containing_file ?&PsiFile, base_node ?PsiElementImpl) &VarDefinition {
 	if node.type_name == .var_definition {
 		return &VarDefinition{
 			PsiElementImpl: base_node or { new_psi_node(containing_file, node) }

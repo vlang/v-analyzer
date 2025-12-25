@@ -27,7 +27,7 @@ pub:
 }
 
 pub fn references(element psi.PsiElement, params SearchParams) []psi.PsiElement {
-	containing_file := element.containing_file
+	containing_file := element.containing_file() or { return [] }
 	return ReferencesSearch{
 		params:          params
 		containing_file: containing_file
@@ -59,8 +59,8 @@ pub fn (r &ReferencesSearch) search(element psi.PsiElement) []psi.PsiElement {
 	if resolved is psi.ImportName {
 		import_spec := resolved.parent_of_type(.import_spec) or { return [] }
 		if import_spec is psi.ImportSpec {
-			root := element.containing_file.root
-			return r.search_in_scope(import_spec, root)
+			file := element.containing_file() or { return [] }
+			return r.search_in_scope(import_spec, file.root())
 		}
 		return []
 	}
@@ -116,7 +116,9 @@ pub fn (r &ReferencesSearch) search_module_import(element psi.PsiNamedElement) [
 	}
 
 	mut result := []psi.PsiElement{cap: 10}
-	file_sink := (element as psi.PsiElement).containing_file.index_sink() or { return [] }
+	psi_element := element as psi.PsiElement
+	file := psi_element.containing_file() or { return [] }
+	file_sink := file.index_sink() or { return [] }
 	module_name := file_sink.module_fqn()
 	depends_sinks := stubs_index.get_all_sink_depends_on(module_name)
 

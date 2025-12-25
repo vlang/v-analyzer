@@ -27,7 +27,7 @@ pub fn new_dumb_aware_semantic_visitor(range lsp.Range, containing_file &psi.Psi
 pub fn (v DumbAwareSemanticVisitor) accept(root psi.PsiElement) []SemanticToken {
 	mut result := []SemanticToken{cap: 500}
 
-	for node in psi.new_tree_walker(root.node) {
+	for node in psi.new_tree_walker(root.node()) {
 		range := node.range()
 		if v.with_range && (range.end_byte <= v.start || range.start_byte >= v.end) {
 			continue
@@ -41,6 +41,9 @@ pub fn (v DumbAwareSemanticVisitor) accept(root psi.PsiElement) []SemanticToken 
 
 @[inline]
 fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiElement, mut result []SemanticToken) {
+	containing_file := root.containing_file() or { return }
+	source_text := containing_file.source_text
+
 	if node.type_name == .enum_field_definition {
 		if first_child := node.first_child() {
 			result << element_to_semantic(first_child, .enum_member)
@@ -84,7 +87,7 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 			result << element_to_semantic(last_child, .type_)
 		}
 	} else if node.type_name == .unknown {
-		text := node.text(root.containing_file.source_text)
+		text := node.text(source_text)
 
 		if text == 'sql' {
 			if parent := node.parent() {
@@ -120,7 +123,7 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 			}
 		}
 	} else if node.type_name == .reference_expression {
-		def := psi.node_to_var_definition(node, root.containing_file, none)
+		def := psi.node_to_var_definition(node, containing_file, none)
 		if !isnil(def) {
 			if def.is_mutable() {
 				result << element_to_semantic(node, .variable, 'mutable')
@@ -129,7 +132,7 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 			}
 		}
 
-		first_char := node.first_char(root.containing_file.source_text)
+		first_char := node.first_char(source_text)
 		if first_char == `@` || first_char == `$` {
 			result << element_to_semantic(node, .property) // not a best variant...
 		}
@@ -151,7 +154,7 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 		}
 	} else if node.type_name == .function_declaration {
 		if first_child := node.child_by_field_name('name') {
-			first_char := first_child.first_char(root.containing_file.source_text)
+			first_char := first_child.first_char(source_text)
 			if first_char in [`@`, `$`] {
 				// tweak highlighting for @lock/@rlock
 				result << element_to_semantic(first_child, .function)

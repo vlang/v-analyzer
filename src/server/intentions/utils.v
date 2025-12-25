@@ -13,7 +13,7 @@ fn find_declaration_at_pos(file &psi.PsiFile, pos psi.Position) ?psi.PsiNamedEle
 		return parent
 	}
 
-	if parent.node.type_name == .overridable_operator {
+	if parent.node().type_name == .overridable_operator {
 		grand := parent.parent() or { return none }
 		if grand is psi.PsiNamedElement {
 			return grand

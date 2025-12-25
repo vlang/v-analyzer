@@ -50,7 +50,7 @@ pub fn (c CallExpression) resolve() ?PsiElement {
 pub fn (c CallExpression) parameter_index_on_offset(offset u32) int {
 	argument_list := c.find_child_by_type(.argument_list) or { return -1 }
 	commas := argument_list.children().filter(it.get_text() == ',')
-	count_commas_before := commas.filter(it.node.start_byte() < offset).len
+	count_commas_before := commas.filter(it.node().start_byte() < offset).len
 	return count_commas_before
 }
 
