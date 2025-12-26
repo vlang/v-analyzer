@@ -1,4 +1,3 @@
 [submodule "tree_sitter_v/bindings/core"]
 	path = tree_sitter_v/bindings/core
 	url = https://github.com/tree-sitter/tree-sitter.git
-	branch = master

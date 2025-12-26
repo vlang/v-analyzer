@@ -2,6 +2,7 @@
  * @file V grammar for tree-sitter
  */
 
+/* eslint-disable no-undef */
 /* eslint-disable arrow-parens */
 /* eslint-disable camelcase */
 /* eslint-disable-next-line spaced-comment */

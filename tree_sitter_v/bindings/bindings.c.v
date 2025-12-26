@@ -9,16 +9,18 @@ module bindings
 #flag -I @VMODROOT/tree_sitter_v/bindings/core/lib/include
 #flag -I @VMODROOT/tree_sitter_v/bindings/core/lib/src
 #flag @VMODROOT/tree_sitter_v/bindings/core/lib/src/lib.c
-#include "tree_sitter/api.h"
 
-#flag -I @VMODROOT/tree_sitter_v/bindings
 #flag -I @VMODROOT/tree_sitter_v/src
 #flag @VMODROOT/tree_sitter_v/src/parser.c
-#include "bindings.h"
+#include "tree_sitter/api.h"
+
+pub type TSDecodeFunction = fn (string, u32, &int) u32
 
 pub enum TSVInputEncoding {
 	utf8
-	utf16
+    utf16le
+    utf16be
+    custom
 }
 
 pub type C.TSInputEncoding = TSVInputEncoding
@@ -29,6 +31,7 @@ mut:
 	payload  voidptr
 	read     fn (payload voidptr, byte_index u32, position C.TSPoint, bytes_read &u32) &char
 	encoding C.TSInputEncoding
+    decode   TSDecodeFunction
 }
 
 @[typedef]
@@ -547,7 +550,7 @@ pub fn (node C.TSNode) tree_cursor() TSTreeCursor {
 pub struct C.TSTreeCursor {
 	tree    voidptr
 	id      voidptr
-	context [2]u32
+	context [3]u32
 }
 
 fn C.ts_tree_cursor_delete(cursor &C.TSTreeCursor)
