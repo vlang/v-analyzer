@@ -141,8 +141,17 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 			result << element_to_semantic(name, .property) // not a best variant...
 		}
 	} else if node.type_name == .import_path {
-		if last_part := node.last_child() {
-			result << element_to_semantic(last_part, .namespace)
+		count := node.child_count()
+		for i in 0 .. count {
+			if child := node.child(i) {
+				if child.type_name == .import_name {
+					result << element_to_semantic(child, .namespace)
+				}
+			}
+		}
+	} else if node.type_name == .import_alias {
+		if last_child := node.last_child() {
+			result << element_to_semantic(last_child, .namespace)
 		}
 	} else if node.type_name in [.interpolation_opening, .interpolation_closing] {
 		result << element_to_semantic(node, .keyword)
@@ -153,8 +162,8 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 			result << element_to_semantic(identifier, .variable, 'global')
 		}
 		if modifiers := node.child_by_field_name('modifiers') {
-        	result << element_to_semantic(modifiers, .keyword) 
-    	}
+			result << element_to_semantic(modifiers, .keyword)
+		}
 	} else if node.type_name == .function_declaration {
 		if first_child := node.child_by_field_name('name') {
 			first_char := first_child.first_char(source_text)

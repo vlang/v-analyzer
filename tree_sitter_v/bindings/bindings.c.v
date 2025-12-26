@@ -18,9 +18,9 @@ pub type TSDecodeFunction = fn (string, u32, &int) u32
 
 pub enum TSVInputEncoding {
 	utf8
-    utf16le
-    utf16be
-    custom
+	utf16le
+	utf16be
+	custom
 }
 
 pub type C.TSInputEncoding = TSVInputEncoding
@@ -31,7 +31,7 @@ mut:
 	payload  voidptr
 	read     fn (payload voidptr, byte_index u32, position C.TSPoint, bytes_read &u32) &char
 	encoding C.TSInputEncoding
-    decode   TSDecodeFunction
+	decode   TSDecodeFunction
 }
 
 @[typedef]
