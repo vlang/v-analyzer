@@ -152,6 +152,9 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 		if identifier := node.child_by_field_name('name') {
 			result << element_to_semantic(identifier, .variable, 'global')
 		}
+		if modifiers := node.child_by_field_name('modifiers') {
+        	result << element_to_semantic(modifiers, .keyword) 
+    	}
 	} else if node.type_name == .function_declaration {
 		if first_child := node.child_by_field_name('name') {
 			first_char := first_child.first_char(source_text)

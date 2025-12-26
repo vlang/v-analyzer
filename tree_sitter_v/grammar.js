@@ -203,7 +203,11 @@ module.exports = grammar({
 			),
 
 		global_var_definition: ($) =>
-			seq(field('name', $.identifier), choice($.plain_type, $._global_var_value)),
+			seq(
+				optional(field('modifiers', 'volatile')),
+				field('name', $.identifier),
+				choice($.plain_type, $._global_var_value),
+			),
 
 		_global_var_value: ($) => seq('=', field('value', $._expression)),
 
@@ -331,7 +335,7 @@ module.exports = grammar({
 		implements: ($) =>
 			seq(
 				choice($.type_reference_expression, $.qualified_type),
-				repeat(seq(',', choice($.type_reference_expression, $.qualified_type)))
+				repeat(seq(',', choice($.type_reference_expression, $.qualified_type))),
 			),
 
 		_struct_body: ($) =>
@@ -568,15 +572,9 @@ module.exports = grammar({
 		short_element_list: ($) =>
 			repeat1(seq(alias($._expression, $.element), optional(list_separator))),
 
-		field_name: ($) =>
-			$.reference_expression,
+		field_name: ($) => $.reference_expression,
 
-		keyed_element: ($) =>
-			seq(
-				field('key', $.field_name),
-				':',
-				field('value', $._expression),
-			),
+		keyed_element: ($) => seq(field('key', $.field_name), ':', field('value', $._expression)),
 
 		function_literal: ($) =>
 			prec.right(

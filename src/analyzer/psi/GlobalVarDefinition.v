@@ -13,7 +13,10 @@ pub fn (_ &GlobalVarDefinition) is_public() bool {
 }
 
 pub fn (n &GlobalVarDefinition) identifier() ?PsiElement {
-	return n.find_child_by_type(.identifier)
+    if node := n.find_child_by_name('name') {
+        return node
+    }
+    return n.find_child_by_type(.identifier)
 }
 
 pub fn (n &GlobalVarDefinition) identifier_text_range() TextRange {
