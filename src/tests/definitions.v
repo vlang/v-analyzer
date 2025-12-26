@@ -371,5 +371,22 @@ fn definitions() testing.Tester {
 		t.assert_uri_from_stubs(first.target_uri, 'implicit.v')!
 	})
 
+	t.test('global variable with volatile modifier', fn (mut t testing.Test, mut fixture testing.Fixture) ! {
+		fixture.configure_by_text('1.v', '
+        __global volatile base_revision = 0
+
+        fn main() {
+            println(base/*caret*/_revision)
+        }
+        '.trim_indent())!
+
+		locations := fixture.definition_at_cursor()
+		t.assert_has_definition(locations)!
+
+		first := locations.first()
+		t.assert_uri(first.target_uri, fixture.current_file_uri())!
+		t.assert_definition_name(first, 'base_revision')!
+	})
+
 	return t
 }

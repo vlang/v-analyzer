@@ -2,6 +2,7 @@
  * @file V grammar for tree-sitter
  */
 
+/* eslint-disable no-undef */
 /* eslint-disable arrow-parens */
 /* eslint-disable camelcase */
 /* eslint-disable-next-line spaced-comment */
@@ -203,7 +204,11 @@ module.exports = grammar({
 			),
 
 		global_var_definition: ($) =>
-			seq(field('name', $.identifier), choice($.plain_type, $._global_var_value)),
+			seq(
+				optional(field('modifiers', 'volatile')),
+				field('name', $.identifier),
+				choice($.plain_type, $._global_var_value),
+			),
 
 		_global_var_value: ($) => seq('=', field('value', $._expression)),
 
@@ -280,7 +285,17 @@ module.exports = grammar({
 			),
 
 		parameter_list: ($) =>
-			prec(PREC.resolve, seq('(', optional(sep($.parameter_declaration)), ')')),
+    		prec(PREC.resolve, seq(
+    		    '(',
+    		    optional(choice(
+    		        $.variadic_parameter,
+    		        seq(
+    		            sep($.parameter_declaration),
+    		            optional(seq(',', $.variadic_parameter))
+    		        )
+    		    )),
+    		    ')'
+    		)),
 
 		parameter_declaration: ($) =>
 			seq(
@@ -289,6 +304,8 @@ module.exports = grammar({
 				optional(field('variadic', '...')),
 				field('type', $.plain_type),
 			),
+
+		variadic_parameter: ($) => '...',
 
 		type_parameter_list: ($) => seq('(', sep($.type_parameter_declaration), ')'),
 
@@ -324,14 +341,14 @@ module.exports = grammar({
 				choice('struct', 'union'),
 				field('name', $.identifier),
 				optional(field('generic_parameters', $.generic_parameters)),
-				optional(seq('implements', field('implements', $.implements))),
+				optional(seq('implements', field('implements', $.implements_clause))),
 				$._struct_body,
 			),
 
-		implements: ($) =>
+		implements_clause: ($) =>
 			seq(
 				choice($.type_reference_expression, $.qualified_type),
-				repeat(seq(',', choice($.type_reference_expression, $.qualified_type)))
+				repeat(seq(',', choice($.type_reference_expression, $.qualified_type))),
 			),
 
 		_struct_body: ($) =>
@@ -568,15 +585,9 @@ module.exports = grammar({
 		short_element_list: ($) =>
 			repeat1(seq(alias($._expression, $.element), optional(list_separator))),
 
-		field_name: ($) =>
-			$.reference_expression,
+		field_name: ($) => $.reference_expression,
 
-		keyed_element: ($) =>
-			seq(
-				field('key', $.field_name),
-				':',
-				field('value', $._expression),
-			),
+		keyed_element: ($) => seq(field('key', $.field_name), ':', field('value', $._expression)),
 
 		function_literal: ($) =>
 			prec.right(
@@ -1107,7 +1118,9 @@ module.exports = grammar({
 				field('right', $.expression_list),
 			),
 
-		block: ($) => seq('{', repeat(seq($._statement, optional(semi))), '}'),
+		_block_element: ($) => choice($._statement, $.import_declaration),
+
+		block: ($) => seq('{', repeat(seq($._block_element, optional(semi))), '}'),
 
 		defer_statement: ($) => seq('defer', $.block),
 
@@ -1181,7 +1194,13 @@ module.exports = grammar({
 
 		hash_statement: () => seq('#', token.immediate(repeat1(/[^\\\r\n]/))),
 
-		asm_statement: ($) => seq('asm', $.identifier, $._content_block),
+		asm_statement: ($) => 
+            seq(
+                'asm',
+				optional(field('modifiers', choice('volatile', 'goto'))),
+                optional(field('arch', $.identifier)),
+                $._content_block
+            ),
 
 		// Loose checking for asm and sql statements
 		_content_block: () => seq('{', token.immediate(prec(1, /[^{}]+/)), '}'),

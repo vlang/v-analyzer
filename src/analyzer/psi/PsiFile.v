@@ -156,16 +156,29 @@ pub fn (p &PsiFile) module_clause() ?&ModuleClause {
 }
 
 pub fn (p &PsiFile) get_imports() []ImportSpec {
-	import_list := p.root().find_child_by_type_or_stub(.import_list) or { return [] }
-	declarations := import_list.find_children_by_type_or_stub(.import_declaration)
-	mut import_specs := []ImportSpec{cap: declarations.len}
-	for declaration in declarations {
-		spec := declaration.find_child_by_type_or_stub(.import_spec) or { continue }
-		if spec is ImportSpec {
-			import_specs << spec
+	mut specs := []ImportSpec{}
+
+	if p.is_stub_based() {
+		for _, stub in p.stub_list.index_map {
+			if stub.stub_type == .import_spec {
+				if element := stub.get_psi() {
+					if element is ImportSpec {
+						specs << element
+					}
+				}
+			}
+		}
+	} else {
+		mut walker := new_psi_tree_walker(p.root())
+		for {
+			child := walker.next() or { break }
+			if child is ImportSpec {
+				specs << child
+			}
 		}
 	}
-	return import_specs
+
+	return specs
 }
 
 pub fn (p &PsiFile) resolve_import_spec(name string) ?ImportSpec {

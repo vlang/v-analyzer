@@ -1,4 +1,5 @@
 {
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
   "name": "v",
   "word": "identifier",
   "rules": {
@@ -644,6 +645,22 @@
       "type": "SEQ",
       "members": [
         {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "modifiers",
+              "content": {
+                "type": "STRING",
+                "value": "volatile"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
           "type": "FIELD",
           "name": "name",
           "content": {
@@ -1173,27 +1190,62 @@
             "type": "CHOICE",
             "members": [
               {
-                "type": "SEQ",
+                "type": "CHOICE",
                 "members": [
                   {
                     "type": "SYMBOL",
-                    "name": "parameter_declaration"
+                    "name": "variadic_parameter"
                   },
                   {
-                    "type": "REPEAT",
-                    "content": {
-                      "type": "SEQ",
-                      "members": [
-                        {
-                          "type": "STRING",
-                          "value": ","
-                        },
-                        {
-                          "type": "SYMBOL",
-                          "name": "parameter_declaration"
-                        }
-                      ]
-                    }
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "SYMBOL",
+                            "name": "parameter_declaration"
+                          },
+                          {
+                            "type": "REPEAT",
+                            "content": {
+                              "type": "SEQ",
+                              "members": [
+                                {
+                                  "type": "STRING",
+                                  "value": ","
+                                },
+                                {
+                                  "type": "SYMBOL",
+                                  "name": "parameter_declaration"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "CHOICE",
+                        "members": [
+                          {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "STRING",
+                                "value": ","
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "variadic_parameter"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "BLANK"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
@@ -1261,6 +1313,10 @@
           }
         }
       ]
+    },
+    "variadic_parameter": {
+      "type": "STRING",
+      "value": "..."
     },
     "type_parameter_list": {
       "type": "SEQ",
@@ -1510,7 +1566,7 @@
                   "name": "implements",
                   "content": {
                     "type": "SYMBOL",
-                    "name": "implements"
+                    "name": "implements_clause"
                   }
                 }
               ]
@@ -1526,7 +1582,7 @@
         }
       ]
     },
-    "implements": {
+    "implements_clause": {
       "type": "SEQ",
       "members": [
         {
@@ -7686,6 +7742,19 @@
         }
       ]
     },
+    "_block_element": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "import_declaration"
+        }
+      ]
+    },
     "block": {
       "type": "SEQ",
       "members": [
@@ -7700,7 +7769,7 @@
             "members": [
               {
                 "type": "SYMBOL",
-                "name": "_statement"
+                "name": "_block_element"
               },
               {
                 "type": "CHOICE",
@@ -8215,8 +8284,45 @@
           "value": "asm"
         },
         {
-          "type": "SYMBOL",
-          "name": "identifier"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "modifiers",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": "volatile"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "goto"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "arch",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -8515,5 +8621,6 @@
     "_statement",
     "_top_level_declaration",
     "_expression_with_blocks"
-  ]
+  ],
+  "reserved": {}
 }

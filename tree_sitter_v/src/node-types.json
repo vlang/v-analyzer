@@ -429,16 +429,31 @@
   {
     "type": "asm_statement",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
+    "fields": {
+      "arch": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "modifiers": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "goto",
+            "named": false
+          },
+          {
+            "type": "volatile",
+            "named": false
+          }
+        ]
+      }
     }
   },
   {
@@ -735,6 +750,10 @@
         {
           "type": "_statement",
           "named": true
+        },
+        {
+          "type": "import_declaration",
+          "named": true
         }
       ]
     }
@@ -742,6 +761,7 @@
   {
     "type": "block_comment",
     "named": true,
+    "extra": true,
     "fields": {}
   },
   {
@@ -1647,6 +1667,16 @@
     "type": "global_var_definition",
     "named": true,
     "fields": {
+      "modifiers": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "volatile",
+            "named": false
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
@@ -1795,7 +1825,7 @@
     }
   },
   {
-    "type": "implements",
+    "type": "implements_clause",
     "named": true,
     "fields": {},
     "children": {
@@ -2258,6 +2288,7 @@
   {
     "type": "line_comment",
     "named": true,
+    "extra": true,
     "fields": {}
   },
   {
@@ -2847,6 +2878,10 @@
       "types": [
         {
           "type": "parameter_declaration",
+          "named": true
+        },
+        {
+          "type": "variadic_parameter",
           "named": true
         }
       ]
@@ -3576,6 +3611,7 @@
   {
     "type": "source_file",
     "named": true,
+    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -3819,7 +3855,7 @@
         "required": false,
         "types": [
           {
-            "type": "implements",
+            "type": "implements_clause",
             "named": true
           }
         ]
@@ -4279,6 +4315,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "variadic_parameter",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "visibility_modifiers",

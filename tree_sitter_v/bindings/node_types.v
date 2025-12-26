@@ -74,7 +74,7 @@ pub enum NodeType {
 	identifier_list
 	if_attribute
 	if_expression
-	implements
+	implements_clause
 	import_alias
 	import_declaration
 	import_list
@@ -172,6 +172,7 @@ pub enum NodeType {
 	var_declaration
 	var_definition
 	var_definition_list
+	variadic_parameter
 	visibility_modifiers
 	wrong_pointer_type
 	escape_sequence
@@ -384,7 +385,7 @@ const node_type_name_to_enum = {
 	'identifier_list':                  NodeType.identifier_list
 	'if_attribute':                     NodeType.if_attribute
 	'if_expression':                    NodeType.if_expression
-	'implements':                       NodeType.implements
+	'implements_clause':                NodeType.implements_clause
 	'import_alias':                     NodeType.import_alias
 	'import_declaration':               NodeType.import_declaration
 	'import_list':                      NodeType.import_list
@@ -482,6 +483,7 @@ const node_type_name_to_enum = {
 	'var_declaration':                  NodeType.var_declaration
 	'var_definition':                   NodeType.var_definition
 	'var_definition_list':              NodeType.var_definition_list
+	'variadic_parameter':               NodeType.variadic_parameter
 	'visibility_modifiers':             NodeType.visibility_modifiers
 	'wrong_pointer_type':               NodeType.wrong_pointer_type
 	'escape_sequence':                  NodeType.escape_sequence
