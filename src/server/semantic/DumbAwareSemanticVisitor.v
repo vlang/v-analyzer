@@ -188,6 +188,9 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 		.generic_parameter {
 			result << element_to_semantic(node, .type_parameter)
 		}
+		.variadic_parameter {
+			result << element_to_semantic(node, .operator)
+    	}
 		.global_var_definition {
 			if identifier := node.child_by_field_name('name') {
 				result << element_to_semantic(identifier, .variable, 'global')

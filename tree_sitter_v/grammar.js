@@ -285,7 +285,17 @@ module.exports = grammar({
 			),
 
 		parameter_list: ($) =>
-			prec(PREC.resolve, seq('(', optional(sep($.parameter_declaration)), ')')),
+    		prec(PREC.resolve, seq(
+    		    '(',
+    		    optional(choice(
+    		        $.variadic_parameter,
+    		        seq(
+    		            sep($.parameter_declaration),
+    		            optional(seq(',', $.variadic_parameter))
+    		        )
+    		    )),
+    		    ')'
+    		)),
 
 		parameter_declaration: ($) =>
 			seq(
@@ -294,6 +304,8 @@ module.exports = grammar({
 				optional(field('variadic', '...')),
 				field('type', $.plain_type),
 			),
+
+		variadic_parameter: ($) => '...',
 
 		type_parameter_list: ($) => seq('(', sep($.type_parameter_declaration), ')'),
 
