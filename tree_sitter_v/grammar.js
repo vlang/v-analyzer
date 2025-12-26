@@ -1106,7 +1106,9 @@ module.exports = grammar({
 				field('right', $.expression_list),
 			),
 
-		block: ($) => seq('{', repeat(seq($._statement, optional(semi))), '}'),
+		_block_element: ($) => choice($._statement, $.import_declaration),
+
+		block: ($) => seq('{', repeat(seq($._block_element, optional(semi))), '}'),
 
 		defer_statement: ($) => seq('defer', $.block),
 
@@ -1180,7 +1182,13 @@ module.exports = grammar({
 
 		hash_statement: () => seq('#', token.immediate(repeat1(/[^\\\r\n]/))),
 
-		asm_statement: ($) => seq('asm', $.identifier, $._content_block),
+		asm_statement: ($) => 
+            seq(
+                'asm',
+				optional(field('modifiers', choice('volatile', 'goto'))),
+                optional(field('arch', $.identifier)),
+                $._content_block
+            ),
 
 		// Loose checking for asm and sql statements
 		_content_block: () => seq('{', token.immediate(prec(1, /[^{}]+/)), '}'),
