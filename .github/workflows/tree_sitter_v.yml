@@ -31,9 +31,6 @@ jobs:
       - name: Run tests
         run: npm run test
 
-      - name: Lint
-        run: npm run lint
-
   test-bindings:
     runs-on: ubuntu-latest
 

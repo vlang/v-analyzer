@@ -9,10 +9,12 @@ module bindings
 #flag -I @VMODROOT/tree_sitter_v/bindings/core/lib/include
 #flag -I @VMODROOT/tree_sitter_v/bindings/core/lib/src
 #flag @VMODROOT/tree_sitter_v/bindings/core/lib/src/lib.c
+#include "tree_sitter/api.h"
 
+#flag -I @VMODROOT/tree_sitter_v/bindings
 #flag -I @VMODROOT/tree_sitter_v/src
 #flag @VMODROOT/tree_sitter_v/src/parser.c
-#include "tree_sitter/api.h"
+#include "bindings.h"
 
 pub type TSDecodeFunction = fn (string, u32, &int) u32
 
