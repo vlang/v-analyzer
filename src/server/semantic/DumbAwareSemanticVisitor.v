@@ -122,6 +122,16 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 				result << element_to_semantic(identifier, .enum_)
 			}
 		}
+		.implements_clause {
+			if !node.is_named() {
+				result << element_to_semantic(node, .keyword)
+			}
+		}
+		.interface_declaration {
+			if identifier := node.child_by_field_name('name') {
+				result << element_to_semantic(identifier, .interface_)
+			}
+		}
 		.parameter_declaration, .receiver {
 			if identifier := node.child_by_field_name('name') {
 				if _ := node.child_by_field_name('mutability') {
@@ -190,7 +200,7 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 		}
 		.variadic_parameter {
 			result << element_to_semantic(node, .operator)
-    	}
+		}
 		.global_var_definition {
 			if identifier := node.child_by_field_name('name') {
 				result << element_to_semantic(identifier, .variable, 'global')
@@ -220,18 +230,18 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 }
 
 fn highlight_compile_time_condition(node psi.AstNode, mut result []SemanticToken) {
-    if node.type_name == .reference_expression {
-        result << element_to_semantic(node, .variable, 'readonly', 'defaultLibrary')
-    } else if node.type_name == .binary_expression || node.type_name == .unary_expression {
-        count := node.child_count()
-        for i in 0 .. count {
-            if child := node.child(i) {
-                highlight_compile_time_condition(child, mut result)
-            }
-        }
-    } else if node.type_name == .parenthesized_expression {
-        if child := node.child(1) {
-             highlight_compile_time_condition(child, mut result)
-        }
-    }
+	if node.type_name == .reference_expression {
+		result << element_to_semantic(node, .variable, 'readonly', 'defaultLibrary')
+	} else if node.type_name == .binary_expression || node.type_name == .unary_expression {
+		count := node.child_count()
+		for i in 0 .. count {
+			if child := node.child(i) {
+				highlight_compile_time_condition(child, mut result)
+			}
+		}
+	} else if node.type_name == .parenthesized_expression {
+		if child := node.child(1) {
+			highlight_compile_time_condition(child, mut result)
+		}
+	}
 }
