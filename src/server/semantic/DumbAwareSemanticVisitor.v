@@ -115,16 +115,18 @@ fn (_ DumbAwareSemanticVisitor) highlight_node(node psi.AstNode, root psi.PsiEle
 						result << element_to_semantic(node, .keyword)
 					}
 				}
+			} else if text == 'implements' {
+				if parent := node.parent() {
+					if parent.type_name in [.struct_declaration, .interface_declaration,
+						.implements_clause] {
+						result << element_to_semantic(node, .keyword)
+					}
+				}
 			}
 		}
 		.enum_declaration {
 			if identifier := node.child_by_field_name('name') {
 				result << element_to_semantic(identifier, .enum_)
-			}
-		}
-		.implements_clause {
-			if !node.is_named() {
-				result << element_to_semantic(node, .keyword)
 			}
 		}
 		.interface_declaration {

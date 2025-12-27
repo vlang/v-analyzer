@@ -7,7 +7,13 @@ pub struct TypeAliasDeclaration {
 }
 
 pub fn (a &TypeAliasDeclaration) get_type() types.Type {
-	return types.new_interface_type(a.name(), a.module_name())
+	types_list := a.types()
+	inner_type := if types_list.len > 0 {
+		convert_type(types_list[0])
+	} else {
+		types.Type(types.unknown_type)
+	}
+	return types.new_alias_type(a.name(), a.module_name(), inner_type)
 }
 
 pub fn (a &TypeAliasDeclaration) generic_parameters() ?&GenericParameters {
