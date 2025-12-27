@@ -356,9 +356,6 @@ pub fn (r &SubResolver) process_unqualified_resolve(mut processor PsiScopeProces
 	if !r.process_selective_imports(mut processor) {
 		return false
 	}
-	if !r.process_module_clause(mut processor) {
-		return false
-	}
 	if !r.process_owner_generic_ts(mut processor) {
 		return false
 	}
@@ -444,6 +441,9 @@ pub fn (r &SubResolver) process_unqualified_resolve(mut processor PsiScopeProces
 
 	mod_decls := stubs_index.get_all_declarations_from_module(module_name, r.for_types)
 	if !r.process_elements(mod_decls, mut processor) {
+		return false
+	}
+	if !r.process_module_clause(mut processor) {
 		return false
 	}
 

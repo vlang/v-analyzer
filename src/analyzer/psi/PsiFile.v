@@ -237,8 +237,6 @@ pub fn (p &PsiFile) resolve_selective_import_symbol(name string) ?PsiElement {
 	return none
 }
 
-
-
 pub fn (p &PsiFile) resolve_symbol_in_import_spec(spec ImportSpec, name string) ?PsiElement {
 	import_name := spec.qualified_name()
 	real_module_fqn := stubs_index.find_real_module_fqn(import_name)
