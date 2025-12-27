@@ -2,7 +2,6 @@ module server
 
 import lsp
 import analyzer.psi
-import analyzer.parser
 import server.completion
 import server.completion.providers
 import loglib
@@ -32,7 +31,7 @@ pub fn (mut ls LanguageServer) completion(params lsp.CompletionParams) ![]lsp.Co
 	// Thus, we collect them, filter and show them to the user.
 	source = insert_to_string(source, offset, completion.dummy_identifier)
 
-	res := parser.parse_code(source)
+	res := ls.main_parser.parse_code(source)
 	patched_psi_file := psi.new_psi_file(uri.path(), res.tree, res.source_text)
 
 	element := patched_psi_file.root().find_element_at(offset) or {

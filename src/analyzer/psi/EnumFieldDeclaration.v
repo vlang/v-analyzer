@@ -66,7 +66,9 @@ pub fn (f &EnumFieldDeclaration) value() ?PsiElement {
 		}
 
 		file := f.containing_file() or { return none }
-		res := parser.parse_code(stub.additional)
+		mut p := parser.Parser.new()
+		defer { p.free() }
+		res := p.parse_code(stub.additional)
 		root := res.tree.root_node()
 		first_child := root.first_child()?
 		next_first_child := first_child.first_child()?

@@ -115,7 +115,7 @@ fn (mut p C.TSParser) parse_bytes_with_old_tree(content []u8, old_tree &TSTree) 
 }
 
 @[inline; unsafe]
-fn (p &C.TSParser) free() {
+fn (p &C.TSParser) delete() {
 	unsafe {
 		C.ts_parser_delete(p)
 	}

@@ -5,6 +5,7 @@ import jsonrpc
 import lsp
 import time
 import analyzer
+import analyzer.parser
 import os
 import config
 import loglib
@@ -80,6 +81,8 @@ pub mut:
 	indexing_mng analyzer.IndexingManager
 	// project_resolver is used to resolve the project root for a given file.
 	project_resolver &workspace.ProjectResolver = unsafe { nil }
+	// main_parser is the parser used only in main thread for handling didChange requests.
+	main_parser &parser.Parser = parser.Parser.new()
 }
 
 pub fn LanguageServer.new(indexing analyzer.IndexingManager) &LanguageServer {

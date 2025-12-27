@@ -60,19 +60,19 @@ pub fn (p &PsiFile) index_sink() ?StubIndexSink {
 	return stubs_index.get_sink_for_file(p.path)
 }
 
-pub fn (mut p PsiFile) reparse(new_code string) {
+pub fn (mut f PsiFile) reparse(new_code string, mut p parser.Parser) {
 	now := time.now()
-	unsafe { p.tree.free() }
+	unsafe { f.tree.free() }
 	// TODO: for some reason if we pass the old tree then trying to get the text
 	// of the node gives the text at the wrong offset.
-	res := parser.parse_code_with_tree(new_code, unsafe { nil })
-	p.tree = res.tree
-	p.source_text = res.source_text
-	p.root = create_element(AstNode(res.tree.root_node()), p)
+	res := p.parse_code_with_tree(new_code, unsafe { nil })
+	f.tree = res.tree
+	f.source_text = res.source_text
+	f.root = create_element(AstNode(res.tree.root_node()), f)
 
 	loglib.with_duration(time.since(now)).with_fields({
-		'file':   p.path
-		'length': p.source_text.len.str()
+		'file':   f.path
+		'length': f.source_text.len.str()
 	}).info('Reparsed file')
 }
 

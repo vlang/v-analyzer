@@ -29,6 +29,13 @@ pub fn (mut p Parser[T]) reset() {
 	p.raw_parser.reset()
 }
 
+@[inline]
+pub fn (p &Parser[T]) free() {
+    unsafe {
+        p.raw_parser.delete()
+    }
+}
+
 @[params]
 pub struct ParseConfig {
 pub:

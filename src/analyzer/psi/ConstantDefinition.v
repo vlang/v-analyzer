@@ -68,7 +68,9 @@ pub fn (c &ConstantDefinition) expression() ?PsiElement {
 	if stub := c.get_stub() {
 		file := c.containing_file() or { return none }
 		// pretty hacky but it works
-		res := parser.parse_code(stub.additional)
+		mut p := parser.Parser.new()
+		defer { p.free() }
+		res := p.parse_code(stub.additional)
 		root := res.tree.root_node()
 		first_child := root.first_child()?
 		next_first_child := first_child.first_child()?

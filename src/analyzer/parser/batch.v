@@ -32,15 +32,16 @@ pub fn parse_batch_files(files []string, count_workers int) []ParseResult {
 fn spawn_parser_workers(result_chan chan ParseResult, file_chan chan string, count_workers int) {
 	mut wg := sync.new_waitgroup()
 	wg.add(count_workers)
+
 	for i := 0; i < count_workers; i++ {
 		spawn fn [file_chan, mut wg, result_chan] () {
+			mut p := Parser.new()
 			for {
 				filepath := <-file_chan or { break }
-				mut result := parse_file(filepath) or { continue }
+				mut result := p.parse_file(filepath) or { continue }
 				result.path = filepath
 				result_chan <- result
 			}
-
 			wg.done()
 		}()
 	}
