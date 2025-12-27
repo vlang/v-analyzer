@@ -92,8 +92,10 @@ pub fn (r &SubResolver) process_qualifier_expression(qualifier PsiElement, mut p
 	if qualifier is ReferenceExpressionBase {
 		resolved := qualifier.resolve() or { return true }
 		if resolved is ImportSpec {
-			elements := stubs_index.get_all_declarations_from_module(resolved.qualified_name(),
-				r.for_types)
+			import_name := resolved.qualified_name()
+			real_fqn := stubs_index.find_real_module_fqn(import_name)
+
+			elements := stubs_index.get_all_declarations_from_module(real_fqn, r.for_types)
 			for element in elements {
 				if !processor.execute(element) {
 					return false

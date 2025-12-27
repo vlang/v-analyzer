@@ -237,24 +237,14 @@ pub fn (p &PsiFile) resolve_selective_import_symbol(name string) ?PsiElement {
 	return none
 }
 
+
+
 pub fn (p &PsiFile) resolve_symbol_in_import_spec(spec ImportSpec, name string) ?PsiElement {
-	module_fqn := spec.qualified_name()
+	import_name := spec.qualified_name()
+	real_module_fqn := stubs_index.find_real_module_fqn(import_name)
 
-	if found := p.find_in_module(module_fqn, name) {
+	if found := p.find_in_module(real_module_fqn, name) {
 		return found
-	}
-
-	all_modules := get_all_modules()
-	for mod in all_modules {
-		if mod == module_fqn {
-			continue
-		}
-
-		if mod.ends_with('.' + module_fqn) || module_fqn.ends_with('.' + mod) {
-			if found := p.find_in_module(mod, name) {
-				return found
-			}
-		}
 	}
 
 	return none
