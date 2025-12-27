@@ -77,3 +77,11 @@ pub fn (n ImportSpec) resolve_directory() string {
 
 	return stubs_index.get_module_root(fqn)
 }
+
+pub fn (n &ImportSpec) selective_list() ?&SelectiveImportList {
+	list := n.find_child_by_type_or_stub(.selective_import_list)?
+	if list is SelectiveImportList {
+		return list
+	}
+	return none
+}

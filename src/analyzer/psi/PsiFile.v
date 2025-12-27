@@ -217,3 +217,54 @@ pub fn (p &PsiFile) process_declarations(mut processor PsiScopeProcessor) bool {
 
 	return true
 }
+
+pub fn (p &PsiFile) resolve_selective_import_symbol(name string) ?PsiElement {
+	imports := p.get_imports()
+
+	for spec in imports {
+		list := spec.selective_list() or { continue }
+		symbols := list.symbols()
+
+		for ref in symbols {
+			if ref.name() == name {
+				if found := p.resolve_symbol_in_import_spec(spec, name) {
+					return found
+				}
+			}
+		}
+	}
+
+	return none
+}
+
+pub fn (p &PsiFile) resolve_symbol_in_import_spec(spec ImportSpec, name string) ?PsiElement {
+	import_name := spec.qualified_name()
+	real_module_fqn := stubs_index.find_real_module_fqn(import_name)
+
+	if found := p.find_in_module(real_module_fqn, name) {
+		return found
+	}
+
+	return none
+}
+
+fn (p &PsiFile) find_in_module(module_fqn string, name string) ?PsiElement {
+	elements := stubs_index.get_all_declarations_from_module(module_fqn, false)
+	for element in elements {
+		if element is PsiNamedElement {
+			if element.name() == name {
+				return element as PsiElement
+			}
+		}
+	}
+
+	types := stubs_index.get_all_declarations_from_module(module_fqn, true)
+	for type_element in types {
+		if type_element is PsiNamedElement {
+			if type_element.name() == name {
+				return type_element as PsiElement
+			}
+		}
+	}
+	return none
+}

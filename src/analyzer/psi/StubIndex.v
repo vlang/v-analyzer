@@ -268,9 +268,11 @@ pub fn (s &StubIndex) get_all_sink_depends_on(module_fqn string) []StubIndexSink
 		if sink.kind != .workspace {
 			continue
 		}
-
-		if module_fqn in sink.imported_modules {
-			sinks << sink
+		for imported in sink.imported_modules {
+			if s.find_real_module_fqn(imported) == module_fqn {
+				sinks << sink
+				break
+			}
 		}
 	}
 	return sinks
@@ -376,4 +378,30 @@ struct StubResult {
 mut:
 	stubs []&StubBase
 	psis  []PsiElement
+}
+
+pub fn (s &StubIndex) find_real_module_fqn(name string) string {
+	workspace_idx := int(StubIndexLocationKind.workspace)
+	workspace_modules := s.all_elements_by_modules[workspace_idx]
+
+	if name in workspace_modules {
+		return name
+	}
+
+	suffix := '.' + name
+	for mod_fqn, _ in workspace_modules {
+		if mod_fqn.ends_with(suffix) {
+			return mod_fqn
+		}
+	}
+
+	$for kind in StubIndexLocationKind.values {
+		if kind.value != StubIndexLocationKind.workspace {
+			modules := s.all_elements_by_modules[kind.value]
+			if name in modules {
+				return name
+			}
+		}
+	}
+	return name
 }

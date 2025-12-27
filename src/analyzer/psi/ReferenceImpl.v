@@ -92,8 +92,10 @@ pub fn (r &SubResolver) process_qualifier_expression(qualifier PsiElement, mut p
 	if qualifier is ReferenceExpressionBase {
 		resolved := qualifier.resolve() or { return true }
 		if resolved is ImportSpec {
-			elements := stubs_index.get_all_declarations_from_module(resolved.qualified_name(),
-				r.for_types)
+			import_name := resolved.qualified_name()
+			real_fqn := stubs_index.find_real_module_fqn(import_name)
+
+			elements := stubs_index.get_all_declarations_from_module(real_fqn, r.for_types)
 			for element in elements {
 				if !processor.execute(element) {
 					return false
@@ -351,7 +353,7 @@ pub fn (r &SubResolver) process_unqualified_resolve(mut processor PsiScopeProces
 	if !r.process_imported_modules(mut processor) {
 		return false
 	}
-	if !r.process_module_clause(mut processor) {
+	if !r.process_selective_imports(mut processor) {
 		return false
 	}
 	if !r.process_owner_generic_ts(mut processor) {
@@ -439,6 +441,9 @@ pub fn (r &SubResolver) process_unqualified_resolve(mut processor PsiScopeProces
 
 	mod_decls := stubs_index.get_all_declarations_from_module(module_name, r.for_types)
 	if !r.process_elements(mod_decls, mut processor) {
+		return false
+	}
+	if !r.process_module_clause(mut processor) {
 		return false
 	}
 
@@ -567,6 +572,30 @@ pub fn (r &SubResolver) process_imported_modules(mut processor PsiScopeProcessor
 		return false
 	}
 
+	return true
+}
+
+pub fn (r &SubResolver) process_selective_imports(mut processor PsiScopeProcessor) bool {
+	element := r.element as PsiElement
+	name := r.element.name()
+	file := r.containing_file or { return true }
+
+	if parent_list := element.parent_of_type(.selective_import_list) {
+		if spec := parent_list.parent_of_type(.import_spec) {
+			if spec is ImportSpec {
+				if found := file.resolve_symbol_in_import_spec(spec, name) {
+					return processor.execute(found)
+				}
+				return true
+			}
+		}
+	}
+
+	if resolved := file.resolve_selective_import_symbol(name) {
+		if !processor.execute(resolved) {
+			return false
+		}
+	}
 	return true
 }
 

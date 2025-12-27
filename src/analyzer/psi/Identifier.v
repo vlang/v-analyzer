@@ -30,5 +30,14 @@ pub fn (i Identifier) reference() PsiReference {
 }
 
 pub fn (i Identifier) resolve() ?PsiElement {
+	if parent := i.parent() {
+		if parent is PsiNamedElement {
+			if ident := parent.identifier() {
+				if ident.is_equal(i) {
+					return parent as PsiElement
+				}
+			}
+		}
+	}
 	return i.reference().resolve()
 }

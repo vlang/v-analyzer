@@ -351,6 +351,12 @@ pub fn create_element(node AstNode, containing_file ?&PsiFile) PsiElement {
 		}
 	}
 
+	if node.type_name == .selective_import_list {
+		return &SelectiveImportList{
+			PsiElementImpl: base_node
+		}
+	}
+
 	if node.type_name == .global_var_definition {
 		return &GlobalVarDefinition{
 			PsiElementImpl: base_node
