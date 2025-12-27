@@ -268,9 +268,11 @@ pub fn (s &StubIndex) get_all_sink_depends_on(module_fqn string) []StubIndexSink
 		if sink.kind != .workspace {
 			continue
 		}
-
-		if module_fqn in sink.imported_modules {
-			sinks << sink
+		for imported in sink.imported_modules {
+			if s.find_real_module_fqn(imported) == module_fqn {
+				sinks << sink
+				break
+			}
 		}
 	}
 	return sinks
