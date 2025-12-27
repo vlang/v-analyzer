@@ -340,6 +340,10 @@ pub fn (t &TypeInferer) infer_embedded_definition_type(element EmbeddedDefinitio
 }
 
 pub fn (t &TypeInferer) infer_reference_expression_type(element ReferenceExpression) types.Type {
+	if resolved := element.resolve() {
+		return t.infer_type(resolved)
+	}
+
 	if element.text_matches('it') {
 		call := get_it_call(element) or { return types.unknown_type }
 		caller_type := call.caller_type()
@@ -349,8 +353,7 @@ pub fn (t &TypeInferer) infer_reference_expression_type(element ReferenceExpress
 		return types.unknown_type
 	}
 
-	resolved := element.resolve() or { return types.unknown_type }
-	return t.infer_type(resolved)
+	return types.unknown_type
 }
 
 pub fn (t &TypeInferer) infer_if_expression_type(element IfExpression) types.Type {

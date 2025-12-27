@@ -135,7 +135,7 @@ pub fn (_ &StubbedElementType) index_stub(stub &StubBase, mut sink IndexSink) {
 
 	if stub.stub_type == .function_declaration {
 		name := stub.name()
-		if name == 'main' || name.starts_with('test_') {
+		if name.starts_with('test_') {
 			return
 		}
 
