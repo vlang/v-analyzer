@@ -217,3 +217,66 @@ pub fn (p &PsiFile) process_declarations(mut processor PsiScopeProcessor) bool {
 
 	return true
 }
+
+pub fn (p &PsiFile) resolve_selective_import_symbol(name string) ?PsiElement {
+	imports := p.get_imports()
+
+	for spec in imports {
+		list := spec.selective_list() or { continue }
+		symbols := list.symbols()
+
+		for ref in symbols {
+			if ref.name() == name {
+				if found := p.resolve_symbol_in_import_spec(spec, name) {
+					return found
+				}
+			}
+		}
+	}
+
+	return none
+}
+
+pub fn (p &PsiFile) resolve_symbol_in_import_spec(spec ImportSpec, name string) ?PsiElement {
+	module_fqn := spec.qualified_name()
+
+	if found := p.find_in_module(module_fqn, name) {
+		return found
+	}
+
+	all_modules := get_all_modules()
+	for mod in all_modules {
+		if mod == module_fqn {
+			continue
+		}
+
+		if mod.ends_with('.' + module_fqn) || module_fqn.ends_with('.' + mod) {
+			if found := p.find_in_module(mod, name) {
+				return found
+			}
+		}
+	}
+
+	return none
+}
+
+fn (p &PsiFile) find_in_module(module_fqn string, name string) ?PsiElement {
+	elements := stubs_index.get_all_declarations_from_module(module_fqn, false)
+	for element in elements {
+		if element is PsiNamedElement {
+			if element.name() == name {
+				return element as PsiElement
+			}
+		}
+	}
+
+	types := stubs_index.get_all_declarations_from_module(module_fqn, true)
+	for type_element in types {
+		if type_element is PsiNamedElement {
+			if type_element.name() == name {
+				return type_element as PsiElement
+			}
+		}
+	}
+	return none
+}

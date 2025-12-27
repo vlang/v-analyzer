@@ -52,6 +52,7 @@ pub enum StubType as u8 {
 	import_path
 	import_name
 	import_alias
+	selective_import_list
 	module_clause
 	reference_expression
 	generic_parameters
@@ -108,6 +109,8 @@ pub fn node_type_to_stub_type(typ bindings.NodeType) StubType {
 		.import_path { .import_path }
 		.import_name { .import_name }
 		.import_alias { .import_alias }
+		.selective_import_list { .selective_import_list }
+		.element_list { .selective_import_list }
 		.module_clause { .module_clause }
 		.reference_expression { .reference_expression }
 		.generic_parameters { .generic_parameters }
@@ -346,6 +349,11 @@ pub fn (_ &StubbedElementType) create_psi(stub &StubBase) ?PsiElement {
 			PsiElementImpl: base_psi
 		}
 	}
+	if stub_type == .selective_import_list {
+		return SelectiveImportList{
+			PsiElementImpl: base_psi
+		}
+	}
 	if stub_type == .module_clause {
 		return ModuleClause{
 			PsiElementImpl: base_psi
@@ -571,6 +579,7 @@ pub fn (s &StubbedElementType) create_stub(psi PsiElement, parent_stub &StubBase
 			include_text: psi.node().type_name !in [
 				.import_list,
 				.import_declaration,
+				.selective_import_list,
 			]
 		)
 	}

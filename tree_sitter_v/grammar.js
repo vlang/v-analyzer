@@ -113,9 +113,9 @@ module.exports = grammar({
 			seq(
 				optional($.shebang),
 				optional($.module_clause),
-				optional($.import_list),
 				repeat(
 					choice(
+						seq($.import_list, optional(terminator)),
 						seq($._top_level_declaration, optional(terminator)),
 						seq($._statement, optional(terminator)),
 					),
@@ -146,7 +146,7 @@ module.exports = grammar({
 
 		module_clause: ($) => seq(optional($.attributes), 'module', $.identifier),
 
-		import_list: ($) => repeat1($.import_declaration),
+		import_list: ($) => prec.right(repeat1($.import_declaration)),
 
 		import_declaration: ($) => seq('import', $.import_spec, semi),
 

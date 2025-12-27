@@ -351,6 +351,9 @@ pub fn (r &SubResolver) process_unqualified_resolve(mut processor PsiScopeProces
 	if !r.process_imported_modules(mut processor) {
 		return false
 	}
+	if !r.process_selective_imports(mut processor) {
+		return false
+	}
 	if !r.process_module_clause(mut processor) {
 		return false
 	}
@@ -567,6 +570,30 @@ pub fn (r &SubResolver) process_imported_modules(mut processor PsiScopeProcessor
 		return false
 	}
 
+	return true
+}
+
+pub fn (r &SubResolver) process_selective_imports(mut processor PsiScopeProcessor) bool {
+	element := r.element as PsiElement
+	name := r.element.name()
+	file := r.containing_file or { return true }
+
+	if parent_list := element.parent_of_type(.selective_import_list) {
+		if spec := parent_list.parent_of_type(.import_spec) {
+			if spec is ImportSpec {
+				if found := file.resolve_symbol_in_import_spec(spec, name) {
+					return processor.execute(found)
+				}
+				return true
+			}
+		}
+	}
+
+	if resolved := file.resolve_selective_import_symbol(name) {
+		if !processor.execute(resolved) {
+			return false
+		}
+	}
 	return true
 }
 
