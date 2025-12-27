@@ -110,7 +110,6 @@ pub fn node_type_to_stub_type(typ bindings.NodeType) StubType {
 		.import_name { .import_name }
 		.import_alias { .import_alias }
 		.selective_import_list { .selective_import_list }
-		.element_list { .selective_import_list }
 		.module_clause { .module_clause }
 		.reference_expression { .reference_expression }
 		.generic_parameters { .generic_parameters }
