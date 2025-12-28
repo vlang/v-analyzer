@@ -97,6 +97,13 @@ pub fn (p &PsiFile) symbol_at(range TextRange) u8 {
 	return line[range.column - 1] or { return 0 }
 }
 
+pub fn (p &PsiFile) ast_cursor() AstCursor {
+	root := p.tree.root_node()
+	return AstCursor{
+		raw_cursor: root.tree_cursor()
+	}
+}
+
 pub fn (p &PsiFile) root() PsiElement {
 	if p.is_stub_based() {
 		return p.stub_list.root().get_psi() or { return p.root }

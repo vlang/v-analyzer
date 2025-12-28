@@ -566,7 +566,7 @@ fn C.ts_tree_cursor_first_child_for_byte(cursor &C.TSTreeCursor, idx u32) i64
 fn C.ts_tree_cursor_copy(cursor &C.TSTreeCursor) C.TSTreeCursor
 
 @[inline; unsafe]
-fn (cursor &C.TSTreeCursor) free() {
+pub fn (cursor &C.TSTreeCursor) delete() {
 	C.ts_tree_cursor_delete(cursor)
 }
 

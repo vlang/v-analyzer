@@ -32,9 +32,9 @@ pub fn Parser.new() &Parser {
 
 // free frees the Tree-sitter parser.
 pub fn (p &Parser) free() {
-    unsafe {
-        p.binding_parser.free()
-    }
+	unsafe {
+		p.binding_parser.free()
+	}
 }
 
 // parse_file parses a V source file and returns the corresponding `tree_sitter.Tree` and `Rope`.

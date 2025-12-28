@@ -55,35 +55,56 @@ pub fn (tree &StubTree) get_imported_modules() []string {
 }
 
 pub fn build_stub_tree(file &psi.PsiFile, indexing_root string) &StubTree {
-	root := file.root()
+	mut cursor := file.ast_cursor()
+	defer { cursor.free() }
+
 	stub_root := psi.new_root_stub(file.path())
 	module_fqn := psi.module_qualified_name(file, indexing_root)
 
-	build_stub_tree_for_node(root, stub_root, module_fqn, false)
+	if cursor.current_node() != none {
+		build_stub_tree_recurse(mut cursor, file, stub_root, module_fqn, false)
+	}
 
 	return &StubTree{
 		root: stub_root
 	}
 }
 
-pub fn build_stub_tree_for_node(node psi.PsiElement, parent &psi.StubBase, module_fqn string, build_for_all_children bool) {
-	element_type := psi.StubbedElementType{}
+fn build_stub_tree_recurse(mut cursor psi.AstCursor, file &psi.PsiFile, parent &psi.StubBase, module_fqn string, build_for_all_children bool) {
+	node := cursor.current_node() or { return }
+	node_type := node.type_name
 
-	node_copy := node
+	stub_type := psi.node_type_to_stub_type(node_type)
+	is_stubbable := stub_type != .root || psi.node_is_type(node_type)
 
-	if node_copy is psi.StubBasedPsiElement || psi.node_is_type(node) || build_for_all_children {
-		if stub := element_type.create_stub(node, parent, module_fqn) {
-			is_qualified_type := node is psi.QualifiedType
-			for child in node.children() {
-				build_stub_tree_for_node(child, stub, module_fqn, build_for_all_children
-					|| is_qualified_type)
+	mut effective_parent := unsafe { parent }
+	mut should_traverse_children := true
+	mut pass_down_build_all := false
+
+	if is_stubbable || build_for_all_children {
+		psi_element := psi.create_element(node, file)
+		element_type := psi.StubbedElementType{}
+
+		if stub := element_type.create_stub(psi_element, parent, module_fqn) {
+			effective_parent = unsafe { stub }
+			if node_type == .qualified_type {
+				pass_down_build_all = true
 			}
 		}
-		return
 	}
 
-	for child in node.children() {
-		build_stub_tree_for_node(child, parent, module_fqn, false)
+	if should_traverse_children {
+		if cursor.to_first_child() {
+			for {
+				build_stub_tree_recurse(mut cursor, file, effective_parent, module_fqn,
+					build_for_all_children || pass_down_build_all)
+
+				if !cursor.next() {
+					break
+				}
+			}
+			cursor.to_parent()
+		}
 	}
 }
 

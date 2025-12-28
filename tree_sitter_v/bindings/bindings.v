@@ -31,9 +31,9 @@ pub fn (mut p Parser[T]) reset() {
 
 @[inline]
 pub fn (p &Parser[T]) free() {
-    unsafe {
-        p.raw_parser.delete()
-    }
+	unsafe {
+		p.raw_parser.delete()
+	}
 }
 
 @[params]

@@ -562,8 +562,9 @@ pub fn (s &StubbedElementType) create_stub(psi PsiElement, parent_stub &StubBase
 		return declaration_stub(*psi, parent_stub, .module_clause)
 	}
 
-	if node_is_type(psi) {
-		stub_type := node_type_to_stub_type(psi.node().type_name)
+	node_type := psi.node().type_name
+	if node_is_type(node_type) {
+		stub_type := node_type_to_stub_type(node_type)
 		return text_based_stub(psi, parent_stub, stub_type)
 	}
 
@@ -571,11 +572,10 @@ pub fn (s &StubbedElementType) create_stub(psi PsiElement, parent_stub &StubBase
 		return declaration_stub(*psi, parent_stub, .import_spec, include_text: true)
 	}
 
-	if psi.node().type_name in [.import_list, .import_declaration, .import_path, .import_name,
-		.import_alias] {
-		stub_type := node_type_to_stub_type(psi.node().type_name)
+	if node_type in [.import_list, .import_declaration, .import_path, .import_name, .import_alias] {
+		stub_type := node_type_to_stub_type(node_type)
 		return text_based_stub(psi, parent_stub, stub_type,
-			include_text: psi.node().type_name !in [
+			include_text: node_type !in [
 				.import_list,
 				.import_declaration,
 				.selective_import_list,
@@ -639,8 +639,8 @@ pub fn text_based_stub(psi PsiElement, parent_stub &StubElement, stub_type StubT
 }
 
 @[inline]
-pub fn node_is_type(psi PsiElement) bool {
-	return psi.node().type_name in [
+pub fn node_is_type(type_name bindings.NodeType) bool {
+	return type_name in [
 		.plain_type,
 		.type_reference_expression,
 		.qualified_type,
