@@ -257,7 +257,12 @@ pub fn (r &ReferencesSearch) search_in_scope(element psi.PsiNamedElement, scope 
 pub fn (r &ReferencesSearch) search_in(element psi.PsiNamedElement, search_root psi.PsiElement) []psi.PsiElement {
 	name := element.name()
 	mut result := []psi.PsiElement{cap: 10}
-	for node in psi.new_psi_tree_walker(search_root) {
+
+	mut walker := psi.new_psi_tree_walker(search_root)
+	defer { walker.free() }
+
+	for {
+		node := walker.next() or { break }
 		if node is psi.ReferenceExpression || node is psi.TypeReferenceExpression {
 			ref := node as psi.ReferenceExpressionBase
 			if node.text_matches(name) {

@@ -55,14 +55,14 @@ pub fn (tree &StubTree) get_imported_modules() []string {
 }
 
 pub fn build_stub_tree(file &psi.PsiFile, indexing_root string) &StubTree {
-	mut cursor := file.ast_cursor()
-	defer { cursor.free() }
+	mut walker := psi.new_tree_walker(file.tree.root_node())
+	defer { walker.free() }
 
 	stub_root := psi.new_root_stub(file.path())
 	module_fqn := psi.module_qualified_name(file, indexing_root)
 
-	if cursor.current_node() != none {
-		build_stub_tree_recurse(mut cursor, file, stub_root, module_fqn, false)
+	if walker.current_node() != none {
+		build_stub_tree_recurse(mut walker, file, stub_root, module_fqn, false)
 	}
 
 	return &StubTree{
@@ -70,8 +70,8 @@ pub fn build_stub_tree(file &psi.PsiFile, indexing_root string) &StubTree {
 	}
 }
 
-fn build_stub_tree_recurse(mut cursor psi.AstCursor, file &psi.PsiFile, parent &psi.StubBase, module_fqn string, build_for_all_children bool) {
-	node := cursor.current_node() or { return }
+fn build_stub_tree_recurse(mut tw psi.TreeWalker, file &psi.PsiFile, parent &psi.StubBase, module_fqn string, build_for_all_children bool) {
+	node := tw.current_node() or { return }
 	node_type := node.type_name
 
 	stub_type := psi.node_type_to_stub_type(node_type)
@@ -94,16 +94,16 @@ fn build_stub_tree_recurse(mut cursor psi.AstCursor, file &psi.PsiFile, parent &
 	}
 
 	if should_traverse_children {
-		if cursor.to_first_child() {
+		if tw.to_first_child() {
 			for {
-				build_stub_tree_recurse(mut cursor, file, effective_parent, module_fqn,
+				build_stub_tree_recurse(mut tw, file, effective_parent, module_fqn,
 					build_for_all_children || pass_down_build_all)
 
-				if !cursor.next() {
+				if !tw.next_sibling() {
 					break
 				}
 			}
-			cursor.to_parent()
+			tw.to_parent()
 		}
 	}
 }

@@ -135,7 +135,13 @@ fn (f &EnumFieldDeclaration) get_value_impl() i64 {
 
 	if !is_flag {
 		if value := f.value() {
-			if val := f.calculate_value(value) {
+			val := f.calculate_value(value)
+			if f.stub_based() {
+				if mut file := value.containing_file() {
+					file.free()
+				}
+			}
+			if val != none {
 				return val
 			}
 		}

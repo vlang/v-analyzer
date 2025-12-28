@@ -14,7 +14,13 @@ pub fn (c &ConstantDefinition) is_public() bool {
 
 pub fn (c &ConstantDefinition) get_type() types.Type {
 	expr := c.expression() or { return types.unknown_type }
-	return infer_type(expr)
+	res := infer_type(expr)
+	if c.stub_based() {
+		if mut file := expr.containing_file() {
+			file.free()
+		}
+	}
+	return res
 }
 
 fn (c &ConstantDefinition) identifier() ?PsiElement {

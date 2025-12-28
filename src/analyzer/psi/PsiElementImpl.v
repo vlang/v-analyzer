@@ -27,6 +27,14 @@ fn new_psi_node_from_stub(id StubId, stubs_list &StubList) PsiElementImpl {
 	}
 }
 
+fn (n &PsiElementImpl) is_valid_tree() bool {
+	if n.stub_based() {
+		return true
+	}
+	file := n.containing_file or { return true }
+	return !isnil(file.tree)
+}
+
 pub fn (n &PsiElementImpl) stub_id() StubId {
 	return n.stub_id
 }
@@ -52,7 +60,12 @@ pub fn (n &PsiElementImpl) element_type() bindings.NodeType {
 	if stub := n.get_stub() {
 		return stub.element_type()
 	}
-	return n.node().type_name
+
+	if !n.is_valid_tree() {
+		return .unknown
+	}
+
+	return n.node.type_name
 }
 
 pub fn (n &PsiElementImpl) containing_file() ?&PsiFile {
@@ -84,7 +97,11 @@ pub fn (n &PsiElementImpl) accept_mut(mut visitor MutablePsiElementVisitor) {
 }
 
 pub fn (n &PsiElementImpl) find_element_at(offset u32) ?PsiElement {
-	start_byte := if n.node().type_name == .source_file { u32(0) } else { n.node.start_byte() }
+	if !n.is_valid_tree() {
+		return none
+	}
+
+	start_byte := if n.node.type_name == .source_file { u32(0) } else { n.node.start_byte() }
 	abs_offset := start_byte + offset
 	el := n.node.descendant_for_byte_range(abs_offset, abs_offset)?
 	return create_element(el, n.containing_file)
@@ -125,11 +142,19 @@ pub fn (n &PsiElementImpl) parent() ?PsiElement {
 		return none
 	}
 
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	parent := n.node.parent()?
 	return create_element(parent, n.containing_file)
 }
 
 pub fn (n &PsiElementImpl) parent_nth(depth int) ?PsiElement {
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	parent := n.node.parent_nth(depth)?
 	return create_element(parent, n.containing_file)
 }
@@ -205,7 +230,11 @@ pub fn (n &PsiElementImpl) sibling_of_type_backward(typ bindings.NodeType) ?PsiE
 }
 
 pub fn (n &PsiElementImpl) parent_of_type_or_self(typ bindings.NodeType) ?PsiElement {
-	if n.node().type_name == typ {
+	if !n.is_valid_tree() {
+		return none
+	}
+
+	if n.node.type_name == typ {
 		return create_element(n.node, n.containing_file)
 	}
 	mut parent := n.parent()?
@@ -229,6 +258,10 @@ pub fn (n &PsiElementImpl) children() []PsiElement {
 		return children.get_psi()
 	}
 
+	if !n.is_valid_tree() {
+		return []
+	}
+
 	mut result := []PsiElement{}
 	mut child := n.node.first_child() or { return [] }
 	for {
@@ -239,6 +272,10 @@ pub fn (n &PsiElementImpl) children() []PsiElement {
 }
 
 pub fn (n &PsiElementImpl) named_children() []PsiElement {
+	if !n.is_valid_tree() {
+		return []
+	}
+
 	if stub := n.get_stub() {
 		children := stub.children_stubs()
 		return children.get_psi()
@@ -256,6 +293,10 @@ pub fn (n &PsiElementImpl) named_children() []PsiElement {
 }
 
 pub fn (n &PsiElementImpl) first_child() ?PsiElement {
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	child := n.node.first_child()?
 	return create_element(child, n.containing_file)
 }
@@ -266,11 +307,18 @@ pub fn (n &PsiElementImpl) first_child_or_stub() ?PsiElement {
 		return child.get_psi()
 	}
 
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	child := n.node.first_child()?
 	return create_element(child, n.containing_file)
 }
 
 pub fn (n &PsiElementImpl) last_child() ?PsiElement {
+	if !n.is_valid_tree() {
+		return none
+	}
 	child := n.node.last_child()?
 	return create_element(child, n.containing_file)
 }
@@ -281,11 +329,19 @@ pub fn (n &PsiElementImpl) last_child_or_stub() ?PsiElement {
 		return child.get_psi()
 	}
 
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	child := n.node.last_child()?
 	return create_element(child, n.containing_file)
 }
 
 pub fn (n &PsiElementImpl) next_sibling() ?PsiElement {
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	sibling := n.node.next_sibling()?
 	return create_element(sibling, n.containing_file)
 }
@@ -299,10 +355,18 @@ pub fn (n &PsiElementImpl) next_sibling_or_stub() ?PsiElement {
 		return none
 	}
 
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	return n.next_sibling()
 }
 
 pub fn (n &PsiElementImpl) prev_sibling() ?PsiElement {
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	sibling := n.node.prev_sibling()?
 	return create_element(sibling, n.containing_file)
 }
@@ -332,6 +396,10 @@ pub fn (n &PsiElementImpl) prev_sibling_or_stub() ?PsiElement {
 }
 
 pub fn (n &PsiElementImpl) find_child_by_type(typ bindings.NodeType) ?PsiElement {
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	ast_node := n.node.first_node_by_type(typ)?
 	return create_element(ast_node, n.containing_file)
 }
@@ -339,6 +407,10 @@ pub fn (n &PsiElementImpl) find_child_by_type(typ bindings.NodeType) ?PsiElement
 pub fn (n &PsiElementImpl) has_child_of_type(typ bindings.NodeType) bool {
 	if stub := n.get_stub() {
 		return stub.has_child_of_type(node_type_to_stub_type(typ))
+	}
+
+	if !n.is_valid_tree() {
+		return false
 	}
 
 	if _ := n.node.first_node_by_type(typ) {
@@ -354,16 +426,28 @@ pub fn (n &PsiElementImpl) find_child_by_type_or_stub(typ bindings.NodeType) ?Ps
 		return child.get_psi()
 	}
 
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	ast_node := n.node.first_node_by_type(typ)?
 	return create_element(ast_node, n.containing_file)
 }
 
 pub fn (n &PsiElementImpl) find_child_by_name(name string) ?PsiElement {
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	ast_node := n.node.child_by_field_name(name)?
 	return create_element(ast_node, n.containing_file)
 }
 
 pub fn (n &PsiElementImpl) find_children_by_type(typ bindings.NodeType) []PsiElement {
+	if !n.is_valid_tree() {
+		return []
+	}
+
 	mut result := []PsiElement{}
 	mut child := n.node.first_child() or { return [] }
 	for {
@@ -380,6 +464,10 @@ pub fn (n &PsiElementImpl) find_children_by_type_or_stub(typ bindings.NodeType) 
 		return stub.get_children_by_type(node_type_to_stub_type(typ)).get_psi()
 	}
 
+	if !n.is_valid_tree() {
+		return []
+	}
+
 	mut result := []PsiElement{}
 	mut child := n.node.first_child() or { return [] }
 	for {
@@ -392,6 +480,10 @@ pub fn (n &PsiElementImpl) find_children_by_type_or_stub(typ bindings.NodeType) 
 }
 
 pub fn (n &PsiElementImpl) find_last_child_by_type(typ bindings.NodeType) ?PsiElement {
+	if !n.is_valid_tree() {
+		return none
+	}
+
 	ast_node := n.node.last_node_by_type(typ)?
 	return create_element(ast_node, n.containing_file)
 }
@@ -399,6 +491,10 @@ pub fn (n &PsiElementImpl) find_last_child_by_type(typ bindings.NodeType) ?PsiEl
 pub fn (n &PsiElementImpl) get_text() string {
 	if stub := n.get_stub() {
 		return stub.text
+	}
+
+	if !n.is_valid_tree() {
+		return ''
 	}
 
 	if file := n.containing_file() {
@@ -413,6 +509,10 @@ pub fn (n &PsiElementImpl) text_matches(value string) bool {
 		return stub.text == value
 	}
 
+	if !n.is_valid_tree() {
+		return false
+	}
+
 	if file := n.containing_file() {
 		return n.node.text_matches(file.source_text, value)
 	}
@@ -423,6 +523,10 @@ pub fn (n &PsiElementImpl) text_matches(value string) bool {
 pub fn (n &PsiElementImpl) text_range() TextRange {
 	if stub := n.get_stub() {
 		return stub.text_range
+	}
+
+	if !n.is_valid_tree() {
+		return TextRange{}
 	}
 
 	return TextRange{
@@ -437,6 +541,10 @@ pub fn (n &PsiElementImpl) text_length() int {
 	if stub := n.get_stub() {
 		range := stub.text_range
 		return range.end_column - range.column
+	}
+
+	if !n.is_valid_tree() {
+		return 0
 	}
 
 	return int(n.node.text_length())

@@ -91,17 +91,17 @@ pub fn (p &PsiFile) text() string {
 	return p.source_text
 }
 
+pub fn (mut p PsiFile) free() {
+	if !isnil(p.tree) {
+		unsafe { p.tree.free() }
+		p.tree = unsafe { nil }
+	}
+}
+
 pub fn (p &PsiFile) symbol_at(range TextRange) u8 {
 	lines := p.source_text.split_into_lines()
 	line := lines[range.line] or { return 0 }
 	return line[range.column - 1] or { return 0 }
-}
-
-pub fn (p &PsiFile) ast_cursor() AstCursor {
-	root := p.tree.root_node()
-	return AstCursor{
-		raw_cursor: root.tree_cursor()
-	}
 }
 
 pub fn (p &PsiFile) root() PsiElement {
@@ -177,6 +177,8 @@ pub fn (p &PsiFile) get_imports() []ImportSpec {
 		}
 	} else {
 		mut walker := new_psi_tree_walker(p.root())
+		defer { walker.free() }
+
 		for {
 			child := walker.next() or { break }
 			if child is ImportSpec {
