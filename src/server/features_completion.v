@@ -32,7 +32,8 @@ pub fn (mut ls LanguageServer) completion(params lsp.CompletionParams) ![]lsp.Co
 	source = insert_to_string(source, offset, completion.dummy_identifier)
 
 	res := ls.main_parser.parse_code(source)
-	patched_psi_file := psi.new_psi_file(uri.path(), res.tree, res.source_text)
+	mut patched_psi_file := psi.new_psi_file(uri.path(), res.tree, res.source_text)
+	defer { patched_psi_file.free() }
 
 	element := patched_psi_file.root().find_element_at(offset) or {
 		loglib.with_fields({
