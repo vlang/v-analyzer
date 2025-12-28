@@ -185,8 +185,9 @@ pub fn (r &ReferencesSearch) search_named_element_in_module(module_name string, 
 	parsed_files := parser.parse_batch_files(path_to_search, workers)
 
 	for parsed_file in parsed_files {
-		psi_file := psi.new_psi_file(parsed_file.path, parsed_file.tree, parsed_file.source_text)
+		mut psi_file := psi.new_psi_file(parsed_file.path, parsed_file.tree, parsed_file.source_text)
 		result << r.search_in(element, psi_file.root)
+		psi_file.free()
 	}
 
 	return result
@@ -230,8 +231,9 @@ pub fn (r &ReferencesSearch) search_public_named_element(element psi.PsiNamedEle
 	watch := time.new_stopwatch(auto_start: true)
 	parsed_files := parser.parse_batch_files(files, workers)
 	for parsed_result in parsed_files {
-		psi_file := psi.new_psi_file(parsed_result.path, parsed_result.tree, parsed_result.source_text)
+		mut psi_file := psi.new_psi_file(parsed_result.path, parsed_result.tree, parsed_result.source_text)
 		usages_in_depends_modules << r.search_in(element, psi_file.root)
+		psi_file.free()
 	}
 
 	loglib.with_duration(watch.elapsed()).info('Finish searching in depends modules')

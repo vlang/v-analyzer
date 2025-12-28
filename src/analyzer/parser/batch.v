@@ -36,6 +36,7 @@ fn spawn_parser_workers(result_chan chan ParseResult, file_chan chan string, cou
 	for i := 0; i < count_workers; i++ {
 		spawn fn [file_chan, mut wg, result_chan] () {
 			mut p := Parser.new()
+			defer { p.free() }
 			for {
 				filepath := <-file_chan or { break }
 				mut result := p.parse_file(filepath) or { continue }
