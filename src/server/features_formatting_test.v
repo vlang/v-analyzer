@@ -16,7 +16,10 @@ fn test_large_file() {
 	ls.setup_vpaths()
 
 	uri := lsp.document_uri_from_path(test_file)
-	res := parser.parse_code(src)
+
+	mut p := parser.Parser.new()
+	defer { p.free() }
+	res := p.parse_code(src)
 	psi_file := psi.new_psi_file(uri.path(), res.tree, res.source_text)
 	ls.opened_files[uri] = analyzer.OpenedFile{
 		uri:      uri
