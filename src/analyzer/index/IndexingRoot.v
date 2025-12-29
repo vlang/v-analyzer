@@ -178,9 +178,9 @@ pub fn (mut i IndexingRoot) index() BuiltIndexStatus {
 	return .from_scratch
 }
 
-pub fn (mut i IndexingRoot) index_file(path string, content string) !FileIndex {
+pub fn (mut i IndexingRoot) index_file(path string, content string, mut p parser.Parser) !FileIndex {
 	last_modified := os.file_last_mod_unix(path)
-	res := parser.parse_code(content)
+	res := p.parse_code(content)
 	psi_file := psi.new_psi_file(path, res.tree, content)
 	module_fqn := psi.module_qualified_name(psi_file, i.root)
 
@@ -221,6 +221,8 @@ pub fn (mut i IndexingRoot) spawn_indexing_workers(cache_chan chan FileIndex, fi
 	wg.add(workers)
 	for j := 0; j < workers; j++ {
 		spawn fn [file_chan, mut wg, mut i, cache_chan] () {
+			mut p := parser.Parser.new()
+			defer { p.free() }
 			for {
 				filepath := <-file_chan or { break }
 				content := os.read_file(filepath) or {
@@ -230,7 +232,7 @@ pub fn (mut i IndexingRoot) spawn_indexing_workers(cache_chan chan FileIndex, fi
 					}).error('Error reading file for index')
 					continue
 				}
-				cache_chan <- i.index_file(filepath, content) or {
+				cache_chan <- i.index_file(filepath, content, mut p) or {
 					loglib.with_fields({
 						'uri':   lsp.document_uri_from_path(filepath).str()
 						'error': err.str()
@@ -303,7 +305,10 @@ pub fn (mut i IndexingRoot) mark_as_dirty(filepath string, new_content string) !
 		'uri': lsp.document_uri_from_path(filepath).str()
 	}).info('Marking document as dirty')
 	i.index.per_file.data.delete(filepath)
-	res := i.index_file(filepath, new_content) or {
+
+	mut p := parser.Parser.new()
+	defer { p.free() }
+	res := i.index_file(filepath, new_content, mut p) or {
 		return error('Error indexing dirty ${filepath}: ${err}')
 	}
 	i.index.per_file.data[filepath] = res
@@ -321,7 +326,9 @@ pub fn (mut i IndexingRoot) add_file(filepath string, content string) !FileIndex
 		'uri': lsp.document_uri_from_path(filepath).str()
 	}).info('Adding new document')
 
-	res := i.index_file(filepath, content) or {
+	mut p := parser.Parser.new()
+	defer { p.free() }
+	res := i.index_file(filepath, content, mut p) or {
 		return error('Error indexing added ${filepath}: ${err}')
 	}
 	i.index.per_file.data[filepath] = res

@@ -431,6 +431,7 @@ fn (mut ls LanguageServer) setup_stubs() {
 pub fn (mut ls LanguageServer) shutdown() {
 	ls.bg.stop()
 	ls.status = .shutdown
+	ls.main_parser.free()
 	ls.exit()
 }
 

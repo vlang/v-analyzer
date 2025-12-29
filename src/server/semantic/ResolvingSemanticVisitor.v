@@ -23,8 +23,11 @@ pub fn new_resolve_semantic_visitor(range lsp.Range, containing_file &psi.PsiFil
 
 pub fn (v ResolveSemanticVisitor) accept(root psi.PsiElement) []SemanticToken {
 	mut result := []SemanticToken{cap: 400}
+	mut walker := psi.new_psi_tree_walker(root)
+	defer { walker.free() }
 
-	for node in psi.new_psi_tree_walker(root) {
+	for {
+		node := walker.next() or { break }
 		range := node.node().range()
 		if v.with_range && (range.end_byte <= v.start || range.start_byte >= v.end) {
 			continue

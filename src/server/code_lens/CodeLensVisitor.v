@@ -33,7 +33,11 @@ pub fn (mut v CodeLensVisitor) result() []lsp.CodeLens {
 }
 
 pub fn (mut v CodeLensVisitor) accept(root psi.PsiElement) {
-	for node in psi.new_tree_walker(root.node()) {
+	mut walker := psi.new_tree_walker(root.node())
+	defer { walker.free() }
+
+	for {
+		node := walker.next() or { break }
 		v.process_node(node)
 	}
 }

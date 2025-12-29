@@ -26,8 +26,11 @@ pub fn new_dumb_aware_semantic_visitor(range lsp.Range, containing_file &psi.Psi
 
 pub fn (v DumbAwareSemanticVisitor) accept(root psi.PsiElement) []SemanticToken {
 	mut result := []SemanticToken{cap: 500}
+	mut walker := psi.new_tree_walker(root.node())
+	defer { walker.free() }
 
-	for node in psi.new_tree_walker(root.node()) {
+	for {
+		node := walker.next() or { break }
 		range := node.range()
 		if v.with_range && (range.end_byte <= v.start || range.start_byte >= v.end) {
 			continue

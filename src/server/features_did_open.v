@@ -4,13 +4,12 @@ import lsp
 import loglib
 import analyzer
 import analyzer.psi
-import analyzer.parser
 
 pub fn (mut ls LanguageServer) did_open(params lsp.DidOpenTextDocumentParams) {
 	src := params.text_document.text
 	uri := params.text_document.uri.normalize()
 
-	res := parser.parse_code(src)
+	res := ls.main_parser.parse_code(src)
 	psi_file := psi.new_psi_file(uri.path(), res.tree, res.source_text)
 
 	ls.opened_files[uri] = analyzer.OpenedFile{

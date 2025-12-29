@@ -5,33 +5,31 @@ pub mut:
 	data []u8
 }
 
+@[inline]
+pub fn (mut s Serializer) write_u8(data u8) {
+	s.data << data
+}
+
+@[inline]
 pub fn (mut s Serializer) write_string(str string) {
 	s.write_int(str.len)
-	for sym in str {
-		s.write_u8(sym)
-	}
+	unsafe { s.data.push_many(str.str, str.len) }
 }
 
 pub fn (mut s Serializer) write_int(data int) {
-	if data > 0 && data < 0xFF {
-		s.write_u8(1)
-		s.write_u8(u8(data))
+	if data > 0 && data < 0xff {
+		s.data << 1
+		s.data << u8(data)
 		return
 	}
-
-	s.write_u8(0)
+	s.data << 0
 	for i in 0 .. 4 {
-		s.write_u8(u8(data >> (8 * (3 - i))) & 0xFF)
+		s.data << u8(data >> (8 * (3 - i))) & 0xff
 	}
 }
 
 pub fn (mut s Serializer) write_i64(data i64) {
 	for i in 0 .. 8 {
-		s.write_u8(u8(data >> (8 * (7 - i))) & 0xFF)
+		s.data << u8(data >> (8 * (7 - i))) & 0xff
 	}
-}
-
-@[inline]
-pub fn (mut s Serializer) write_u8(data u8) {
-	s.data << data
 }

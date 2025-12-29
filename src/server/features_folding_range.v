@@ -8,8 +8,12 @@ pub fn (mut ls LanguageServer) folding_range(params lsp.FoldingRangeParams) ?[]l
 	file := ls.get_file(uri)?
 
 	mut result := []lsp.FoldingRange{}
+	mut walker := psi.new_tree_walker(file.psi_file.root().node())
+	defer { walker.free() }
 
-	for node in psi.new_tree_walker(file.psi_file.root().node()) {
+	for {
+		node := walker.next() or { break }
+
 		if node.type_name == .import_list {
 			element := psi.create_element(node, file.psi_file)
 			decls := element.find_children_by_type(.import_declaration)

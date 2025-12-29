@@ -109,10 +109,12 @@ pub fn (mut i Checker) check() {
 
 pub fn (mut c Checker) check_file(path string) []ErrorInfo {
 	content := os.read_file(path) or { return [] }
-	res := parser.parse_code(content)
+
+	mut p := parser.Parser.new()
+	defer { p.free() }
+	res := p.parse_code(content)
 
 	root := res.tree.root_node()
-
 	errors := c.check_node(path, AstNode(root))
 
 	// unsafe { res.tree.free() }

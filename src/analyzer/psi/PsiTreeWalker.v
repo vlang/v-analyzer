@@ -17,3 +17,8 @@ pub fn new_psi_tree_walker(root_node PsiElement) PsiTreeWalker {
 		containing_file: root_node.containing_file()
 	}
 }
+
+@[inline]
+pub fn (mut tw PsiTreeWalker) free() {
+	tw.tree_walker.free()
+}

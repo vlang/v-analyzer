@@ -14,7 +14,13 @@ pub fn (c &ConstantDefinition) is_public() bool {
 
 pub fn (c &ConstantDefinition) get_type() types.Type {
 	expr := c.expression() or { return types.unknown_type }
-	return infer_type(expr)
+	res := infer_type(expr)
+	if c.stub_based() {
+		if mut file := expr.containing_file() {
+			file.free()
+		}
+	}
+	return res
 }
 
 fn (c &ConstantDefinition) identifier() ?PsiElement {
@@ -68,7 +74,9 @@ pub fn (c &ConstantDefinition) expression() ?PsiElement {
 	if stub := c.get_stub() {
 		file := c.containing_file() or { return none }
 		// pretty hacky but it works
-		res := parser.parse_code(stub.additional)
+		mut p := parser.Parser.new()
+		defer { p.free() }
+		res := p.parse_code(stub.additional)
 		root := res.tree.root_node()
 		first_child := root.first_child()?
 		next_first_child := first_child.first_child()?

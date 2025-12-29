@@ -17,7 +17,11 @@ pub fn (mut v InlayHintsVisitor) accept(root psi.PsiElement) {
 	file := root.containing_file() or { return }
 	v.lines = file.source_text.count('\n')
 
-	for node in psi.new_tree_walker(root.node()) {
+	mut walker := psi.new_tree_walker(root.node())
+	defer { walker.free() }
+
+	for {
+		node := walker.next() or { break }
 		v.process_node(node, file)
 	}
 }

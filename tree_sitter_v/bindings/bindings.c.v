@@ -115,7 +115,7 @@ fn (mut p C.TSParser) parse_bytes_with_old_tree(content []u8, old_tree &TSTree) 
 }
 
 @[inline; unsafe]
-fn (p &C.TSParser) free() {
+fn (p &C.TSParser) delete() {
 	unsafe {
 		C.ts_parser_delete(p)
 	}
@@ -566,7 +566,7 @@ fn C.ts_tree_cursor_first_child_for_byte(cursor &C.TSTreeCursor, idx u32) i64
 fn C.ts_tree_cursor_copy(cursor &C.TSTreeCursor) C.TSTreeCursor
 
 @[inline; unsafe]
-fn (cursor &C.TSTreeCursor) free() {
+pub fn (cursor &C.TSTreeCursor) delete() {
 	C.ts_tree_cursor_delete(cursor)
 }
 

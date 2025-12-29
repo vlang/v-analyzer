@@ -66,7 +66,9 @@ pub fn (f &EnumFieldDeclaration) value() ?PsiElement {
 		}
 
 		file := f.containing_file() or { return none }
-		res := parser.parse_code(stub.additional)
+		mut p := parser.Parser.new()
+		defer { p.free() }
+		res := p.parse_code(stub.additional)
 		root := res.tree.root_node()
 		first_child := root.first_child()?
 		next_first_child := first_child.first_child()?
@@ -133,7 +135,13 @@ fn (f &EnumFieldDeclaration) get_value_impl() i64 {
 
 	if !is_flag {
 		if value := f.value() {
-			if val := f.calculate_value(value) {
+			val := f.calculate_value(value)
+			if f.stub_based() {
+				if mut file := value.containing_file() {
+					file.free()
+				}
+			}
+			if val != none {
 				return val
 			}
 		}
