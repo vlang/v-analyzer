@@ -7748,7 +7748,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "import_declaration"
+          "name": "import_list"
         },
         {
           "type": "SYMBOL",

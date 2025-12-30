@@ -1118,7 +1118,7 @@ module.exports = grammar({
 		_block_element: ($) =>
     		choice(
     		    $._statement,
-    		    $.import_declaration,
+    		    $.import_list,
     		    $._top_level_declaration
     		),
 

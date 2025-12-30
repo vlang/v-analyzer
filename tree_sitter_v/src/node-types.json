@@ -756,7 +756,7 @@
           "named": true
         },
         {
-          "type": "import_declaration",
+          "type": "import_list",
           "named": true
         }
       ]
