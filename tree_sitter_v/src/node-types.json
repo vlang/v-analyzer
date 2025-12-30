@@ -752,6 +752,10 @@
           "named": true
         },
         {
+          "type": "_top_level_declaration",
+          "named": true
+        },
+        {
           "type": "import_declaration",
           "named": true
         }
