@@ -274,6 +274,17 @@ pub fn (r &ReferencesSearch) search_in(element psi.PsiNamedElement, search_root 
 						result << node
 					}
 				}
+				if element is psi.ImportSpec && resolved is psi.ImportSpec {
+					if element.import_name() == resolved.import_name() {
+						if element_file := element.containing_file() {
+							if resolved_file := resolved.containing_file() {
+								if element_file.path == resolved_file.path {
+									result << node
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}

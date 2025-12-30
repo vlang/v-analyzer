@@ -540,10 +540,8 @@ fn test_with_value() {
                           (match_arms
                             (match_arm
                               (match_expression_list
-                                (match_arm_type
-                                  (plain_type
-                                    (type_reference_expression
-                                      (identifier)))))
+                                (reference_expression
+                                  (identifier)))
                               (block
                                 (return_statement
                                   (expression_list

@@ -59,6 +59,49 @@ pub fn (r &ReferenceImpl) resolve() ?PsiElement {
 	return result
 }
 
+pub fn (r &ReferenceImpl) multi_resolve() []PsiElement {
+	file := r.file or { return [] }
+
+	if res := r.resolve_as_import_spec() {
+		return res
+	}
+
+	sub := SubResolver{
+		containing_file: file
+		element:         r.element
+		for_types:       r.for_types
+		for_attributes:  r.for_attributes
+	}
+	mut processor := ResolveProcessor{
+		containing_file: file
+		ref:             r.element
+		ref_name:        r.element.name()
+		collect_all:     true
+	}
+
+	sub.process_resolve_variants(mut processor)
+
+	return processor.result
+}
+
+fn (r &ReferenceImpl) resolve_as_import_spec() ?[]PsiElement {
+	if r.element is Identifier {
+		parent := r.element.parent()?
+		if parent !is ImportName {
+			return none
+		}
+		spec := parent.parent()?.parent()?
+		if spec is ImportSpec {
+			if ident := spec.identifier() {
+				if ident.is_equal(parent) {
+					return [spec]
+				}
+			}
+		}
+	}
+	return none
+}
+
 pub struct SubResolver {
 pub:
 	containing_file ?&PsiFile
@@ -91,16 +134,22 @@ pub fn (r &SubResolver) process_qualifier_expression(qualifier PsiElement, mut p
 
 	if qualifier is ReferenceExpressionBase {
 		resolved := qualifier.resolve() or { return true }
-		if resolved is ImportSpec {
-			import_name := resolved.qualified_name()
-			real_fqn := stubs_index.find_real_module_fqn(import_name)
 
-			elements := stubs_index.get_all_declarations_from_module(real_fqn, r.for_types)
-			for element in elements {
-				if !processor.execute(element) {
+		if resolved is ImportSpec {
+			import_name := resolved.import_name()
+			file := r.containing_file or { return true }
+			specs := file.resolve_import_specs(import_name)
+
+			for _, spec in specs {
+				target_fqn := spec.qualified_name()
+				real_fqn := stubs_index.find_real_module_fqn(target_fqn)
+				elements := stubs_index.get_all_declarations_from_module(real_fqn, r.for_types)
+
+				if !r.process_elements(elements, mut processor) {
 					return false
 				}
 			}
+			return true
 		}
 
 		if resolved is ModuleClause {
@@ -821,7 +870,8 @@ pub struct ResolveProcessor {
 	ref             ReferenceExpressionBase
 	ref_name        string
 mut:
-	result []PsiElement
+	result      []PsiElement
+	collect_all bool
 }
 
 fn (mut r ResolveProcessor) execute(element PsiElement) bool {
@@ -836,6 +886,9 @@ fn (mut r ResolveProcessor) execute(element PsiElement) bool {
 		}
 		if name == r.ref_name {
 			r.result << element as PsiElement
+			if r.collect_all {
+				return true
+			}
 			return false
 		}
 	}

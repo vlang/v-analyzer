@@ -572,7 +572,14 @@ pub fn (s &StubbedElementType) create_stub(psi PsiElement, parent_stub &StubBase
 		return declaration_stub(*psi, parent_stub, .import_spec, include_text: true)
 	}
 
-	if node_type in [.import_list, .import_declaration, .import_path, .import_name, .import_alias] {
+	if node_type in [
+		.import_list,
+		.import_declaration,
+		.import_path,
+		.import_name,
+		.import_alias,
+		.selective_import_list,
+	] {
 		stub_type := node_type_to_stub_type(node_type)
 		return text_based_stub(psi, parent_stub, stub_type,
 			include_text: node_type !in [

@@ -267,6 +267,11 @@ fn (mut p Provider) const_documentation(element psi.ConstantDefinition) ? {
 	p.sb.write_string(' = ')
 	if value := element.expression() {
 		p.sb.write_string(value.get_text())
+		if element.stub_based() {
+			if mut file := value.containing_file() {
+				file.free()
+			}
+		}
 	}
 	p.sb.write_string('\n')
 	p.sb.write_string('```')

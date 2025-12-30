@@ -322,15 +322,12 @@ module.exports = grammar({
 		// fn foo[T, T2]() {}
 		//       ^^^^^^^
 		generic_parameters: ($) =>
-			prec(
-				PREC.resolve,
-				seq(
-					choice(token.immediate('['), token.immediate('<')),
-					sep($.generic_parameter),
-					optional(','),
-					choice(']', '>'),
-				),
-			),
+    		seq(
+    		    token.immediate('['),
+    		    sep($.generic_parameter),
+    		    optional(','),
+    		    ']',
+    		),
 
 		generic_parameter: ($) => $.identifier,
 
@@ -798,7 +795,7 @@ module.exports = grammar({
 				choice($._expression_without_blocks, $.match_arm_type, alias($._definite_range, $.range)),
 			),
 
-		match_arm_type: ($) => prec(PREC.match_arm_type, $.plain_type),
+		match_arm_type: ($) => $.plain_type,
 
 		match_else_arm_clause: ($) => seq('else', field('block', $.block)),
 
@@ -1118,7 +1115,12 @@ module.exports = grammar({
 				field('right', $.expression_list),
 			),
 
-		_block_element: ($) => choice($._statement, $.import_declaration),
+		_block_element: ($) =>
+    		choice(
+    		    $._statement,
+    		    $.import_list,
+    		    $._top_level_declaration
+    		),
 
 		block: ($) => seq('{', repeat(seq($._block_element, optional(semi))), '}'),
 
