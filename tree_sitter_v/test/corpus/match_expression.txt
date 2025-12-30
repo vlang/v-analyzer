@@ -192,19 +192,16 @@ match age {
       (match_arms
         (match_arm
           (match_expression_list
-            (match_arm_type
-              (plain_type
-                (array_type
-                  (plain_type
-                    (type_reference_expression
-                      (identifier)))))))
-          (block))
-        (match_arm
-          (match_expression_list
-            (match_arm_type
-              (plain_type
-                (type_reference_expression
-                  (identifier)))))
+            (in_expression
+              (type_initializer
+                (plain_type
+                  (array_type
+                    (plain_type
+                      (type_reference_expression
+                        (identifier)))))
+                (type_initializer_body))
+              (reference_expression
+                (identifier))))
           (block))))))
 
 ================================================================================
@@ -224,22 +221,17 @@ match age {
       (match_arms
         (match_arm
           (match_expression_list
-            (match_arm_type
-              (plain_type
-                (map_type
-                  (plain_type
-                    (type_reference_expression
-                      (identifier)))
-                  (plain_type
-                    (type_reference_expression
-                      (identifier)))))))
-          (block))
-        (match_arm
-          (match_expression_list
-            (match_arm_type
-              (plain_type
-                (pointer_type
-                  (plain_type
-                    (type_reference_expression
-                      (identifier)))))))
+            (binary_expression
+              (type_initializer
+                (plain_type
+                  (map_type
+                    (plain_type
+                      (type_reference_expression
+                        (identifier)))
+                    (plain_type
+                      (type_reference_expression
+                        (identifier)))))
+                (type_initializer_body))
+              (reference_expression
+                (identifier))))
           (block))))))

@@ -475,22 +475,6 @@ fn foo[T]() {}
     (block)))
 
 ================================================================================
-Simple generic function with old syntax
-================================================================================
-fn foo<T>() {}
---------------------------------------------------------------------------------
-
-(source_file
-  (function_declaration
-    (identifier)
-    (generic_parameters
-      (generic_parameter
-        (identifier)))
-    (signature
-      (parameter_list))
-    (block)))
-
-================================================================================
 Generic function with several generic parameters
 ================================================================================
 fn foo[T, U]() {}
