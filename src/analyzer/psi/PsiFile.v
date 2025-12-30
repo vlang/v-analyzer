@@ -191,18 +191,25 @@ pub fn (p &PsiFile) get_imports() []ImportSpec {
 }
 
 pub fn (p &PsiFile) resolve_import_spec(name string) ?ImportSpec {
+	specs := p.resolve_import_specs(name)
+	if specs.len > 0 {
+		return specs.first()
+	}
+	return none
+}
+
+pub fn (p &PsiFile) resolve_import_specs(name string) []ImportSpec {
 	imports := p.get_imports()
 	if imports.len == 0 {
-		return none
+		return []
 	}
-
+	mut result := []ImportSpec{cap: 2}
 	for imp in imports {
 		if imp.import_name() == name {
-			return imp
+			result << imp
 		}
 	}
-
-	return none
+	return result
 }
 
 pub fn (p &PsiFile) process_declarations(mut processor PsiScopeProcessor) bool {

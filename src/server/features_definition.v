@@ -17,19 +17,21 @@ pub fn (mut ls LanguageServer) definition(params lsp.TextDocumentPositionParams)
 		return none
 	}
 
-	resolved := element.resolve() or {
-		loglib.with_fields({
-			'caller': @METHOD
-			'name':   element.name()
-		}).warn('Cannot resolve reference')
+	resolved_elements := element.reference().multi_resolve()
+	if resolved_elements.len == 0 {
 		return none
 	}
 
-	containing_file := resolved.containing_file() or { return [] }
-	data := new_resolve_result(containing_file, resolved) or { return [] }
-	return [
-		data.to_location_link(element.text_range()),
-	]
+	mut links := []lsp.LocationLink{cap: resolved_elements.len}
+
+	for resolved in resolved_elements {
+		containing_file := resolved.containing_file() or { continue }
+		if data := new_resolve_result(containing_file, resolved) {
+			links << data.to_location_link(element.text_range())
+		}
+	}
+
+	return links
 }
 
 struct ResolveResult {
