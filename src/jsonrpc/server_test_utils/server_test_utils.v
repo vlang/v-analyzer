@@ -150,5 +150,6 @@ pub fn (rw &TestStream) last_notification_at_method[T](method_name string) !json
 
 // RpcResult<T> is a result form used for primitive types.
 pub struct RpcResult[T] {
+pub mut:
 	result T
 }
