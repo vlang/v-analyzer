@@ -13,7 +13,7 @@ pub mut:
 }
 
 // Source represent the possible types of V source code to parse.
-type Source = []byte | string
+type Source = []u8 | string
 
 // Parser is a wrapper around the Tree-sitter V parser.
 pub struct Parser {
@@ -84,7 +84,7 @@ pub fn (mut p Parser) parse_source(source Source) ParseResult {
 		string {
 			source
 		}
-		[]byte {
+		[]u8 {
 			source.str()
 		}
 	}
