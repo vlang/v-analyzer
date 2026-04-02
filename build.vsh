@@ -63,6 +63,9 @@ fn (m ReleaseMode) compile_cmd() string {
 		$if windows {
 			// TCC cannot build tree-sitter on Windows.
 			'-cc gcc'
+		} $else $if linux {
+			// GCC is needed for libbacktrace (unwind.h) and tree-sitter support.
+			'-cc gcc'
 		} $else {
 			// Let `-prod` toggle the appropriate production compiler.
 			''
