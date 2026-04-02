@@ -35,11 +35,9 @@ jobs:
           - target: linux-x86_64
             os: ubuntu-latest
           - target: darwin-x86_64
-            os: macos-latest
-            vflags: -d cross_compile_macos_x86_64
+            os: macos-13
           - target: darwin-arm64
             os: macos-latest
-            vflags: -d cross_compile_macos_arm64
           - build_type: release
             cflags: -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -frename-registers -ftree-vectorize
       fail-fast: false
