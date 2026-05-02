@@ -144,7 +144,7 @@ struct SocketStream {
 	log_label string = 'v-analyzer'
 	log       bool   = true
 mut:
-	conn   &net.TcpConn       = &net.TcpConn(net.listen_tcp(.ip, '80')!)
+	conn   &net.TcpConn       = unsafe { nil }
 	reader &io.BufferedReader = unsafe { nil }
 pub mut:
 	port  int = 5007
