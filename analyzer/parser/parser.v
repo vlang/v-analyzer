@@ -88,6 +88,7 @@ pub fn (mut p Parser) parse_source(source Source) ParseResult {
 			source.str()
 		}
 	}
+
 	return p.parse_code(code)
 }
 

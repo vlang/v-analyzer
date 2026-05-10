@@ -81,8 +81,8 @@ fn candidates_by_methods(methods []psi.PsiElement) []psi.PsiNamedElement {
 			fingerprint := method.fingerprint()
 
 			// all methods with the same fingerprint can probably be part of struct that implements the interface
-			struct_methods := stubs_index.get_elements_from_by_name(.workspace, .methods_fingerprint,
-				fingerprint)
+			struct_methods := stubs_index.get_elements_from_by_name(.workspace,
+				.methods_fingerprint, fingerprint)
 
 			for struct_method in struct_methods {
 				if struct_method is psi.FunctionOrMethodDeclaration {

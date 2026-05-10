@@ -85,7 +85,8 @@ pub fn (mut ls LanguageServer) initialize(params lsp.InitializeParams, mut wr Re
 			}
 			folding_range_provider:       true
 			execute_command_provider:     lsp.ExecuteCommandOptions{
-				commands: arrays.concat(ls.intentions.values().map(it.id), ...ls.compiler_quick_fixes.values().map(it.id))
+				commands: arrays.concat(ls.intentions.values().map(it.id),
+					...ls.compiler_quick_fixes.values().map(it.id))
 			}
 		}
 		server_info:  lsp.ServerInfo{
@@ -112,7 +113,8 @@ pub fn (mut ls LanguageServer) initialized(mut wr ResponseWriter) {
 	need_index_stdlib := 'no-stdlib' !in ls.initialization_options
 
 	if need_index_stdlib {
-		ls.indexing_mng.indexer.add_indexing_root(ls.paths.vmodules_root, .modules, ls.paths.cache_dir)
+		ls.indexing_mng.indexer.add_indexing_root(ls.paths.vmodules_root, .modules,
+			ls.paths.cache_dir)
 		for path in os.vmodules_paths()[1..] {
 			if path.is_blank() {
 				continue
@@ -223,8 +225,7 @@ fn (mut ls LanguageServer) setup() {
 			}
 		}
 
-		ls.client.log_message("Find custom cache dir path in '${cfg.path()}' config",
-			.info)
+		ls.client.log_message("Find custom cache dir path in '${cfg.path()}' config", .info)
 		ls.client.log_message('Using "${cfg.custom_cache_dir}" as cache dir', .info)
 
 		loglib.info("Find custom cache dir path in '${cfg.path()}' config")
@@ -246,8 +247,7 @@ fn (mut ls LanguageServer) setup() {
 fn (mut ls LanguageServer) setup_cache_dir() {
 	if !os.exists(config.analyzer_caches_path) {
 		os.mkdir_all(config.analyzer_caches_path) or {
-			ls.client.log_message('Failed to create analyzer caches directory: ${err}',
-				.error)
+			ls.client.log_message('Failed to create analyzer caches directory: ${err}', .error)
 
 			loglib.with_fields({
 				'err': err.str()
@@ -345,8 +345,7 @@ fn (mut ls LanguageServer) setup_vpaths() {
 fn (mut ls LanguageServer) setup_config_dir() {
 	if !os.exists(config.analyzer_configs_path) {
 		os.mkdir_all(config.analyzer_configs_path) or {
-			ls.client.log_message('Failed to create analyzer configs directory: ${err}',
-				.error)
+			ls.client.log_message('Failed to create analyzer configs directory: ${err}', .error)
 
 			loglib.with_fields({
 				'err': err.str()
@@ -363,8 +362,7 @@ fn (mut ls LanguageServer) setup_config_dir() {
 		loglib.info('Creating default global analyzer config')
 
 		os.write_file(config.analyzer_global_config_path, config.default) or {
-			ls.client.log_message('Failed to create global default analyzer config: ${err}',
-				.error)
+			ls.client.log_message('Failed to create global default analyzer config: ${err}', .error)
 
 			loglib.with_fields({
 				'err': err.str()

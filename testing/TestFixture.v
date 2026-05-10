@@ -62,8 +62,7 @@ pub fn (mut t Fixture) initialize(with_stdlib bool) !lsp.InitializeResult {
 		options << 'no-stdlib'
 	}
 
-	result := t.test_client.send[lsp.InitializeParams, lsp.InitializeResult]('initialize',
-		lsp.InitializeParams{
+	result := t.test_client.send[lsp.InitializeParams, lsp.InitializeResult]('initialize', lsp.InitializeParams{
 		process_id:             75556
 		client_info:            lsp.ClientInfo{
 			name:    'Testing'
@@ -129,8 +128,7 @@ pub fn (mut t Fixture) configure_by_text(filename string, text string) ! {
 }
 
 fn (mut t Fixture) send_open_current_file_request() ! {
-	t.test_client.send[lsp.DidOpenTextDocumentParams, jsonrpc.Null]('textDocument/didOpen',
-		lsp.DidOpenTextDocumentParams{
+	t.test_client.send[lsp.DidOpenTextDocumentParams, jsonrpc.Null]('textDocument/didOpen', lsp.DidOpenTextDocumentParams{
 		text_document: lsp.TextDocumentItem{
 			uri:         lsp.document_uri_from_path(t.current_file.path)
 			language_id: 'v'
@@ -139,8 +137,7 @@ fn (mut t Fixture) send_open_current_file_request() ! {
 		}
 	}) or {}
 
-	t.test_client.send[lsp.DidChangeTextDocumentParams, jsonrpc.Null]('textDocument/didChange',
-		lsp.DidChangeTextDocumentParams{
+	t.test_client.send[lsp.DidChangeTextDocumentParams, jsonrpc.Null]('textDocument/didChange', lsp.DidChangeTextDocumentParams{
 		text_document:   lsp.VersionedTextDocumentIdentifier{
 			uri:     lsp.document_uri_from_path(t.current_file.path)
 			version: 1
@@ -152,8 +149,7 @@ fn (mut t Fixture) send_open_current_file_request() ! {
 		]
 	}) or {}
 
-	t.test_client.send[lsp.DidChangeWatchedFilesParams, jsonrpc.Null]('workspace/didChangeWatchedFiles',
-		lsp.DidChangeWatchedFilesParams{
+	t.test_client.send[lsp.DidChangeWatchedFilesParams, jsonrpc.Null]('workspace/didChangeWatchedFiles', lsp.DidChangeWatchedFilesParams{
 		changes: [
 			lsp.FileEvent{
 				uri: lsp.document_uri_from_path(t.current_file.path)
@@ -168,8 +164,7 @@ pub fn (mut t Fixture) definition_at_cursor() []lsp.LocationLink {
 }
 
 pub fn (mut t Fixture) definition(pos lsp.Position) []lsp.LocationLink {
-	links := t.test_client.send[lsp.TextDocumentPositionParams, []lsp.LocationLink]('textDocument/definition',
-		lsp.TextDocumentPositionParams{
+	links := t.test_client.send[lsp.TextDocumentPositionParams, []lsp.LocationLink]('textDocument/definition', lsp.TextDocumentPositionParams{
 		text_document: lsp.TextDocumentIdentifier{
 			uri: lsp.document_uri_from_path(t.current_file.path)
 		}
@@ -184,8 +179,7 @@ pub fn (mut t Fixture) complete_at_cursor() []lsp.CompletionItem {
 }
 
 pub fn (mut t Fixture) complete(pos lsp.Position) []lsp.CompletionItem {
-	items := t.test_client.send[lsp.CompletionParams, []lsp.CompletionItem]('textDocument/completion',
-		lsp.CompletionParams{
+	items := t.test_client.send[lsp.CompletionParams, []lsp.CompletionItem]('textDocument/completion', lsp.CompletionParams{
 		text_document: lsp.TextDocumentIdentifier{
 			uri: lsp.document_uri_from_path(t.current_file.path)
 		}
@@ -199,8 +193,7 @@ pub fn (mut t Fixture) complete(pos lsp.Position) []lsp.CompletionItem {
 }
 
 pub fn (mut t Fixture) compute_inlay_hints() []lsp.InlayHint {
-	hints := t.test_client.send[lsp.InlayHintParams, []lsp.InlayHint]('textDocument/inlayHint',
-		lsp.InlayHintParams{
+	hints := t.test_client.send[lsp.InlayHintParams, []lsp.InlayHint]('textDocument/inlayHint', lsp.InlayHintParams{
 		text_document: lsp.TextDocumentIdentifier{
 			uri: lsp.document_uri_from_path(t.current_file.path)
 		}
@@ -210,8 +203,7 @@ pub fn (mut t Fixture) compute_inlay_hints() []lsp.InlayHint {
 }
 
 pub fn (mut t Fixture) compute_semantic_tokens() lsp.SemanticTokens {
-	tokens := t.test_client.send[lsp.SemanticTokensParams, lsp.SemanticTokens]('textDocument/semanticTokens/full',
-		lsp.SemanticTokensParams{
+	tokens := t.test_client.send[lsp.SemanticTokensParams, lsp.SemanticTokens]('textDocument/semanticTokens/full', lsp.SemanticTokensParams{
 		text_document: lsp.TextDocumentIdentifier{
 			uri: lsp.document_uri_from_path(t.current_file.path)
 		}
@@ -225,8 +217,7 @@ pub fn (mut t Fixture) implementation_at_cursor() []lsp.Location {
 }
 
 pub fn (mut t Fixture) implementation(pos lsp.Position) []lsp.Location {
-	links := t.test_client.send[lsp.TextDocumentPositionParams, []lsp.Location]('textDocument/implementation',
-		lsp.TextDocumentPositionParams{
+	links := t.test_client.send[lsp.TextDocumentPositionParams, []lsp.Location]('textDocument/implementation', lsp.TextDocumentPositionParams{
 		text_document: lsp.TextDocumentIdentifier{
 			uri: lsp.document_uri_from_path(t.current_file.path)
 		}
@@ -260,8 +251,7 @@ pub fn (mut t Fixture) documentation(pos lsp.Position) ?lsp.Hover {
 }
 
 pub fn (mut t Fixture) close_file(path string) {
-	t.test_client.send[lsp.DidCloseTextDocumentParams, jsonrpc.Null]('textDocument/didClose',
-		lsp.DidCloseTextDocumentParams{
+	t.test_client.send[lsp.DidCloseTextDocumentParams, jsonrpc.Null]('textDocument/didClose', lsp.DidCloseTextDocumentParams{
 		text_document: lsp.TextDocumentIdentifier{
 			uri: lsp.document_uri_from_path(path)
 		}

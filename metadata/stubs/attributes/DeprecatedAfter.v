@@ -31,5 +31,5 @@ pub struct DeprecatedAfter {
 	with_arg        bool   = true
 	arg_is_optional bool
 	target          []Target = [Target.struct_, Target.function, Target.field, Target.constant,
-	Target.type_alias]
+		Target.type_alias]
 }

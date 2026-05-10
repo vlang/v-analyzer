@@ -27,7 +27,8 @@ pub fn (mut ls LanguageServer) type_definition(params lsp.TextDocumentPositionPa
 		return none
 	}
 
-	typ := types.unwrap_generic_instantiation_type(types.unwrap_pointer_type(psi.infer_type(resolved)))
+	typ :=
+		types.unwrap_generic_instantiation_type(types.unwrap_pointer_type(psi.infer_type(resolved)))
 	type_element := psi.find_element(typ.qualified_name())?
 
 	containing_file := type_element.containing_file() or { return [] }

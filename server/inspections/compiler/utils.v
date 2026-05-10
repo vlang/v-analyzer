@@ -23,7 +23,8 @@ fn parse_compiler_diagnostic(msg string) ?inspections.Report {
 
 	first_line := lines.first()
 
-	line_colon_idx := first_line.index_after(':', 2) or { return none } // deal with `d:/v/...:2:4: error: ...`
+	line_colon_idx :=
+		first_line.index_after(':', 2) or { return none } // deal with `d:/v/...:2:4: error: ...`
 	mut filepath := first_line[..line_colon_idx]
 	$if windows {
 		filepath = filepath.replace('/', '\\')

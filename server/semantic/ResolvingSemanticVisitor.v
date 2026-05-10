@@ -11,7 +11,8 @@ pub struct ResolveSemanticVisitor {
 }
 
 pub fn new_resolve_semantic_visitor(range lsp.Range, containing_file &psi.PsiFile) ResolveSemanticVisitor {
-	start := utils.compute_offset(containing_file.source_text, range.start.line, range.start.character)
+	start := utils.compute_offset(containing_file.source_text, range.start.line,
+		range.start.character)
 	end := utils.compute_offset(containing_file.source_text, range.end.line, range.end.character)
 
 	return ResolveSemanticVisitor{

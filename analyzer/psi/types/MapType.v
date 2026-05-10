@@ -37,5 +37,6 @@ pub fn (s &MapType) accept(mut visitor TypeVisitor) {
 }
 
 pub fn (s &MapType) substitute_generics(name_map map[string]Type) Type {
-	return new_map_type(s.module_name, s.key.substitute_generics(name_map), s.value.substitute_generics(name_map))
+	return new_map_type(s.module_name, s.key.substitute_generics(name_map),
+		s.value.substitute_generics(name_map))
 }

@@ -656,7 +656,8 @@ pub fn (r &SubResolver) process_enum_fetch(parent PsiElement, mut processor PsiS
 pub fn (r &SubResolver) process_type_initializer_field(mut processor PsiScopeProcessor) bool {
 	if init_expr := r.element().parent_of_type(.type_initializer) {
 		if init_expr is PsiTypedElement {
-			typ := types.unwrap_generic_instantiation_type(types.unwrap_pointer_type(infer_type(init_expr as PsiElement)))
+			typ :=
+				types.unwrap_generic_instantiation_type(types.unwrap_pointer_type(infer_type(init_expr as PsiElement)))
 			if typ is types.StructType {
 				if !r.process_struct_type_fields(typ, mut processor) {
 					return false

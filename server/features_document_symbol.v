@@ -72,6 +72,7 @@ fn symbol_kind(element psi.PsiElement) ?lsp.SymbolKind {
 		}
 		else {}
 	}
+
 	return none
 }
 
