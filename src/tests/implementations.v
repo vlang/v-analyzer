@@ -56,8 +56,7 @@ fn implementations() testing.Tester {
 		t.assert_has_implementation_with_name(locations, 'FooImpl')!
 	})
 
-	t.test('method interface implementation with parameters, parameters types mismatch',
-		fn (mut t testing.Test, mut fixture testing.Fixture) ! {
+	t.test('method interface implementation with parameters, parameters types mismatch', fn (mut t testing.Test, mut fixture testing.Fixture) ! {
 		fixture.configure_by_text('1.v', '
 		module main
 

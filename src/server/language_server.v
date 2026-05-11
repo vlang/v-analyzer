@@ -143,6 +143,7 @@ pub fn (mut ls LanguageServer) handle_jsonrpc(request &jsonrpc.Request, mut rw j
 		}
 		else {}
 	}
+
 	if ls.status != .initialized {
 		if request.method == 'initialize' {
 			params := json.decode(lsp.InitializeParams, request.params) or { return err }

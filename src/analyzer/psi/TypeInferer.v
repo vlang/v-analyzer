@@ -501,8 +501,7 @@ pub fn (t &TypeInferer) infer_call_expr_type(element CallExpression) types.Type 
 			result_type := expr_type.result
 			if types.is_generic(result_type) {
 				if resolved is GenericParametersOwner {
-					return GenericTypeInferer{}.infer_generic_call(element, resolved,
-						result_type)
+					return GenericTypeInferer{}.infer_generic_call(element, resolved, result_type)
 				}
 			}
 

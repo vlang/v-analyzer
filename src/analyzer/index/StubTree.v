@@ -97,6 +97,7 @@ fn build_stub_tree_recurse(mut tw psi.TreeWalker, file &psi.PsiFile, parent &psi
 		if tw.to_first_child() {
 			for {
 				build_stub_tree_recurse(mut tw, file, effective_parent, module_fqn,
+
 					build_for_all_children || pass_down_build_all)
 
 				if !tw.next_sibling() {
@@ -130,9 +131,7 @@ pub fn build_stub_tree_iterative(file &psi.PsiFile, mut nodes []NodeInfo) &StubT
 		this_parent_stub := node.parent
 
 		parent_stub := if node.node is psi.StubBasedPsiElement {
-			if stub := element_type.create_stub(node.node as psi.PsiElement, this_parent_stub,
-				'')
-			{
+			if stub := element_type.create_stub(node.node as psi.PsiElement, this_parent_stub, '') {
 				stub
 			} else {
 				this_parent_stub

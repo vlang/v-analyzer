@@ -35,7 +35,8 @@ fn (g &GenericTypeInferer) infer_generic_ts_map(arg_owner GenericArgumentsOwner,
 				qualifier_type := infer_type(qualifier)
 				if instantiation := g.extract_instantiation(qualifier_type) {
 					qualifier_specialization_map := g.infer_qualifier_generic_ts_map(instantiation)
-					return g.infer_simple_generic_ts_map(arg_owner, params_owner, qualifier_specialization_map)
+					return g.infer_simple_generic_ts_map(arg_owner, params_owner,
+						qualifier_specialization_map)
 				}
 			}
 		}

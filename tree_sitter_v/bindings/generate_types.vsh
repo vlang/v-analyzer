@@ -152,7 +152,8 @@ for supertype_name in supertype_ordered_names {
 sb.writeln('}')
 
 // write constants
-write_const_enum_array(mut sb, 'declaration_node_types', node_type_enum_name, declaration_node_types)
+write_const_enum_array(mut sb, 'declaration_node_types', node_type_enum_name,
+	declaration_node_types)
 write_const_enum_array(mut sb, 'identifier_node_types', node_type_enum_name, identifier_node_types)
 write_const_enum_array(mut sb, 'literal_node_types', node_type_enum_name, literal_node_types)
 

@@ -65,8 +65,8 @@ fn super_candidates_by_methods(methods []psi.PsiElement) []psi.PsiNamedElement {
 			fingerprint := method.fingerprint()
 
 			// all methods with the same fingerprint can probably be part of the same interface
-			interface_methods := stubs_index.get_elements_from_by_name(.workspace, .interface_methods_fingerprint,
-				fingerprint)
+			interface_methods := stubs_index.get_elements_from_by_name(.workspace,
+				.interface_methods_fingerprint, fingerprint)
 
 			for interface_method in interface_methods {
 				if interface_method is psi.InterfaceMethodDeclaration {
@@ -87,8 +87,8 @@ fn super_candidates_by_fields(fields []psi.PsiElement) []psi.PsiNamedElement {
 			fingerprint := field.name()
 
 			// all fields with the same fingerprint can probably be part of interface that can be implemented by the struct
-			interface_fields := stubs_index.get_elements_from_by_name(.workspace, .interface_fields_fingerprint,
-				fingerprint)
+			interface_fields := stubs_index.get_elements_from_by_name(.workspace,
+				.interface_fields_fingerprint, fingerprint)
 
 			for interface_field in interface_fields {
 				if interface_field is psi.FieldDeclaration {

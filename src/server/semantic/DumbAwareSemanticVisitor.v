@@ -14,7 +14,8 @@ pub struct DumbAwareSemanticVisitor {
 }
 
 pub fn new_dumb_aware_semantic_visitor(range lsp.Range, containing_file &psi.PsiFile) DumbAwareSemanticVisitor {
-	start := utils.compute_offset(containing_file.source_text, range.start.line, range.start.character)
+	start := utils.compute_offset(containing_file.source_text, range.start.line,
+		range.start.character)
 	end := utils.compute_offset(containing_file.source_text, range.end.line, range.end.character)
 
 	return DumbAwareSemanticVisitor{
