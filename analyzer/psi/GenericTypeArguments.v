@@ -14,7 +14,8 @@ pub fn (n GenericTypeArguments) types() []types.Type {
 
 	mut arg_types := []types.Type{cap: plain_types.len}
 	for plain_type in plain_types {
-		arg_types << inferer.convert_type(plain_type, mut visited)
+		typ := inferer.convert_type(plain_type, mut visited)
+		arg_types << typ
 	}
 
 	return arg_types
