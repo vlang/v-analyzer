@@ -4,8 +4,8 @@ import os
 import lsp
 import loglib as _ // import to use __global `logger`
 
-const default_vexe = @VEXE
-const default_vroot = os.dir(default_vexe)
+const default_vroot = os.dir(@VEXE)
+const default_vexe = os.join_path(default_vroot, $if windows { 'v.exe' } $else { 'v' })
 const default_vlib_root = os.join_path(default_vroot, 'vlib')
 const default_vmodules_root = os.vmodules_dir()
 

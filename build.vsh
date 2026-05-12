@@ -66,6 +66,9 @@ fn (m ReleaseMode) compile_cmd() string {
 		} $else $if linux {
 			// GCC is needed for libbacktrace (unwind.h) and tree-sitter support.
 			'-cc gcc'
+		} $else $if macos {
+			// TCC cannot build tree-sitter reliably on macOS.
+			'-cc clang'
 		} $else {
 			// Let `-prod` toggle the appropriate production compiler.
 			''
@@ -93,6 +96,7 @@ fn (m ReleaseMode) compile_cmd() string {
 		.debug { '${build_cmd} -g ${libbacktrace}' }
 		.dev { '${build_cmd} -d show_ast_on_hover -g ${libbacktrace}' }
 	}
+
 	$if !windows {
 		// Treesitter's generated C code uses gotos;
 		// Older V versions of the json codegen generated `if(cond) \nstatement; statement2;` with wrong indentation, instead of blocks;

@@ -33,7 +33,7 @@ pub fn (mut s Deserializer) read_int() int {
 	s.index += 4
 	mut res := 0
 	for index, datum in data {
-		res |= datum << (8 * (3 - index))
+		res |= int(u32(datum) << (8 * (3 - index)))
 	}
 	return res
 }
@@ -41,9 +41,9 @@ pub fn (mut s Deserializer) read_int() int {
 pub fn (mut s Deserializer) read_i64() i64 {
 	data := s.data[s.index..s.index + 8]
 	s.index += 8
-	mut res := 0
+	mut res := i64(0)
 	for index, datum in data {
-		res |= datum << (8 * (7 - index))
+		res |= i64(u64(datum) << (8 * (7 - index)))
 	}
 	return res
 }

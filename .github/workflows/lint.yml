@@ -32,11 +32,12 @@ jobs:
 
       - name: Verify formatting
         run: |
+          fmt_files=($(git ls-files '*.v' '*.vsh' ':!:metadata/stubs/*.v' ':!:src/metadata/stubs/*.v'))
           set +e
-          v fmt -c .
+          v fmt -c "${fmt_files[@]}"
           exit_code=$?
           # Don't fail on internal errors.
           if [[ $exit_code -ne 0 && $exit_code -ne 5 ]]; then
-            v fmt -diff .
+            v fmt -diff "${fmt_files[@]}"
             exit 1
           fi
