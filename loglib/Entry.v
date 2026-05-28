@@ -89,15 +89,15 @@ pub fn (entry &Entry) log_one(level LogLevel, msg string) {
 }
 
 pub fn (entry &Entry) log_impl(level LogLevel, msg ...string) {
-	mut new_entry := entry.clone()
-	new_entry.time = time.now()
-	new_entry.level = level
-	new_entry.message = msg.join(' ')
+	mut log_entry := entry.clone()
+	log_entry.time = time.now()
+	log_entry.level = level
+	log_entry.message = msg.join(' ')
 
-	new_entry.write()
+	log_entry.write()
 
 	if u64(level) <= u64(LogLevel.panic) {
-		panic(new_entry)
+		panic(log_entry)
 	}
 }
 
