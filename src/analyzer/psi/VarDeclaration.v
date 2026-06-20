@@ -41,7 +41,7 @@ fn (v VarDeclaration) initializer_of(def VarDefinition) ?PsiElement {
 	return expressions[index]
 }
 
-pub fn (v VarDeclaration) vars() []src.analyzer.psi.PsiElement {
+pub fn (v VarDeclaration) vars() []PsiElement {
 	first_child := v.first_child() or { return [] }
 	return first_child
 		.children()
@@ -54,7 +54,7 @@ pub fn (v VarDeclaration) vars() []src.analyzer.psi.PsiElement {
 		})
 }
 
-fn (v VarDeclaration) expressions() []src.analyzer.psi.PsiElement {
+fn (v VarDeclaration) expressions() []PsiElement {
 	last_child := v.last_child() or { return [] }
 	return last_child.children()
 }
