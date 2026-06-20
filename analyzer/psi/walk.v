@@ -24,7 +24,7 @@ pub fn inspect(node PsiElement, cb fn (PsiElement) bool) {
 }
 
 struct Inspector {
-	cb fn (analyzer.psi.PsiElement) bool = unsafe { nil }
+	cb fn (PsiElement) bool = unsafe { nil }
 }
 
 fn (r &Inspector) visit_element(element PsiElement) {

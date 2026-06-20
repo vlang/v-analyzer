@@ -6,7 +6,7 @@ pub struct Attribute {
 
 fn (_ &Attribute) stub() {}
 
-pub fn (n Attribute) expressions() []analyzer.psi.PsiElement {
+pub fn (n Attribute) expressions() []PsiElement {
 	if stub := n.get_stub() {
 		return stub.get_children_by_type(.attribute_expression).get_psi()
 	}
