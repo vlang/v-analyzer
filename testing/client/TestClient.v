@@ -1,7 +1,7 @@
 module client
 
 import jsonrpc
-import json
+import json2
 import io
 import datatypes
 
@@ -41,7 +41,7 @@ pub mut:
 
 // send sends a request and receives a decoded response result.
 pub fn (mut tc TestClient) send[T, U](method string, params T) !U {
-	params_json := json.encode(params)
+	params_json := json2.encode(params, escape_unicode: true, time_as_unix: true)
 	req := jsonrpc.Request{
 		id:     '${tc.id}'
 		method: method
@@ -55,14 +55,14 @@ pub fn (mut tc TestClient) send[T, U](method string, params T) !U {
 		return IError(io.Eof{})
 	}
 	// println(raw_json_content)
-	return json.decode(U, raw_json_content)!
+	return json2.decode[U](raw_json_content)!
 }
 
 // notify is a version of send but instead of returning a response,
 // it only notifies the server. Effectively sending a request as a
 // notification.
 pub fn (mut tc TestClient) notify[T](method string, params T) ! {
-	params_json := json.encode(params)
+	params_json := json2.encode(params, escape_unicode: true, time_as_unix: true)
 	req := jsonrpc.Request{
 		id:     ''
 		method: method
@@ -96,7 +96,7 @@ pub fn (mut rw TestStream) read(mut buf []u8) !int {
 pub fn (mut rw TestStream) write(buf []u8) !int {
 	raw_json_content := buf.bytestr().all_after('\r\n\r\n')
 	if raw_json_content.contains('"result":') {
-		resp := json.decode(TestResponse, raw_json_content) or { return err }
+		resp := json2.decode[TestResponse](raw_json_content) or { return err }
 		rw.resp_buf[resp.raw_id] = resp
 	} else if raw_json_content.contains('"params":') {
 		idx := rw.notif_idx % 20
@@ -127,7 +127,7 @@ pub fn (rw &TestStream) response_text(raw_id string) string {
 // notification_at returns the jsonrpc.Notification<T> in a given index.
 pub fn (rw &TestStream) notification_at[T](idx int) !jsonrpc.NotificationMessage[T] {
 	raw_json_content := rw.notif_buf[idx].bytestr().all_after('\r\n\r\n')
-	return json.decode(jsonrpc.NotificationMessage[T], raw_json_content)!
+	return json2.decode[jsonrpc.NotificationMessage[T]](raw_json_content)!
 }
 
 // last_notification_at_method returns the last jsonrpc.Notification<T> from the given method name.

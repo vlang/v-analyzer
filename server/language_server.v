@@ -1,6 +1,6 @@
 module server
 
-import json
+import json2
 import jsonrpc
 import lsp
 import time
@@ -146,7 +146,7 @@ pub fn (mut ls LanguageServer) handle_jsonrpc(request &jsonrpc.Request, mut rw j
 
 	if ls.status != .initialized {
 		if request.method == 'initialize' {
-			params := json.decode(lsp.InitializeParams, request.params) or { return err }
+			params := json2.decode[lsp.InitializeParams](request.params) or { return err }
 			w.write(ls.initialize(params, mut rw))
 		} else if ls.status == .shutdown {
 			return jsonrpc.invalid_request
@@ -166,19 +166,19 @@ pub fn (mut ls LanguageServer) handle_jsonrpc(request &jsonrpc.Request, mut rw j
 			ls.initialized(mut rw)
 		}
 		'textDocument/didOpen' {
-			params := json.decode(lsp.DidOpenTextDocumentParams, request.params) or { return err }
+			params := json2.decode[lsp.DidOpenTextDocumentParams](request.params) or { return err }
 			ls.did_open(params)
 		}
 		'textDocument/didSave' {
-			params := json.decode(lsp.DidSaveTextDocumentParams, request.params) or { return err }
+			params := json2.decode[lsp.DidSaveTextDocumentParams](request.params) or { return err }
 			ls.did_save(params)
 		}
 		'textDocument/didChange' {
-			params := json.decode(lsp.DidChangeTextDocumentParams, request.params) or { return err }
+			params := json2.decode[lsp.DidChangeTextDocumentParams](request.params) or { return err }
 			ls.did_change(params)
 		}
 		'textDocument/didClose' {
-			params := json.decode(lsp.DidCloseTextDocumentParams, request.params) or { return err }
+			params := json2.decode[lsp.DidCloseTextDocumentParams](request.params) or { return err }
 			ls.did_close(params)
 		}
 		'textDocument/willSave' {
@@ -188,37 +188,37 @@ pub fn (mut ls LanguageServer) handle_jsonrpc(request &jsonrpc.Request, mut rw j
 			// ls.will_save(params)
 		}
 		'textDocument/formatting' {
-			params := json.decode(lsp.DocumentFormattingParams, request.params) or {
+			params := json2.decode[lsp.DocumentFormattingParams](request.params) or {
 				return w.wrap_error(err)
 			}
 			w.write(ls.formatting(params) or { return w.wrap_error(err) })
 		}
 		'textDocument/documentSymbol' {
-			params := json.decode(lsp.DocumentSymbolParams, request.params) or {
+			params := json2.decode[lsp.DocumentSymbolParams](request.params) or {
 				return w.wrap_error(err)
 			}
 			w.write(ls.document_symbol(params) or { return w.wrap_error(err) })
 		}
 		'workspace/symbol' {
-			params := json.decode(lsp.WorkspaceSymbolParams, request.params) or {
+			params := json2.decode[lsp.WorkspaceSymbolParams](request.params) or {
 				return w.wrap_error(err)
 			}
-			w.write(ls.workspace_symbol(params) or { return w.wrap_error(err) })
+			w.write(ls.workspace_symbol(params) or { return jsonrpc.null_result })
 		}
 		'textDocument/signatureHelp' {
-			params := json.decode(lsp.SignatureHelpParams, request.params) or {
+			params := json2.decode[lsp.SignatureHelpParams](request.params) or {
 				return w.wrap_error(err)
 			}
-			w.write(ls.signature_help(params) or { return w.wrap_error(err) })
+			w.write(ls.signature_help(params) or { return jsonrpc.null_result })
 		}
 		'textDocument/completion' {
-			params := json.decode(lsp.CompletionParams, request.params) or {
+			params := json2.decode[lsp.CompletionParams](request.params) or {
 				return w.wrap_error(err)
 			}
 			w.write(ls.completion(params) or { return w.wrap_error(err) })
 		}
 		'textDocument/hover' {
-			params := json.decode(lsp.HoverParams, request.params) or { return w.wrap_error(err) }
+			params := json2.decode[lsp.HoverParams](request.params) or { return w.wrap_error(err) }
 			hover_data := ls.hover(params) or {
 				w.write_empty()
 				return
@@ -226,101 +226,101 @@ pub fn (mut ls LanguageServer) handle_jsonrpc(request &jsonrpc.Request, mut rw j
 			w.write(hover_data)
 		}
 		'textDocument/foldingRange' {
-			params := json.decode(lsp.FoldingRangeParams, request.params) or {
+			params := json2.decode[lsp.FoldingRangeParams](request.params) or {
 				return w.wrap_error(err)
 			}
-			w.write(ls.folding_range(params) or { return w.wrap_error(err) })
+			w.write(ls.folding_range(params) or { return jsonrpc.null_result })
 		}
 		'textDocument/definition' {
-			params := json.decode(lsp.TextDocumentPositionParams, request.params) or {
+			params := json2.decode[lsp.TextDocumentPositionParams](request.params) or {
 				return w.wrap_error(err)
 			}
-			w.write(ls.definition(params) or { return w.wrap_error(err) })
+			w.write(ls.definition(params) or { return jsonrpc.null_result })
 		}
 		'textDocument/typeDefinition' {
-			params := json.decode(lsp.TextDocumentPositionParams, request.params) or {
+			params := json2.decode[lsp.TextDocumentPositionParams](request.params) or {
 				return w.wrap_error(err)
 			}
-			w.write(ls.type_definition(params) or { return w.wrap_error(err) })
+			w.write(ls.type_definition(params) or { return jsonrpc.null_result })
 		}
 		'textDocument/references' {
-			params := json.decode(lsp.ReferenceParams, request.params) or {
+			params := json2.decode[lsp.ReferenceParams](request.params) or {
 				return w.wrap_error(err)
 			}
 			w.write(ls.references(params))
 		}
 		'textDocument/implementation' {
-			params := json.decode(lsp.TextDocumentPositionParams, request.params) or {
+			params := json2.decode[lsp.TextDocumentPositionParams](request.params) or {
 				return w.wrap_error(err)
 			}
-			w.write(ls.implementation(params) or { return w.wrap_error(err) })
+			w.write(ls.implementation(params) or { return jsonrpc.null_result })
 		}
 		'workspace/didChangeWatchedFiles' {
-			params := json.decode(lsp.DidChangeWatchedFilesParams, request.params) or { return err }
+			params := json2.decode[lsp.DidChangeWatchedFilesParams](request.params) or { return err }
 			ls.did_change_watched_files(params)
 		}
 		'textDocument/codeLens' {
-			params := json.decode(lsp.CodeLensParams, request.params) or {
+			params := json2.decode[lsp.CodeLensParams](request.params) or {
 				return w.wrap_error(err)
 			}
-			w.write(ls.code_lens(params) or { return w.wrap_error(err) })
+			w.write(ls.code_lens(params) or { return jsonrpc.null_result })
 		}
 		'textDocument/inlayHint' {
-			params := json.decode(lsp.InlayHintParams, request.params) or {
+			params := json2.decode[lsp.InlayHintParams](request.params) or {
 				return w.wrap_error(err)
 			}
-			w.write(ls.inlay_hints(params) or { return w.wrap_error(err) })
+			w.write(ls.inlay_hints(params) or { return jsonrpc.null_result })
 		}
 		'textDocument/prepareRename' {
-			params := json.decode(lsp.PrepareRenameParams, request.params) or {
+			params := json2.decode[lsp.PrepareRenameParams](request.params) or {
 				return w.wrap_error(err)
 			}
 			w.write(ls.prepare_rename(params) or { return w.wrap_error(err) })
 		}
 		'textDocument/rename' {
-			params := json.decode(lsp.RenameParams, request.params) or { return w.wrap_error(err) }
+			params := json2.decode[lsp.RenameParams](request.params) or { return w.wrap_error(err) }
 			w.write(ls.rename(params) or { return w.wrap_error(err) })
 		}
 		'textDocument/documentLink' {}
 		'textDocument/semanticTokens/full' {
-			params := json.decode(lsp.SemanticTokensParams, request.params) or {
+			params := json2.decode[lsp.SemanticTokensParams](request.params) or {
 				return w.wrap_error(err)
 			}
 			w.write(ls.semantic_tokens(params.text_document, lsp.Range{}) or {
-				return w.wrap_error(err)
+				return jsonrpc.null_result
 			})
 		}
 		'textDocument/semanticTokens/range' {
-			params := json.decode(lsp.SemanticTokensRangeParams, request.params) or {
+			params := json2.decode[lsp.SemanticTokensRangeParams](request.params) or {
 				return w.wrap_error(err)
 			}
 			w.write(ls.semantic_tokens(params.text_document, params.range) or {
-				return w.wrap_error(err)
+				return jsonrpc.null_result
 			})
 		}
 		'textDocument/documentHighlight' {
-			params := json.decode(lsp.TextDocumentPositionParams, request.params) or {
+			params := json2.decode[lsp.TextDocumentPositionParams](request.params) or {
 				return w.wrap_error(err)
 			}
-			w.write(ls.document_highlight(params) or { return w.wrap_error(err) })
+			w.write(ls.document_highlight(params) or { return jsonrpc.null_result })
 		}
 		'textDocument/codeAction' {
-			params := json.decode(lsp.CodeActionParams, request.params) or {
+			params := json2.decode[lsp.CodeActionParams](request.params) or {
 				return w.wrap_error(err)
 			}
-			w.write(ls.code_actions(params) or { return w.wrap_error(err) })
+			w.write(ls.code_actions(params) or { return jsonrpc.null_result })
 		}
 		'workspace/executeCommand' {
-			params := json.decode(lsp.ExecuteCommandParams, request.params) or {
+			params := json2.decode[lsp.ExecuteCommandParams](request.params) or {
 				return w.wrap_error(err)
 			}
 			ls.execute_command(params)
 		}
 		'v-analyzer/viewStubTree' {
-			params := json.decode(lsp.TextDocumentIdentifier, request.params) or {
+			params := json2.decode[lsp.TextDocumentIdentifier](request.params) or {
 				return w.wrap_error(err)
 			}
-			w.write(ls.view_stub_tree(params) or { return w.wrap_error(err) })
+			w.write(ls.view_stub_tree(params) or { return jsonrpc.null_result })
 		}
 		'$/cancelRequest' {
 			loglib.info('got $/cancelRequest request')

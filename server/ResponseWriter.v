@@ -6,11 +6,11 @@ import lsp
 pub type ResponseWriter = jsonrpc.ResponseWriter
 
 fn (mut wr ResponseWriter) wrap_error(err IError) IError {
-	if err is none {
-		return err
+	if err is none || err is jsonrpc.NullResult {
+		return jsonrpc.null_result
 	}
 	wr.log_message(err.msg(), .error)
-	return none
+	return jsonrpc.null_result
 }
 
 // log_message sends a window/logMessage notification to the client

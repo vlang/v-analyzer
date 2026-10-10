@@ -11,7 +11,7 @@ pub fn extract_doc_comment(el PsiElement) string {
 
 	mut comments := []PsiElement{}
 
-	for comment is LineComment {
+	for is_line_comment(comment) {
 		comment_start_line := comment.node().start_point().row
 
 		if comment_start_line + 1 + u32(comments.len) != el_start_line {
@@ -102,4 +102,10 @@ pub fn extract_doc_comment(el PsiElement) string {
 
 	res_str := res.str() + if field_eol_comment != '' { '\n\n... ' + field_eol_comment } else { '' }
 	return res_str
+}
+
+// is_line_comment is used as a loop condition so that the loop variable,
+// which is reassigned in the loop body, is not smart cast.
+fn is_line_comment(el PsiElement) bool {
+	return el is LineComment
 }

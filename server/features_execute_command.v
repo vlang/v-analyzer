@@ -2,7 +2,7 @@ module server
 
 import lsp
 import loglib
-import json
+import json2
 import server.intentions
 
 pub struct IntentionData {
@@ -14,9 +14,9 @@ pub:
 pub fn (mut ls LanguageServer) execute_command(params lsp.ExecuteCommandParams) ? {
 	mut intention := ls.find_intention_or_quickfix(params.command)?
 
-	arguments := json.decode([]string, params.arguments) or { []string{} }
+	arguments := json2.decode[[]string](params.arguments) or { []string{} }
 
-	argument := json.decode(IntentionData, arguments[0]) or {
+	argument := json2.decode[IntentionData](arguments[0]) or {
 		loglib.with_fields({
 			'command':  params.command
 			'argument': params.arguments

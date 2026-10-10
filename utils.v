@@ -42,19 +42,15 @@ pub fn download_install_vsh() ! {
 }
 
 pub fn call_install_vsh(cmd string) !int {
+	mut args := ['v', analyzer_install_script_path]
+	args << cmd.fields()
 	$if windows {
-		// On Windows we cannot use `os.Command` because it doesn't support Windows
-		res := os.execute('v ${analyzer_install_script_path} ${cmd}')
+		res := os.exec(args)
 		println(res.output)
 		return res.exit_code
 	}
 
-	mut command := os.Command{
-		path:            'v ${analyzer_install_script_path} ${cmd}'
-		redirect_stdout: true
-	}
-
-	command.start()!
+	mut command := os.start_new_command_args(args)!
 
 	for !command.eof {
 		println(command.read_line())

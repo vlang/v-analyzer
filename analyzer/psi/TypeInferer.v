@@ -61,10 +61,17 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 		UnaryExpression {
 			return t.infer_unary_expression_type(element)
 		}
-		OrBlockExpression, ResultPropagationExpression, OptionPropagationExpression {
+		OrBlockExpression {
 			expr := element.expression() or { return types.unknown_type }
-			expr_type := t.infer_type(expr)
-			return types.unwrap_result_or_option_type(expr_type)
+			return types.unwrap_result_or_option_type(t.infer_type(expr))
+		}
+		ResultPropagationExpression {
+			expr := element.expression() or { return types.unknown_type }
+			return types.unwrap_result_or_option_type(t.infer_type(expr))
+		}
+		OptionPropagationExpression {
+			expr := element.expression() or { return types.unknown_type }
+			return types.unwrap_result_or_option_type(t.infer_type(expr))
 		}
 		IndexExpression {
 			return t.infer_index_expression_type(element)
@@ -131,7 +138,13 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 			signature := element.signature() or { return types.unknown_type }
 			return t.process_signature(signature)
 		}
-		EnumDeclaration, EnumFieldDeclaration, ConstantDefinition {
+		EnumDeclaration {
+			return element.get_type()
+		}
+		EnumFieldDeclaration {
+			return element.get_type()
+		}
+		ConstantDefinition {
 			return element.get_type()
 		}
 		TypeReferenceExpression {
@@ -209,7 +222,7 @@ pub fn (t &TypeInferer) infer_slice_expression_type(element SliceExpression) typ
 
 pub fn (t &TypeInferer) infer_compile_time_if_expression_type(element CompileTimeIfExpression) types.Type {
 	block := element.block()
-	block_type := t.infer_type(block)
+	block_type := if b := block { t.infer_type(PsiElement(b)) } else { types.unknown_type }
 	if block_type is types.UnknownType {
 		else_branch := element.else_branch() or { return types.unknown_type }
 		return t.infer_type(else_branch)
@@ -358,7 +371,7 @@ pub fn (t &TypeInferer) infer_reference_expression_type(element ReferenceExpress
 
 pub fn (t &TypeInferer) infer_if_expression_type(element IfExpression) types.Type {
 	block := element.block()
-	block_type := t.infer_type(block)
+	block_type := if b := block { t.infer_type(PsiElement(b)) } else { types.unknown_type }
 	if block_type is types.UnknownType {
 		else_branch := element.else_branch() or { return types.unknown_type }
 		return t.infer_type(else_branch)
@@ -368,7 +381,7 @@ pub fn (t &TypeInferer) infer_if_expression_type(element IfExpression) types.Typ
 
 pub fn (t &TypeInferer) infer_unsafe_expression_type(element UnsafeExpression) types.Type {
 	block := element.block()
-	return t.infer_type(block)
+	return if b := block { t.infer_type(PsiElement(b)) } else { types.unknown_type }
 }
 
 pub fn (t &TypeInferer) infer_type_initializer_type(element TypeInitializer, mut visited map[string]types.Type) types.Type {

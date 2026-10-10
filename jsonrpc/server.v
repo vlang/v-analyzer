@@ -4,7 +4,7 @@
 module jsonrpc
 
 import io
-import json
+import json2
 import sync
 import strings
 
@@ -59,7 +59,7 @@ pub fn (mut s Server) dispatch_event(event_name string, data InterceptorData) ! 
 // process_raw_request decodes the raw request string into JSONRPC request.
 fn (_ Server) process_raw_request(raw_request string) !Request {
 	json_payload := raw_request.all_after('\r\n\r\n')
-	return json.decode(Request, json_payload) or { return err }
+	return json2.decode[Request](json_payload) or { return err }
 }
 
 // respond executes the incoming request into a response.
@@ -100,7 +100,7 @@ fn (mut s Server) internal_respond(mut base_rw ResponseWriter) ! {
 	s.handler.handle_jsonrpc(&req, mut rw) or {
 		// do not send response error if request is a notification
 		if req.id.len != 0 {
-			if err is none {
+			if err is none || err is NullResult {
 				rw.write(null)
 			} else if err is ResponseError {
 				rw.write_error(err)

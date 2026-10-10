@@ -360,11 +360,13 @@ pub fn get_all_modules() []string {
 }
 
 fn (_ &StubIndex) get_all_elements_from_sink_by_key(key StubIndexKey, sink StubIndexSink) []PsiElement {
-	data := sink.data[int(key)] or { return [] }
+	if int(key) !in sink.data {
+		return []
+	}
 
 	element_type := StubbedElementType{}
-	mut elements := []PsiElement{cap: data.len}
-	for _, stub_ids in data {
+	mut elements := []PsiElement{cap: sink.data[int(key)].len}
+	for _, stub_ids in sink.data[int(key)] {
 		for stub_id in stub_ids {
 			stub := sink.stub_list.index_map[stub_id] or { continue }
 			elements << element_type.create_psi(stub) or { continue }

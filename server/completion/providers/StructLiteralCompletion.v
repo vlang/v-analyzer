@@ -33,7 +33,7 @@ pub fn (s &StructLiteralCompletion) allowed_variants(ctx &completion.CompletionC
 	element := ref as psi.PsiElement
 
 	mut parent := element.parent() or { return .none_ }
-	for parent is psi.UnaryExpression {
+	for is_unary_expression(parent) {
 		parent = parent.parent() or { return .none_ }
 	}
 
@@ -101,4 +101,10 @@ pub fn (s &StructLiteralCompletion) get_field_initializers(element psi.PsiElemen
 	}
 
 	return []
+}
+
+// is_unary_expression is used as a loop condition so that the loop variable,
+// which is reassigned in the loop body, is not smart cast.
+fn is_unary_expression(el psi.PsiElement) bool {
+	return el is psi.UnaryExpression
 }

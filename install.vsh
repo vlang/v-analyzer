@@ -2,7 +2,7 @@
 
 // This script is used to install and update v-analyzer.
 import os
-import json
+import json2
 import term
 import time
 import compress.szip
@@ -171,7 +171,7 @@ fn install_from_binary(asset ReleaseAsset, update bool) ! {
 
 fn find_latest_asset(release_type string) !ReleaseAsset {
 	text := http.get_text('https://api.github.com/repos/vlang/v-analyzer/releases/latest')
-	res := json.decode(ReleaseInfo, text) or {
+	res := json2.decode[ReleaseInfo](text) or {
 		errorln('Failed to decode JSON response from GitHub: ${err}')
 		return error('Failed to decode JSON response from GitHub: ${err}')
 	}

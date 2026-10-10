@@ -1,7 +1,7 @@
 module server
 
 import lsp
-import json
+import json2
 import server.intentions
 
 pub fn (mut ls LanguageServer) code_actions(params lsp.CodeActionParams) ?[]lsp.CodeAction {
@@ -24,10 +24,10 @@ pub fn (mut ls LanguageServer) code_actions(params lsp.CodeActionParams) ?[]lsp.
 				title:     intention.name
 				command:   intention.id
 				arguments: [
-					json.encode(IntentionData{
+					json2.encode(IntentionData{
 						file_uri: uri
 						position: params.range.start
-					}),
+					}, escape_unicode: true, time_as_unix: true),
 				]
 			}
 		}
@@ -49,10 +49,10 @@ pub fn (mut ls LanguageServer) code_actions(params lsp.CodeActionParams) ?[]lsp.
 				title:     intention.name
 				command:   intention.id
 				arguments: [
-					json.encode(IntentionData{
+					json2.encode(IntentionData{
 						file_uri: uri
 						position: params.range.start
-					}),
+					}, escape_unicode: true, time_as_unix: true),
 				]
 			}
 		}

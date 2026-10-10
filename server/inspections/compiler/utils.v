@@ -63,7 +63,7 @@ fn exec_compiler_diagnostics(compiler_path string, uri lsp.DocumentUri, project_
 	is_script := filepath.ends_with('.vsh') || filepath.ends_with('.vv')
 
 	check_target := if is_script { filepath } else { project_root }
-	res := os.execute('${compiler_path} -enable-globals -shared -check ${check_target}')
+	res := os.exec([compiler_path, '-enable-globals', '-shared', '-check', check_target])
 
 	if res.exit_code == 0 {
 		return none

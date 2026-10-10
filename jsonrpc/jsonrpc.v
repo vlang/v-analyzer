@@ -3,7 +3,7 @@
 // that can be found in the LICENSE file.
 module jsonrpc
 
-import json
+import json2
 import strings
 import io
 
@@ -40,6 +40,14 @@ pub const error_codes = [
 	unknown_error.code(),
 ]
 
+// NullResult is returned by a handler to make the server reply with a `null`
+// result. It replaces returning `none` from a `!` function, which V no longer allows.
+pub struct NullResult {
+	Error
+}
+
+pub const null_result = NullResult{}
+
 // Null represents the null value in JSON.
 pub struct Null {}
 
@@ -64,7 +72,7 @@ pub fn (req Request) json() string {
 
 // decode_params decodes the parameters of a Request.
 pub fn (req Request) decode_params[T]() !T {
-	return json.decode(T, req.params) or { return err }
+	return json2.decode[T](req.params) or { return err }
 }
 
 // Response is a representation of server reply after an rpc call was made.
@@ -102,7 +110,7 @@ fn encode_response[T](resp Response[T], mut writer io.Writer) {
 		writer.write(resp.id.bytes()) or {}
 	}
 	if resp.error.code != 0 {
-		err := json.encode(resp.error)
+		err := json2.encode(resp.error, escape_unicode: true, time_as_unix: true)
 		writer.write(error_field_in_u8) or {}
 		writer.write(err.bytes()) or {}
 	} else {
@@ -110,7 +118,7 @@ fn encode_response[T](resp Response[T], mut writer io.Writer) {
 		$if T is Null {
 			writer.write(null_in_u8) or {}
 		} $else {
-			res := json.encode(resp.result)
+			res := json2.encode(resp.result, escape_unicode: true, time_as_unix: true)
 			writer.write(res.bytes()) or {}
 		}
 	}
@@ -147,7 +155,7 @@ fn encode_notification[T](notif NotificationMessage[T], mut writer io.Writer) {
 	$if T is Null {
 		writer.write(null_in_u8) or {}
 	} $else {
-		res := json.encode(notif.params)
+		res := json2.encode(notif.params, escape_unicode: true, time_as_unix: true)
 		writer.write(res.bytes()) or {}
 	}
 	writer.write([u8(`}`)]) or {}
@@ -158,7 +166,7 @@ fn encode_request[T](notif NotificationMessage[T], mut writer io.Writer) {
 	$if T is Null {
 		writer.write(null_in_u8) or {}
 	} $else {
-		res := json.encode(notif.params)
+		res := json2.encode(notif.params, escape_unicode: true, time_as_unix: true)
 		writer.write(res.bytes()) or {}
 	}
 	writer.write([u8(`}`)]) or {}

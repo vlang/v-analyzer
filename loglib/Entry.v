@@ -14,9 +14,9 @@ pub mut:
 	message string
 }
 
-pub fn new_entry(logger &Logger) &Entry {
+pub fn new_entry(lg &Logger) &Entry {
 	return &Entry{
-		logger: logger
+		logger: lg
 	}
 }
 

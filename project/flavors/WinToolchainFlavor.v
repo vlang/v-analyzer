@@ -6,7 +6,7 @@ pub struct WinToolchainFlavor {}
 
 fn (s &WinToolchainFlavor) get_home_page_candidates() []string {
 	mut res := []string{}
-	result := os.execute('where v')
+	result := os.exec(['where', 'v'])
 	if result.exit_code == 0 {
 		res << os.dir(result.output.trim_space())
 	}

@@ -57,7 +57,7 @@ fn new_ts_parser() &C.TSParser {
 
 @[inline]
 fn (mut p C.TSParser) parse(old_tree &TSTree, input C.TSInput) &TSTree {
-	return &TSTree(C.ts_parser_parse(p, voidptr(old_tree), input))
+	return unsafe { &TSTree(C.ts_parser_parse(p, voidptr(old_tree), input)) }
 }
 
 @[inline]
@@ -82,7 +82,7 @@ fn (mut p C.TSParser) parse_string_with_old_tree(content string, old_tree &TSTre
 
 @[inline]
 fn (mut p C.TSParser) parse_string_with_old_tree_and_len(content string, old_tree &TSTree, len u32) &TSTree {
-	return &TSTree(C.ts_parser_parse_string(p, voidptr(old_tree), &char(content.str), len))
+	return unsafe { &TSTree(C.ts_parser_parse_string(p, voidptr(old_tree), &char(content.str), len)) }
 }
 
 @[inline]
@@ -91,7 +91,7 @@ fn (mut p C.TSParser) parse_bytes(content []u8) &TSTree {
 }
 
 fn byte_array_input_read(pl voidptr, byte_index u32, position C.TSPoint, bytes_read &u32) &char {
-	payload := *(&[]u8(pl))
+	payload := unsafe { *(&[]u8(pl)) }
 	if byte_index >= u32(payload.len) {
 		unsafe {
 			*bytes_read = 0
@@ -140,22 +140,23 @@ fn C.ts_tree_get_changed_ranges(old_tree &C.TSTree, new_tree &C.TSTree, count &u
 
 @[inline]
 fn (tree &TSTree) copy() &TSTree {
-	return &TSTree(C.ts_tree_copy(voidptr(tree)))
+	return unsafe { &TSTree(C.ts_tree_copy(voidptr(tree))) }
 }
 
 @[inline]
 fn (tree &TSTree) root_node() C.TSNode {
-	return C.ts_tree_root_node(&C.TSTree(tree))
+	return C.ts_tree_root_node(unsafe { &C.TSTree(tree) })
 }
 
 @[inline]
 fn (tree &TSTree) edit(input_edit &C.TSInputEdit) {
-	C.ts_tree_edit(&C.TSTree(tree), input_edit)
+	C.ts_tree_edit(unsafe { &C.TSTree(tree) }, input_edit)
 }
 
 fn (tree &TSTree) get_changed_ranges(new_tree &TSTree) []C.TSRange {
 	mut len := u32(0)
-	buf := C.ts_tree_get_changed_ranges(&C.TSTree(tree), &C.TSTree(new_tree), &len)
+	buf := C.ts_tree_get_changed_ranges(unsafe { &C.TSTree(tree) }, unsafe { &C.TSTree(new_tree) },
+		&len)
 	element_size := int(sizeof(C.TSRange))
 
 	return unsafe {
