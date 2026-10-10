@@ -126,6 +126,7 @@ fn (mut _ IndexingRoot) need_index(path string) bool {
 	}
 
 	return !path.contains('/tests/') && !path.contains('/slow_tests/')
+		&& !path.contains('/testdata/')
 		&& !path.contains('/.vmodules/cache/')
 		&& !path.contains('/builtin/wasm/') // TODO: index this folder too
 		&& !path.contains('/builtin/js/') // TODO: index this folder too
