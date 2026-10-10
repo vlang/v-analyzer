@@ -5,7 +5,7 @@ import runtime
 import sync
 import os
 import time
-import src.analyzer.parser
+import analyzer.parser
 import tree_sitter_v.bindings
 
 fn main() {

@@ -7,7 +7,7 @@ import os
 import cli
 import term
 import time
-import src.metadata
+import metadata
 
 const vexe = @VEXE
 const bin_path = './bin/v-analyzer' + $if windows { '.exe' } $else { '' }
