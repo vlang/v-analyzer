@@ -31,19 +31,20 @@ pub fn (mut s Deserializer) read_int() int {
 
 	data := s.data[s.index..s.index + 4]
 	s.index += 4
-	mut res := 0
+	mut res := u32(0)
 	for index, datum in data {
-		res |= datum << (8 * (3 - index))
+		res |= u32(datum) << (8 * (3 - index))
 	}
-	return res
+	// the format stores ints as 32 bits; sign-extend, since `int` may be 64-bit
+	return int(i32(res))
 }
 
 pub fn (mut s Deserializer) read_i64() i64 {
 	data := s.data[s.index..s.index + 8]
 	s.index += 8
-	mut res := 0
+	mut res := i64(0)
 	for index, datum in data {
-		res |= datum << (8 * (7 - index))
+		res |= i64(datum) << (8 * (7 - index))
 	}
 	return res
 }

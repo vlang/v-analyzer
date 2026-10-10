@@ -148,3 +148,31 @@ pub enum StubType as u8 {
 	value_attribute
 	plain_type
 }
+
+fn test_serialize_deserialize_int_boundaries() {
+	values := [0, 1, 254, 255, 256, 560000, -1, -560000, int(max_i32), int(min_i32)]
+	mut s := Serializer{}
+	for v in values {
+		s.write_int(v)
+	}
+	mut d := Deserializer{
+		data: s.data
+	}
+	for v in values {
+		assert d.read_int() == v
+	}
+}
+
+fn test_serialize_deserialize_i64() {
+	values := [i64(0), 1, 0x7fffffff, 0x1_0000_0000, 1_700_000_000_123, -1, max_i64, min_i64]
+	mut s := Serializer{}
+	for v in values {
+		s.write_i64(v)
+	}
+	mut d := Deserializer{
+		data: s.data
+	}
+	for v in values {
+		assert d.read_i64() == v
+	}
+}
