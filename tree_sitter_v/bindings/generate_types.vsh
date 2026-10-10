@@ -1,4 +1,4 @@
-import json
+import json2
 import strings
 import os
 
@@ -59,7 +59,7 @@ fn (typ TSNodeType) is_anon() bool {
 
 cur_dir := dir(@FILE)
 node_types_json := read_file(join_path(@VMODROOT, 'tree_sitter_v', 'src', 'node-types.json'))!
-node_types := json.decode([]TSNodeType, node_types_json)!
+node_types := json2.decode[[]TSNodeType](node_types_json)!
 node_type_enum_name := 'NodeType'
 super_type_enum_name := 'SuperType'
 

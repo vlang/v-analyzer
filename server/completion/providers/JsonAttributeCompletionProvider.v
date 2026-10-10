@@ -47,5 +47,5 @@ fn (mut p JsonAttributeCompletionProvider) json_name(field_name string) string {
 const v_keywords = ['as', 'asm', 'assert', 'atomic', 'break', 'const', 'continue', 'defer', 'dump',
 	'else', 'enum', 'false', 'fn', 'for', '__global', 'go', 'goto', 'if', 'import', 'in', 'interface',
 	'is', 'isreftype', '_likely_', 'lock', 'match', 'module', 'mut', 'nil', 'none', '__offsetof',
-	'or', 'pub', 'return', 'rlock', 'select', 'shared', 'sizeof', 'spawn', 'static', 'struct', 'true',
-	'type', 'typeof', 'union', '_unlikely_', 'unsafe', 'volatile']
+	'or', 'pub', 'return', 'rlock', 'select', 'shared', 'sizeof', 'spawn', 'static', 'struct',
+	'true', 'type', 'typeof', 'union', '_unlikely_', 'unsafe', 'volatile']

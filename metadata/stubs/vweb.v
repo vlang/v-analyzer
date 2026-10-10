@@ -33,4 +33,6 @@ pub fn (v VWebTemplate) html() vweb.Result
 //   return $vweb.html()
 // }
 // ```
+// vfmt off
 pub const $vweb = VWebTemplate{}
+// vfmt on
