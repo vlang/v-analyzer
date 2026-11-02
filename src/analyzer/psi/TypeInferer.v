@@ -61,7 +61,15 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 		UnaryExpression {
 			return t.infer_unary_expression_type(element)
 		}
-		OrBlockExpression, ResultPropagationExpression, OptionPropagationExpression {
+		OrBlockExpression {
+			expr := element.expression() or { return types.unknown_type }
+			return types.unwrap_result_or_option_type(t.infer_type(expr))
+		}
+		ResultPropagationExpression {
+			expr := element.expression() or { return types.unknown_type }
+			return types.unwrap_result_or_option_type(t.infer_type(expr))
+		}
+		OptionPropagationExpression {
 			expr := element.expression() or { return types.unknown_type }
 			expr_type := t.infer_type(expr)
 			return types.unwrap_result_or_option_type(expr_type)
@@ -131,7 +139,13 @@ pub fn (t &TypeInferer) infer_type_impl(elem ?PsiElement) types.Type {
 			signature := element.signature() or { return types.unknown_type }
 			return t.process_signature(signature)
 		}
-		EnumDeclaration, EnumFieldDeclaration, ConstantDefinition {
+		EnumDeclaration {
+			return element.get_type()
+		}
+		EnumFieldDeclaration {
+			return element.get_type()
+		}
+		ConstantDefinition {
 			return element.get_type()
 		}
 		TypeReferenceExpression {

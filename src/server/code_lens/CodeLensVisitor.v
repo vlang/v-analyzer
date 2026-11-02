@@ -2,7 +2,7 @@ module code_lens
 
 import lsp
 import config
-import json
+import json2
 import server.tform
 import analyzer.psi
 import analyzer.psi.search
@@ -145,11 +145,11 @@ pub fn (mut v CodeLensVisitor) add_interface_implementations_lens(node psi.AstNo
 			command:   'v-analyzer.showReferences'
 			arguments: [
 				v.uri.path(),
-				json.encode(lsp.Position{
+				json2.encode(lsp.Position{
 					line:      identifier_text_range.line
 					character: identifier_text_range.column
-				}),
-				json.encode(locations),
+				}, escape_unicode: true, time_as_unix: true),
+				json2.encode(locations, escape_unicode: true, time_as_unix: true),
 			]
 		})
 	}
@@ -178,11 +178,11 @@ pub fn (mut v CodeLensVisitor) add_super_interfaces_lens(node psi.AstNode) {
 			command:   'v-analyzer.showReferences'
 			arguments: [
 				v.uri.path(),
-				json.encode(lsp.Position{
+				json2.encode(lsp.Position{
 					line:      identifier_text_range.line
 					character: identifier_text_range.column
-				}),
-				json.encode(locations),
+				}, escape_unicode: true, time_as_unix: true),
+				json2.encode(locations, escape_unicode: true, time_as_unix: true),
 			]
 		})
 	}

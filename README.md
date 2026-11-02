@@ -169,3 +169,7 @@ The full license text can be found in the [LICENSE](https://github.com/vlang/v-a
 [badge__tests_ci]: https://img.shields.io/github/actions/workflow/status/vlang/v-analyzer/analyzer_tests.yml?style=flat-rounded&branch=main&logo=github&&logoColor=959da5&labelColor=333&label=Analyzer
 [badge__tree_sitter_ci]: https://img.shields.io/github/actions/workflow/status/vlang/v-analyzer/tree_sitter_v.yml?style=flat-rounded&branch=main&logo=github&&logoColor=959da5&labelColor=333&label=Tree-sitter
 [badge__vscode_ext_ci]: https://img.shields.io/github/actions/workflow/status/vlang/v-analyzer/vscode_extension_tests.yml?style=flat-rounded&branch=main&logo=github&&logoColor=959da5&labelColor=333&label=VS%20Code%20Extension
+
+The server uses `json2` for JSON-RPC messages. Requests whose optional feature result is
+absent receive a JSON `null` response. Stub-backed PSI nodes use `bindings.new_stub_node`
+to initialize a node without calling Tree-sitter on an empty native node.

@@ -765,8 +765,8 @@ pub fn (r &SubResolver) process_owner_generic_ts(mut processor PsiScopeProcessor
 	return true
 }
 
-pub fn (_ &SubResolver) find_function(stubs_index StubIndex, name string) ?&FunctionOrMethodDeclaration {
-	found := stubs_index.get_elements_by_name(.functions, name)
+pub fn (_ &SubResolver) find_function(index StubIndex, name string) ?&FunctionOrMethodDeclaration {
+	found := index.get_elements_by_name(.functions, name)
 	if found.len != 0 {
 		first := found.first()
 		if first is FunctionOrMethodDeclaration {
@@ -776,8 +776,8 @@ pub fn (_ &SubResolver) find_function(stubs_index StubIndex, name string) ?&Func
 	return none
 }
 
-pub fn (_ &SubResolver) find_struct(stubs_index StubIndex, name string) ?&StructDeclaration {
-	found := stubs_index.get_elements_by_name(.structs, name)
+pub fn (_ &SubResolver) find_struct(index StubIndex, name string) ?&StructDeclaration {
+	found := index.get_elements_by_name(.structs, name)
 	if found.len != 0 {
 		first := found.first()
 		if first is StructDeclaration {
@@ -787,8 +787,8 @@ pub fn (_ &SubResolver) find_struct(stubs_index StubIndex, name string) ?&Struct
 	return none
 }
 
-pub fn (_ &SubResolver) find_interface(stubs_index StubIndex, name string) ?&InterfaceDeclaration {
-	found := stubs_index.get_elements_by_name(.interfaces, name)
+pub fn (_ &SubResolver) find_interface(index StubIndex, name string) ?&InterfaceDeclaration {
+	found := index.get_elements_by_name(.interfaces, name)
 	if found.len != 0 {
 		first := found.first()
 		if first is InterfaceDeclaration {
@@ -798,8 +798,8 @@ pub fn (_ &SubResolver) find_interface(stubs_index StubIndex, name string) ?&Int
 	return none
 }
 
-pub fn (_ &SubResolver) find_enum(stubs_index StubIndex, name string) ?&EnumDeclaration {
-	found := stubs_index.get_elements_by_name(.enums, name)
+pub fn (_ &SubResolver) find_enum(index StubIndex, name string) ?&EnumDeclaration {
+	found := index.get_elements_by_name(.enums, name)
 	if found.len != 0 {
 		first := found.first()
 		if first is EnumDeclaration {
@@ -809,8 +809,8 @@ pub fn (_ &SubResolver) find_enum(stubs_index StubIndex, name string) ?&EnumDecl
 	return none
 }
 
-pub fn (_ &SubResolver) find_constant(stubs_index StubIndex, name string) ?&ConstantDefinition {
-	found := stubs_index.get_elements_by_name(.constants, name)
+pub fn (_ &SubResolver) find_constant(index StubIndex, name string) ?&ConstantDefinition {
+	found := index.get_elements_by_name(.constants, name)
 	if found.len != 0 {
 		first := found.first()
 		if first is ConstantDefinition {
@@ -820,8 +820,8 @@ pub fn (_ &SubResolver) find_constant(stubs_index StubIndex, name string) ?&Cons
 	return none
 }
 
-pub fn (_ &SubResolver) find_type_alias(stubs_index StubIndex, name string) ?&TypeAliasDeclaration {
-	found := stubs_index.get_elements_by_name(.type_aliases, name)
+pub fn (_ &SubResolver) find_type_alias(index StubIndex, name string) ?&TypeAliasDeclaration {
+	found := index.get_elements_by_name(.type_aliases, name)
 	if found.len != 0 {
 		first := found.first()
 		if first is TypeAliasDeclaration {
@@ -831,8 +831,8 @@ pub fn (_ &SubResolver) find_type_alias(stubs_index StubIndex, name string) ?&Ty
 	return none
 }
 
-pub fn (_ &SubResolver) find_global_variable(stubs_index StubIndex, name string) ?&GlobalVarDefinition {
-	found := stubs_index.get_elements_by_name(.global_variables, name)
+pub fn (_ &SubResolver) find_global_variable(index StubIndex, name string) ?&GlobalVarDefinition {
+	found := index.get_elements_by_name(.global_variables, name)
 	if found.len != 0 {
 		first := found.first()
 		if first is GlobalVarDefinition {
@@ -842,8 +842,8 @@ pub fn (_ &SubResolver) find_global_variable(stubs_index StubIndex, name string)
 	return none
 }
 
-pub fn (_ &SubResolver) find_attribute(stubs_index StubIndex, name string) ?&StructDeclaration {
-	found := stubs_index.get_elements_by_name(.attributes, name)
+pub fn (_ &SubResolver) find_attribute(index StubIndex, name string) ?&StructDeclaration {
+	found := index.get_elements_by_name(.attributes, name)
 	if found.len != 0 {
 		first := found.first()
 		if first is StructDeclaration {

@@ -5,13 +5,13 @@ import strings
 pub fn extract_doc_comment(el PsiElement) string {
 	el_start_line := el.node().start_point().row
 	mut comment := el.prev_sibling() or { return '' }
-	if comment !is LineComment {
+	if comment.element_type() != .line_comment {
 		comment = comment.prev_sibling() or { return '' }
 	}
 
 	mut comments := []PsiElement{}
 
-	for comment is LineComment {
+	for comment.element_type() == .line_comment {
 		comment_start_line := comment.node().start_point().row
 
 		if comment_start_line + 1 + u32(comments.len) != el_start_line {
