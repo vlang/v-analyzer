@@ -20,7 +20,7 @@ pub fn new_psi_node(containing_file ?&PsiFile, node AstNode) PsiElementImpl {
 
 fn new_psi_node_from_stub(id StubId, stubs_list &StubList) PsiElementImpl {
 	return PsiElementImpl{
-		node:            AstNode{}
+		node:            AstNode(bindings.new_stub_node[bindings.NodeType](bindings.type_factory, bindings.NodeType.unknown))
 		containing_file: new_stub_psi_file(stubs_list.path, stubs_list)
 		stub_id:         id
 		stubs_list:      stubs_list

@@ -35,7 +35,7 @@ fn (mut p JsonAttributeCompletionProvider) add_completion(ctx &completion.Comple
 
 fn (mut p JsonAttributeCompletionProvider) json_name(field_name string) string {
 	without_underscore_and_at := field_name.trim_string_right('_').trim_string_left('@')
-	name_to_camelize := if token.is_key(without_underscore_and_at) {
+	name_to_camelize := if token.Token.from_string_tinyv(without_underscore_and_at).is_keyword() {
 		without_underscore_and_at
 	} else {
 		field_name

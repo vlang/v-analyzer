@@ -33,7 +33,7 @@ pub fn (s &StructLiteralCompletion) allowed_variants(ctx &completion.CompletionC
 	element := ref as psi.PsiElement
 
 	mut parent := element.parent() or { return .none_ }
-	for parent is psi.UnaryExpression {
+	for parent.node().type_name == .unary_expression {
 		parent = parent.parent() or { return .none_ }
 	}
 

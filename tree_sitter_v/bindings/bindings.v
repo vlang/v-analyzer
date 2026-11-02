@@ -7,8 +7,8 @@ pub const language = unsafe { &TSLanguage(C.tree_sitter_v()) }
 
 pub struct Parser[T] {
 mut:
-	raw_parser   &TSParser = unsafe { nil }          @[required]
-	type_factory NodeTypeFactory[T] @[required]
+	raw_parser   &TSParser = unsafe { nil } @[required]
+	type_factory NodeTypeFactory[T]         @[required]
 }
 
 pub fn new_parser[T](type_factory NodeTypeFactory[T]) &Parser[T] {
@@ -75,6 +75,15 @@ pub fn new_tsnode[T](factory NodeTypeFactory[T], node TSNode) Node[T] {
 		raw_node:     node
 		type_factory: factory
 		type_name:    factory.get_type(node.type_name())
+	}
+}
+
+// new_stub_node creates a node with no syntax tree for stub-backed PSI elements.
+pub fn new_stub_node[T](factory NodeTypeFactory[T], type_name T) Node[T] {
+	return Node[T]{
+		type_factory: factory
+		raw_node:     TSNode{}
+		type_name:    type_name
 	}
 }
 

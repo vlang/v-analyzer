@@ -475,65 +475,65 @@ pub fn (s &StubbedElementType) create_stub(psi PsiElement, parent_stub &StubBase
 	}
 
 	if psi is InterfaceDeclaration {
-		return declaration_stub(*psi, parent_stub, .interface_declaration)
+		return declaration_stub(psi, parent_stub, .interface_declaration)
 	}
 
 	if psi is InterfaceMethodDeclaration {
-		return declaration_stub(*psi, parent_stub, .interface_method_declaration,
+		return declaration_stub(psi, parent_stub, .interface_method_declaration,
 			additional: psi.fingerprint()
 		)
 	}
 
 	if psi is StaticReceiver {
-		return declaration_stub(*psi, parent_stub, .static_receiver, include_text: true)
+		return declaration_stub(psi, parent_stub, .static_receiver, include_text: true)
 	}
 
 	if psi is Receiver {
-		return declaration_stub(*psi, parent_stub, .receiver, include_text: true)
+		return declaration_stub(psi, parent_stub, .receiver, include_text: true)
 	}
 
 	if psi is Signature {
-		return text_based_stub(*psi, parent_stub, .signature)
+		return text_based_stub(psi, parent_stub, .signature)
 	}
 
 	if psi is ParameterList {
-		return text_based_stub(*psi, parent_stub, .parameter_list)
+		return text_based_stub(psi, parent_stub, .parameter_list)
 	}
 
 	if psi is ParameterDeclaration {
-		return declaration_stub(*psi, parent_stub, .parameter_declaration, include_text: true)
+		return declaration_stub(psi, parent_stub, .parameter_declaration, include_text: true)
 	}
 
 	if psi is EnumDeclaration {
-		return declaration_stub(*psi, parent_stub, .enum_declaration)
+		return declaration_stub(psi, parent_stub, .enum_declaration)
 	}
 
 	if psi is EnumFieldDeclaration {
 		if expression := psi.last_child() {
 			text := expression.get_text()
-			return declaration_stub(*psi, parent_stub, .enum_field_definition, additional: text)
+			return declaration_stub(psi, parent_stub, .enum_field_definition, additional: text)
 		}
-		return declaration_stub(*psi, parent_stub, .enum_field_definition)
+		return declaration_stub(psi, parent_stub, .enum_field_definition)
 	}
 
 	if psi is FieldDeclaration {
-		return declaration_stub(*psi, parent_stub, .field_declaration)
+		return declaration_stub(psi, parent_stub, .field_declaration)
 	}
 
 	if psi is ConstantDefinition {
 		if expression := psi.last_child() {
 			text := expression.get_text()
-			return declaration_stub(*psi, parent_stub, .constant_declaration, additional: text)
+			return declaration_stub(psi, parent_stub, .constant_declaration, additional: text)
 		}
-		return declaration_stub(*psi, parent_stub, .constant_declaration)
+		return declaration_stub(psi, parent_stub, .constant_declaration)
 	}
 
 	if psi is TypeAliasDeclaration {
-		return declaration_stub(*psi, parent_stub, .type_alias_declaration)
+		return declaration_stub(psi, parent_stub, .type_alias_declaration)
 	}
 
 	if psi is StructFieldScope {
-		return text_based_stub(*psi, parent_stub, .struct_field_scope)
+		return text_based_stub(psi, parent_stub, .struct_field_scope)
 	}
 
 	if psi is Attributes {
@@ -542,23 +542,23 @@ pub fn (s &StubbedElementType) create_stub(psi PsiElement, parent_stub &StubBase
 	}
 
 	if psi is Attribute {
-		return text_based_stub(*psi, parent_stub, .attribute)
+		return text_based_stub(psi, parent_stub, .attribute)
 	}
 
 	if psi is AttributeExpression {
-		return text_based_stub(*psi, parent_stub, .attribute_expression)
+		return text_based_stub(psi, parent_stub, .attribute_expression)
 	}
 
 	if psi is ValueAttribute {
-		return text_based_stub(*psi, parent_stub, .value_attribute)
+		return text_based_stub(psi, parent_stub, .value_attribute)
 	}
 
 	if psi is VisibilityModifiers {
-		return text_based_stub(*psi, parent_stub, .visibility_modifiers)
+		return text_based_stub(psi, parent_stub, .visibility_modifiers)
 	}
 
 	if psi is ModuleClause {
-		return declaration_stub(*psi, parent_stub, .module_clause)
+		return declaration_stub(psi, parent_stub, .module_clause)
 	}
 
 	node_type := psi.node().type_name
@@ -568,7 +568,7 @@ pub fn (s &StubbedElementType) create_stub(psi PsiElement, parent_stub &StubBase
 	}
 
 	if psi is ImportSpec {
-		return declaration_stub(*psi, parent_stub, .import_spec, include_text: true)
+		return declaration_stub(psi, parent_stub, .import_spec, include_text: true)
 	}
 
 	if node_type in [
@@ -590,23 +590,23 @@ pub fn (s &StubbedElementType) create_stub(psi PsiElement, parent_stub &StubBase
 	}
 
 	if psi is ReferenceExpression {
-		return text_based_stub(*psi, parent_stub, .reference_expression)
+		return text_based_stub(psi, parent_stub, .reference_expression)
 	}
 
 	if psi is GenericParameters {
-		return text_based_stub(*psi, parent_stub, .generic_parameters)
+		return text_based_stub(psi, parent_stub, .generic_parameters)
 	}
 
 	if psi is GenericParameter {
-		return declaration_stub(*psi, parent_stub, .generic_parameter)
+		return declaration_stub(psi, parent_stub, .generic_parameter)
 	}
 
 	if psi is GlobalVarDefinition {
-		return declaration_stub(*psi, parent_stub, .global_variable)
+		return declaration_stub(psi, parent_stub, .global_variable)
 	}
 
 	if psi is EmbeddedDefinition {
-		return declaration_stub(*psi, parent_stub, .embedded_definition)
+		return declaration_stub(psi, parent_stub, .embedded_definition)
 	}
 
 	return none
